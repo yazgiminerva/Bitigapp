@@ -223,7 +223,7 @@ a{color:var(--roseD)}
 @keyframes dust{0%{opacity:.8;transform:translate(0,0) scale(.4)}100%{opacity:0;transform:translate(var(--dx),-10px) scale(1.4)}}
 @keyframes nudge{40%{transform:rotate(var(--r))}}
 @media(max-width:600px){.grid{grid-template-columns:minmax(0,1fr)}}
-:root[data-theme=dark] .stage svg,:root[data-theme=dark] .settle svg{filter:saturate(.85) brightness(.9)}
+:root[data-theme=dark] .settle svg{filter:saturate(.9) brightness(.95)}
 :root[data-theme=dark] .cv{color:color-mix(in srgb,var(--c) 30%,#1d161c)}
 .themes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .themes button{min-height:72px;border-radius:16px;border:3px solid transparent;font:800 14px "Nunito",sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
@@ -283,6 +283,8 @@ a{color:var(--roseD)}
           <button type="button" data-theme="dark" style="background:#211b22;color:#f0e6dc"><i><b style="background:#c98f99"></b><b style="background:#94ad96"></b><b style="background:#a698ca"></b><b style="background:#d2b56e"></b></i>Koyu kütüphane</button>
           <button type="button" data-theme="light" style="background:#fbf5ef;color:#40353f"><i><b style="background:#f3b9c0"></b><b style="background:#cfe3cf"></b><b style="background:#dcd3f3"></b><b style="background:#f7e3a3"></b></i>Açık pastel</button>
         </div>
+        <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
+        <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -471,6 +473,8 @@ function setTheme(t) {
   render();
 }
 $('themes').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setTheme(b.dataset.theme); });
+function drawSound() { let on = true; try { on = localStorage.getItem(SKEY) !== 'off'; } catch (e) {} $('soundBtn').textContent = on ? 'Sesler açık' : 'Sesler kapalı'; $('soundBtn').setAttribute('aria-pressed', String(on)); }
+$('soundBtn').onclick = () => { let on = true; try { on = localStorage.getItem(SKEY) !== 'off'; localStorage.setItem(SKEY, on ? 'off' : 'on'); } catch (e) {} drawSound(); if (!on) { sfx.unlock(); sfx.bell(); } };
 function drawRate() { $('rate').innerHTML = [1,2,3,4,5].map(i => `<button type="button" data-v="${i}" class="${i <= rating ? 'on' : ''}" aria-label="${i} yıldız">★</button>`).join(''); }
 function setAcq(v) { acq = v; for (const b of $('seg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.acq === v)); }
 
@@ -549,7 +553,6 @@ async function fillFrom(isbn) {
 
 // Live camera scanning
 let reader = null, scanning = false;
-function beep() { try { const a = new (window.AudioContext || window.webkitAudioContext)(), o = a.createOscillator(), g = a.createGain(); o.frequency.value = 1100; g.gain.value = .08; o.connect(g); g.connect(a.destination); o.start(); o.stop(a.currentTime + .09); } catch (e) {} }
 async function startScan() {
   $('cam').hidden = false; $('camMsg').textContent = 'Barkodu çerçevenin içine getir';
   const Z = window.ZXing;
@@ -563,7 +566,7 @@ async function startScan() {
       if (!res || !scanning) return;
       const t = res.getText();
       if (!/^97[89]\d{10}$/.test(t)) { $('camMsg').textContent = 'Bu bir kitap barkodu değil; ISBN barkodunu (978 ile başlayan) göster.'; return; }
-      scanning = false; beep(); stopScan(); onIsbn(t);
+      scanning = false; sfx.unlock(); sfx.beep(); stopScan(); onIsbn(t);
     });
   } catch (e) {
     $('camMsg').textContent = e && e.name === 'NotAllowedError' ? 'Kamera izni verilmedi. Ayarlar > Safari > Kamera bölümünden izin verebilirsin.' : 'Kamera açılamadı. Fotoğraftan okuyabilir ya da ISBN yazabilirsin.';
@@ -614,6 +617,50 @@ $('q').addEventListener('input', render);
 $('sort').addEventListener('change', render);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('keyOv').hidden) $('keyOv').hidden = true; else if (!$('ov').hidden) closeSheet(); } });
 document.addEventListener('visibilitychange', () => { if (document.hidden && scanning) stopScan(); });
+
+// --- Sounds, made right here with Web Audio (no sound files) ---
+const SKEY = 'kitapligim.sound';
+const sfx = (() => {
+  let ctx = null, noiseBuf = null;
+  const on = () => { try { return localStorage.getItem(SKEY) !== 'off'; } catch (e) { return true; } };
+  function unlock() {
+    if (!on()) return;
+    try {
+      if (!ctx) { const A = window.AudioContext || window.webkitAudioContext; if (!A) return; ctx = new A(); }
+      if (ctx.state === 'suspended') ctx.resume();
+      if (!noiseBuf) { noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate); const d = noiseBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    } catch (e) {}
+  }
+  const ready = () => on() && ctx && ctx.state === 'running';
+  function env(g, t, a, peak, dec) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + a); g.gain.exponentialRampToValueAtTime(0.0001, t + a + dec); }
+  function tone(freq, {type = 'sine', at = 0, a = .005, peak = .2, dec = .4, to = null} = {}) {
+    if (!ready()) return; const t = ctx.currentTime + at, o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = type; o.frequency.setValueAtTime(freq, t); if (to) o.frequency.exponentialRampToValueAtTime(to, t + a + dec);
+    env(g, t, a, peak, dec); o.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + a + dec + .05);
+  }
+  function noise({at = 0, a = .01, peak = .15, dec = .2, type = 'bandpass', f = 1200, q = 1, fTo = null} = {}) {
+    if (!ready()) return; const t = ctx.currentTime + at, s = ctx.createBufferSource(), fl = ctx.createBiquadFilter(), g = ctx.createGain();
+    s.buffer = noiseBuf; s.loop = true; fl.type = type; fl.frequency.setValueAtTime(f, t); fl.Q.value = q; if (fTo) fl.frequency.exponentialRampToValueAtTime(fTo, t + a + dec);
+    env(g, t, a, peak, dec); s.connect(fl); fl.connect(g); g.connect(ctx.destination); s.start(t); s.stop(t + a + dec + .05);
+  }
+  return {
+    unlock,
+    beep: () => tone(1100, {peak: .08, dec: .09}),
+    tick: () => { noise({f: 2500, q: 4, peak: .25, dec: .05}); tone(420, {peak: .08, dec: .06}); },
+    creak: () => { if (!ready()) return; const t = ctx.currentTime, o = ctx.createOscillator(), fl = ctx.createBiquadFilter(), g = ctx.createGain(), lfo = ctx.createOscillator(), lg = ctx.createGain();
+      o.type = 'sawtooth'; o.frequency.setValueAtTime(95, t); o.frequency.linearRampToValueAtTime(70, t + 1.3); lfo.frequency.value = 9; lg.gain.value = 14; lfo.connect(lg); lg.connect(o.frequency);
+      fl.type = 'bandpass'; fl.frequency.value = 900; fl.Q.value = 6; env(g, t, .15, .05, 1.2); o.connect(fl); fl.connect(g); g.connect(ctx.destination); o.start(t); lfo.start(t); o.stop(t + 1.5); lfo.stop(t + 1.5);
+      noise({at: .1, f: 300, q: .7, peak: .04, dec: 1.1, type: 'lowpass'}); },
+    bell: () => { [1318, 1760].forEach((fq, i) => { tone(fq, {at: i * .12, peak: .09, dec: .9}); tone(fq * 2.76, {at: i * .12, peak: .02, dec: .4}); }); },
+    step: () => { tone(110, {peak: .12, dec: .08, to: 60}); noise({f: 400, q: .8, peak: .04, dec: .05, type: 'lowpass'}); },
+    rustle: (len = .6) => { for (let i = 0; i < 6; i++) noise({at: i * len / 6 + Math.random() * .04, f: 2600 + Math.random() * 2000, q: .9, peak: .05 + Math.random() * .04, dec: .07}); },
+    sigh: () => { noise({a: .35, f: 1100, fTo: 450, q: 1.2, peak: .07, dec: .9}); tone(220, {a: .3, peak: .015, dec: .8, to: 180}); },
+    sparkle: () => { [1047, 1319, 1568, 2093, 2637].forEach((fq, i) => tone(fq, {at: i * .07, peak: .07, dec: .7})); noise({at: .1, f: 7000, q: 1, peak: .03, dec: .8, type: 'highpass'}); },
+    thud: () => { tone(140, {peak: .25, dec: .18, to: 55}); noise({f: 500, q: .6, peak: .08, dec: .25, type: 'lowpass'}); },
+  };
+})();
+document.addEventListener('pointerdown', sfx.unlock, {passive: true});
+document.addEventListener('touchend', sfx.unlock, {passive: true});
 
 let afterStory = null;
 function nextPrompt(b, scanned) {
@@ -670,45 +717,64 @@ function person(cls, withBag) {
   </g></g></g>`;
 }
 function sceneSVG(b) {
-  const c = colorOf(b);
-  const awning = Array.from({length: 8}, (_, i) => `<rect x="${24 + i * 22}" y="104" width="22" height="20" fill="${i % 2 ? '#fffaf3' : '#f3b9c0'}"/><circle cx="${35 + i * 22}" cy="124" r="11" fill="${i % 2 ? '#fffaf3' : '#f3b9c0'}"/>`).join('');
-  const winBooks = ['#dcd3f3','#f7e3a3','#cfe2f3','#f3b9c0','#cfe3cf','#f8d2bd','#dcd3f3'].map((col, i) => `<rect x="${114 + i * 10}" y="${158 - (i % 3) * 4}" width="8" height="${22 + (i % 3) * 4}" rx="1" fill="${col}"/>`).join('');
+  const c = colorOf(b), night = isDark();
+  const K = night ? {
+    sky: 'url(#dusk)', sun: '#f6c58f', cloud: '#e9b7b0', shop: '#8fae9b', trim: '#6f8f7c', sign: '#fff3d6', signInk: '#4a3a4e', awA: '#c98f99', awB: '#f3e3cf',
+    win: '#ffe6a8', winStroke: '#6f8f7c', door: '#3a2f45', doorOpen: '#8c7aa8', street: '#5a4a52', curb: '#4b3d45',
+    wall: '#3b3049', dot: '#4a3d58', glass: '#24304f', curtain: '#b87f8b', sill: '#7a5c48', frame: '#e8d3a8', pic: '#55496a', picHill: '#7d9a86', picSun: '#e9cf86',
+    hdoor: '#6e6192', hpanel: '#7c6fa0', floor: '#4b3b40', rug: '#8a5d69', lampPole: '#a88560', shade: '#f2d58a', table: '#9a7354', leg: '#7f5d44', vase: '#8ea8c0', flower: '#c98f99'
+  } : {
+    sky: '#fde9e4', sun: '#fff3c4', cloud: '#fff', shop: '#cfe5d6', trim: '#b5d3bf', sign: '#fffaf3', signInk: '#5b4a60', awA: '#f3b9c0', awB: '#fffaf3',
+    win: '#fffaf3', winStroke: '#9cc4ab', door: '#7d6a86', doorOpen: '#b8a3d6', street: '#f1e2d3', curb: '#e6d1bd',
+    wall: '#fdf1e6', dot: '#f6dfd3', glass: '#dcecf7', curtain: '#f3b9c0', sill: '#e9cfae', frame: '#e9cfae', pic: '#fffaf3', picHill: '#cfe3cf', picSun: '#f7e3a3',
+    hdoor: '#cdb8e8', hpanel: '#d9c9f0', floor: '#ecd9c6', rug: '#f6c9cf', lampPole: '#c9a37e', shade: '#f7e3a3', table: '#e3c39f', leg: '#d3ae86', vase: '#cfe2f3', flower: '#f3b9c0'
+  };
+  const awning = Array.from({length: 8}, (_, i) => `<rect x="${24 + i * 22}" y="104" width="22" height="20" fill="${i % 2 ? K.awB : K.awA}"/><circle cx="${35 + i * 22}" cy="124" r="11" fill="${i % 2 ? K.awB : K.awA}"/>`).join('');
+  const winBooks = PAL.slice(0, 7).map((col, i) => `<rect x="${114 + i * 10}" y="${158 - (i % 3) * 4}" width="8" height="${22 + (i % 3) * 4}" rx="1" fill="${col}"/>`).join('');
   const rays = Array.from({length: 12}, (_, i) => `<path d="M0 0 L-7 -120 L7 -120 Z" fill="#fff3c4" transform="rotate(${i * 30})"/>`).join('');
   const sparks = '<g transform="translate(205 92)">' + SPARKS.map(([dx, dy, col], i) => `<path class="spark" style="--dx:${dx}px;--dy:${dy}px;animation-delay:${6.55 + (i % 4) * .05}s" d="M0 -6 L1.5 -1.5 L6 0 L1.5 1.5 L0 6 L-1.5 1.5 L-6 0 L-1.5 -1.5 Z" fill="${col}"/>`).join('') + '</g>';
-  return `<svg class="scene" viewBox="0 0 360 280" role="img" aria-label="Kitapçıdan eve yeni kitapla gelen biri">
+  const stars = night ? [[40, 30], [150, 22], [210, 44], [330, 26], [120, 50], [345, 70]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${1.2 + (i % 2)}" fill="#fff6dc" opacity=".85"/>`).join('') : '';
+  const bulbs = night ? Array.from({length: 9}, (_, i) => `<circle cx="${30 + i * 21}" cy="${102 + (i % 2) * 3}" r="2.6" fill="${['#ffe08a', '#f3b9c0', '#cfe3cf'][i % 3]}"/>`).join('') : '';
+  return `<svg class="scene" viewBox="0 0 360 280" role="img" aria-label="${night ? 'Akşam vakti kitapçıdan' : 'Kitapçıdan'} eve yeni kitapla gelen biri">
+  <defs><linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a3f6b"/><stop offset=".55" stop-color="#b9788f"/><stop offset="1" stop-color="#f2b38f"/></linearGradient>
+  <radialGradient id="lampglow"><stop offset="0" stop-color="#ffe7a1" stop-opacity=".55"/><stop offset="1" stop-color="#ffe7a1" stop-opacity="0"/></radialGradient></defs>
   <g class="s1">
-    <rect width="360" height="280" fill="#fde9e4"/>
-    <circle cx="300" cy="50" r="22" fill="#fff3c4"/>
-    <g fill="#fff"><ellipse cx="250" cy="70" rx="26" ry="10"/><ellipse cx="270" cy="64" rx="18" ry="10"/><ellipse cx="90" cy="34" rx="22" ry="8"/></g>
-    <rect x="24" y="70" width="176" height="160" rx="6" fill="#cfe5d6"/>
-    <rect x="18" y="62" width="188" height="12" rx="4" fill="#b5d3bf"/>
-    <rect x="58" y="78" width="108" height="22" rx="7" fill="#fffaf3" stroke="#9cc4ab" stroke-width="2"/>
-    <text x="112" y="94" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="14" fill="#5b4a60">KİTAPÇI</text>
-    ${awning}
-    <rect x="106" y="138" width="84" height="58" rx="5" fill="#fffaf3" stroke="#9cc4ab" stroke-width="3"/>
+    <rect width="360" height="280" fill="${K.sky}"/>${stars}
+    <circle cx="${night ? 300 : 300}" cy="${night ? 200 : 50}" r="22" fill="${K.sun}"/>
+    <g fill="${K.cloud}" opacity="${night ? .55 : 1}"><ellipse cx="250" cy="70" rx="26" ry="10"/><ellipse cx="270" cy="64" rx="18" ry="10"/><ellipse cx="90" cy="34" rx="22" ry="8"/></g>
+    <rect x="24" y="70" width="176" height="160" rx="6" fill="${K.shop}"/>
+    <rect x="18" y="62" width="188" height="12" rx="4" fill="${K.trim}"/>
+    <rect x="58" y="78" width="108" height="22" rx="7" fill="${K.sign}" stroke="${K.trim}" stroke-width="2"/>
+    <text x="112" y="94" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="14" fill="${K.signInk}">KİTAPÇI</text>
+    ${awning}${bulbs}
+    <rect x="106" y="138" width="84" height="58" rx="5" fill="${K.win}" stroke="${K.winStroke}" stroke-width="3"/>
     <rect x="110" y="180" width="76" height="4" fill="#d5b086"/>${winBooks}
-    <rect x="38" y="136" width="54" height="94" rx="4" fill="#7d6a86"/>
-    <path d="M38 136 l-10 6 v84 l10 4z" fill="#b8a3d6"/>
+    <rect x="38" y="136" width="54" height="94" rx="4" fill="${K.door}"/>
+    ${night ? '<rect x="42" y="140" width="46" height="86" rx="3" fill="#ffe6a8" opacity=".35"/>' : ''}
+    <path d="M38 136 l-10 6 v84 l10 4z" fill="${K.doorOpen}"/>
     <rect x="200" y="210" width="22" height="20" rx="3" fill="#f3b9c0"/><path d="M211 210c-8-10-6-20 0-24 6 4 8 14 0 24z" fill="#9cc7a4"/>
-    <rect y="230" width="360" height="50" fill="#f1e2d3"/><rect y="230" width="360" height="5" fill="#e6d1bd"/>
+    <rect y="230" width="360" height="50" fill="${K.street}"/><rect y="230" width="360" height="5" fill="${K.curb}"/>
     ${person('p1', true)}
   </g>
   <g class="s2">
-    <rect width="360" height="280" fill="#fdf1e6"/>
-    <g fill="#f6dfd3">${Array.from({length: 40}, (_, i) => `<circle cx="${(i % 10) * 38 + 10 + (Math.floor(i / 10) % 2) * 19}" cy="${Math.floor(i / 10) * 50 + 20}" r="2.5"/>`).join('')}</g>
-    <rect x="240" y="46" width="84" height="66" rx="6" fill="#dcecf7" stroke="#fffaf3" stroke-width="5"/>
-    <path d="M236 42 h20 q-6 40 6 74 h-26z" fill="#f3b9c0"/><path d="M328 42 h-20 q6 40 -6 74 h26z" fill="#f3b9c0"/>
-    <rect x="232" y="114" width="100" height="6" rx="3" fill="#e9cfae"/>
-    <rect x="110" y="56" width="44" height="34" rx="4" fill="#fffaf3" stroke="#e9cfae" stroke-width="4"/><path d="M116 84 l10 -14 8 9 6 -6 8 11z" fill="#cfe3cf"/><circle cx="142" cy="68" r="4" fill="#f7e3a3"/>
-    <rect x="16" y="118" width="58" height="112" rx="4" fill="#cdb8e8"/><rect x="22" y="126" width="46" height="40" rx="3" fill="#d9c9f0"/><rect x="22" y="172" width="46" height="50" rx="3" fill="#d9c9f0"/><circle cx="64" cy="178" r="3" fill="#f7e3a3"/>
-    <rect y="230" width="360" height="50" fill="#ecd9c6"/><ellipse cx="240" cy="250" rx="80" ry="12" fill="#f6c9cf"/>
-    <rect x="334" y="120" width="4" height="110" fill="#c9a37e"/><path d="M318 100 h36 l-8 24 h-20z" fill="#f7e3a3"/>
+    <rect width="360" height="280" fill="${K.wall}"/>
+    <g fill="${K.dot}">${Array.from({length: 40}, (_, i) => `<circle cx="${(i % 10) * 38 + 10 + (Math.floor(i / 10) % 2) * 19}" cy="${Math.floor(i / 10) * 50 + 20}" r="2.5"/>`).join('')}</g>
+    <rect x="240" y="46" width="84" height="66" rx="6" fill="${K.glass}" stroke="${night ? '#5a4a66' : '#fffaf3'}" stroke-width="5"/>
+    ${night ? '<circle cx="300" cy="68" r="11" fill="#f6e7b0"/><circle cx="305" cy="64" r="10" fill="#24304f"/><circle cx="258" cy="62" r="1.5" fill="#fff6dc"/><circle cx="272" cy="90" r="1.2" fill="#fff6dc"/><circle cx="312" cy="96" r="1.3" fill="#fff6dc"/>' : ''}
+    <path d="M236 42 h20 q-6 40 6 74 h-26z" fill="${K.curtain}"/><path d="M328 42 h-20 q6 40 -6 74 h26z" fill="${K.curtain}"/>
+    <rect x="232" y="114" width="100" height="6" rx="3" fill="${K.sill}"/>
+    <rect x="110" y="56" width="44" height="34" rx="4" fill="${K.pic}" stroke="${K.frame}" stroke-width="4"/><path d="M116 84 l10 -14 8 9 6 -6 8 11z" fill="${K.picHill}"/><circle cx="142" cy="68" r="4" fill="${K.picSun}"/>
+    <rect x="16" y="118" width="58" height="112" rx="4" fill="${K.hdoor}"/><rect x="22" y="126" width="46" height="40" rx="3" fill="${K.hpanel}"/><rect x="22" y="172" width="46" height="50" rx="3" fill="${K.hpanel}"/><circle cx="64" cy="178" r="3" fill="#f7e3a3"/>
+    <rect y="230" width="360" height="50" fill="${K.floor}"/><ellipse cx="240" cy="250" rx="80" ry="12" fill="${K.rug}"/>
+    ${night ? '<ellipse cx="336" cy="170" rx="90" ry="110" fill="url(#lampglow)"/><path d="M322 124 L300 230 H372 L350 124Z" fill="#ffe7a1" opacity=".12"/>' : ''}
+    <rect x="334" y="120" width="4" height="110" fill="${K.lampPole}"/><path d="M318 100 h36 l-8 24 h-20z" fill="${K.shade}"/>
     <circle class="glow" cx="205" cy="92" r="70" fill="#fff6c9"/>
     <g transform="translate(205 92)"><g class="rays">${rays}</g></g>
     <g class="book"><rect x="191" y="140" width="28" height="38" rx="3" fill="${c}"/><rect x="191" y="140" width="5" height="38" rx="2" fill="#0000001a"/><rect x="200" y="150" width="14" height="3" rx="1.5" fill="#ffffffaa"/><rect x="200" y="156" width="10" height="3" rx="1.5" fill="#ffffffaa"/></g>
     ${sparks}
-    <rect x="170" y="176" width="130" height="10" rx="4" fill="#e3c39f"/><rect x="182" y="186" width="8" height="44" rx="3" fill="#d3ae86"/><rect x="280" y="186" width="8" height="44" rx="3" fill="#d3ae86"/>
-    <rect x="270" y="156" width="14" height="20" rx="5" fill="#cfe2f3"/><circle cx="277" cy="150" r="6" fill="#f3b9c0"/><path d="M277 156v-4" stroke="#7fae8c" stroke-width="2"/>
+    <rect x="170" y="176" width="130" height="10" rx="4" fill="${K.table}"/><rect x="182" y="186" width="8" height="44" rx="3" fill="${K.leg}"/><rect x="280" y="186" width="8" height="44" rx="3" fill="${K.leg}"/>
+    <rect x="270" y="156" width="14" height="20" rx="5" fill="${K.vase}"/><circle cx="277" cy="150" r="6" fill="${K.flower}"/><path d="M277 156v-4" stroke="#7fae8c" stroke-width="2"/>
+    ${night ? '<rect x="226" y="166" width="10" height="10" rx="2" fill="#f3e3cf"/><path d="M231 166v-5" stroke="#f3e3cf" stroke-width="1.5"/><ellipse cx="231" cy="158" rx="2.4" ry="4" fill="#ffd27a"/><circle cx="231" cy="160" r="12" fill="url(#lampglow)"/>' : ''}
     ${person('p2', true)}
     <g transform="translate(140 130)"><path class="heart h1" style="--dx:-14px" d="M0 3 C-6 -3 -3 -8 0 -5 C3 -8 6 -3 0 3Z" fill="#f3a5b0"/><path class="heart h2" style="--dx:4px" d="M8 -4 C2 -10 5 -15 8 -12 C11 -15 14 -10 8 -4Z" fill="#f7c2c9"/><path class="heart h3" style="--dx:16px" d="M-6 -8 C-12 -14 -9 -19 -6 -16 C-3 -19 0 -14 -6 -8Z" fill="#f3a5b0"/></g>
   </g>
@@ -735,6 +801,12 @@ function playNewBook(b, scanned) {
   if (calm) { showWelcome(); return; }
   const cap = $('caption'), say = (t, at) => storyTimers.push(setTimeout(() => { cap.textContent = t; }, at * 1000));
   say('Kitapçıdan yeni bir dostla çıkıyorsun…', 0); say('Eve hoş geldin.', 2.6); say('Ohh… o yeni kitap kokusu.', 4.7); say('Ve işte!', 6.2);
+  const at = (fn, s) => storyTimers.push(setTimeout(fn, s * 1000));
+  at(sfx.bell, .25);
+  for (let k = 0; k < 6; k++) at(sfx.step, .5 + k * .32);
+  at(sfx.creak, 2.45);
+  for (let k = 0; k < 4; k++) at(sfx.step, 2.8 + k * .3);
+  at(() => sfx.rustle(.6), 4.05); at(sfx.sigh, 4.8); at(() => sfx.rustle(.5), 5.7); at(sfx.sparkle, 6.4);
   storyTimers.push(setTimeout(showWelcome, 7600));
 }
 function endStory() {
@@ -761,18 +833,19 @@ $('wLater').onclick = endStory;
 function playSettle(b, scanned) {
   if (calm) { nextPrompt(b, scanned); return; }
   const c = colorOf(b), box = $('settle');
-  const sp = ['#cfe3cf', '#dcd3f3', '#f7e3a3', null, '#cfe2f3', '#f3b9c0'];
+  const sp = [PAL[1], PAL[2], PAL[3], null, PAL[4], PAL[0]];
   let x = 40;
   const spines = sp.map((col, i) => {
     const w = 26 + (i % 3) * 6, h = 92 + (i * 17) % 30, out = col ? `<rect class="${i === 2 || i === 4 ? 'nudge' : ''}" style="--r:${i === 2 ? '-5deg' : '5deg'}" x="${x}" y="${150 - h}" width="${w}" height="${h}" rx="4" fill="${col}"/>` : `<g class="drop"><rect x="${x}" y="${150 - 112}" width="32" height="112" rx="4" fill="${c}"/><rect x="${x}" y="${150 - 104}" width="32" height="4" fill="#0000001f"/><rect x="${x}" y="${150 - 16}" width="32" height="4" fill="#0000001f"/></g>`;
     x += (col ? w : 32) + 4; return out;
   }).join('');
-  const dust = [-16, -6, 6, 16].map((dx, i) => `<circle class="dust" style="--dx:${dx * 1.6}px" cx="${144 + dx}" cy="148" r="${5 + (i % 2) * 2}" fill="#efe1d6"/>`).join('');
+  const dust = [-16, -6, 6, 16].map((dx, i) => `<circle class="dust" style="--dx:${dx * 1.6}px" cx="${144 + dx}" cy="148" r="${5 + (i % 2) * 2}" fill="${isDark() ? '#8d7d86' : '#efe1d6'}"/>`).join('');
   const tw = [[-40, -60], [44, -70], [-20, -100], [30, -110]].map(([dx, dy], i) => `<g transform="translate(${148 + dx} ${130 + dy * .6})"><path class="tw" style="--dx:${dx * .4}px;--dy:${dy * .3}px;animation-delay:${1 + i * .08}s" d="M0 -6 L1.5 -1.5 L6 0 L1.5 1.5 L0 6 L-1.5 1.5 L-6 0 L-1.5 -1.5 Z" fill="#f2c94c"/></g>`).join('');
-  box.innerHTML = `<div class="box"><svg viewBox="0 0 300 170" role="img" aria-label="Kitap rafa yerleşiyor"><rect width="300" height="170" rx="18" fill="#f6e7dc"/><rect x="24" y="150" width="252" height="12" rx="4" fill="#e2c29c"/>${spines}${dust}${tw}</svg><p>«${esc(b.title)}» rafındaki yerini aldı.</p></div>`;
+  box.innerHTML = `<div class="box"><svg viewBox="0 0 300 170" role="img" aria-label="Kitap rafa yerleşiyor"><rect width="300" height="170" rx="18" fill="${isDark() ? '#33283a' : '#f6e7dc'}"/><rect x="24" y="150" width="252" height="12" rx="4" fill="${isDark() ? '#6e4c37' : '#e2c29c'}"/>${spines}${dust}${tw}</svg><p>«${esc(b.title)}» rafındaki yerini aldı.</p></div>`;
   box.hidden = false;
   const done = () => { if (box.hidden) return; box.hidden = true; box.innerHTML = ''; nextPrompt(b, scanned); };
   box.onclick = done; setTimeout(done, 2600);
+  setTimeout(sfx.thud, 850); setTimeout(() => sfx.rustle(.25), 900);
 }
 
 // --- Opening: the secret bookcase ---
@@ -799,11 +872,12 @@ function playSettle(b, scanned) {
   const finish = () => { if (gone) return; gone = true; sp.classList.add('fade'); setTimeout(() => { sp.remove(); $('plaque').remove(); $('hint').remove(); }, 480); };
   const open = () => {
     if (sp.classList.contains('open')) return finish();
-    sp.classList.add('go');
+    sp.classList.add('go'); sfx.tick(); setTimeout(sfx.creak, calm ? 0 : 900);
     setTimeout(() => sp.classList.add('open'), calm ? 0 : 950);
     setTimeout(finish, calm ? 50 : 2500);
   };
-  sp.addEventListener('click', open); $('hint').addEventListener('click', open); $('plaque').addEventListener('click', open);
+  const tap = () => { sfx.unlock(); open(); };
+  sp.addEventListener('click', tap); $('hint').addEventListener('click', tap); $('plaque').addEventListener('click', tap);
   setTimeout(open, calm ? 0 : 900);
 })();
 
@@ -973,7 +1047,7 @@ async function syncShared() {
 }
 window.addEventListener('online', syncShared);
 
-load(); setTheme(isDark() ? 'dark' : 'light'); setTimeout(syncShared, 1500);
+load(); setTheme(isDark() ? 'dark' : 'light'); drawSound(); setTimeout(syncShared, 1500);
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
