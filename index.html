@@ -156,8 +156,8 @@ summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weig
 .bk{display:grid;gap:8px}
 /* sheets */
 .ov{position:fixed;inset:0;background:#5a46552e;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);display:flex;align-items:flex-end;justify-content:center;z-index:9}
-.sheet{background:var(--paper);width:min(640px,100%);max-height:92vh;overflow-y:auto;border-radius:26px 26px 0 0;padding:18px max(4vw,16px) calc(28px + var(--sb));box-shadow:0 -10px 30px #5a465522}
-.sh-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.sheet{background:var(--paper);width:min(640px,100%);max-height:92vh;max-height:calc(100dvh - var(--st) - 12px);overflow-y:auto;border-radius:26px 26px 0 0;padding:18px max(4vw,16px) calc(28px + var(--sb));box-shadow:0 -10px 30px #5a465522}
+.sh-head{display:flex;justify-content:space-between;align-items:center;gap:10px;position:sticky;top:-18px;z-index:5;margin:-18px calc(-1 * max(4vw,16px)) 12px;padding:18px max(4vw,16px) 10px;background:inherit;border-radius:26px 26px 0 0}
 .x{width:44px;height:44px;border-radius:50%;border:0;background:var(--bg);color:var(--ink);font-size:24px;cursor:pointer;flex:none}
 .scan{background:var(--bg);border-radius:16px;padding:12px;margin-bottom:14px}
 .scan img{width:64px;height:92px;object-fit:cover;border-radius:4px 8px 8px 4px;background:var(--lav)}
@@ -194,7 +194,7 @@ summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weig
 .kvkk p,.kvkk li{font-size:15px;line-height:1.55}.kvkk ul,.kvkk ol{display:block;padding-left:20px;margin:6px 0}.kvkk ul{list-style:disc}.kvkk ol{list-style:decimal}.kvkk li{margin-bottom:4px}
 .lnk{border:0;background:none;padding:0;font:inherit;color:var(--roseD);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 :root:not([data-theme=light]) .lnk{color:var(--rose)}
-.hint{display:block;margin-top:4px;font-size:12px;font-weight:600;color:var(--mute)}
+.fhint{display:block;margin-top:4px;font-size:12px;font-weight:600;color:var(--mute)}
 .tbd{background:var(--butter);color:var(--on);border-radius:6px;padding:0 6px;font-weight:700}
 .authbox details{font-size:14px;padding:2px 12px}
 .listhead .selbtn{margin-left:auto;min-height:36px;padding:4px 14px;font-size:14px}
@@ -567,7 +567,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 27</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 28</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -649,7 +649,7 @@ a{color:var(--roseD)}
         <div class="nw f full"><span>Puanım</span><div class="rate" id="rate"></div></div>
         <label class="nw f">Rafı / yeri<input name="location" placeholder="Örn. salon, 2. raf"></label>
         <label class="nw f">Ödünç verdiğim kişi<input name="lentTo" placeholder="Takma ad ya da baş harfler"></label>
-        <label class="f full"><span id="notesLbl">Notlarım</span><textarea name="notes"></textarea><small class="hint">Başkalarının kişisel bilgilerini, kimlik numarası ya da sağlık bilgisi gibi hassas bilgileri yazma.</small></label>
+        <label class="f full"><span id="notesLbl">Notlarım</span><textarea name="notes"></textarea><small class="fhint">Başkalarının kişisel bilgilerini, kimlik numarası ya da sağlık bilgisi gibi hassas bilgileri yazma.</small></label>
         <div class="nw sect" id="memHead">Hatıra</div>
         <label class="nw f">Aldığım tarih<input name="purchasedAt" type="date"></label>
         <label class="nw f">Nereden aldım<input name="purchasePlace" placeholder="Şehir, kitapçı…"></label>
