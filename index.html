@@ -658,7 +658,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 32</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 33</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -777,6 +777,7 @@ a{color:var(--roseD)}
       <div class="seg2" id="authTabs" role="group"><button type="button" data-t="in" aria-pressed="true">Giriş yap</button><button type="button" data-t="up" aria-pressed="false">Kayıt ol</button></div>
       <form id="authF" autocomplete="on" novalidate>
         <div id="typePick" hidden><span>Kim olarak geliyorsun?</span><div class="tpick" id="tpick"></div></div>
+        <label class="f" id="unameBox" hidden>Kullanıcı adı<input name="uname" autocomplete="username" autocapitalize="off" spellcheck="false" placeholder="ör. yazgi.okuyor" maxlength="24"><small class="muted" style="font-weight:600">Arkadaşların seni bununla bulur. Küçük harf, rakam, nokta ve alt çizgi.</small></label>
         <label class="f">E-posta<input name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" required></label>
         <label class="f">Şifre<input name="pw" type="password" autocomplete="current-password" required></label>
         <label class="f" id="pw2Box" hidden>Şifre tekrar (en az 8 karakter)<input name="pw2" type="password" autocomplete="new-password"></label>
@@ -815,11 +816,11 @@ a{color:var(--roseD)}
     <h3>5. Ortak kitap listesi</h3>
     <p>Barkodla eklediğin kitapların yalnızca künye bilgileri (başlık, yazar, çevirmen, yayınevi, basım yılı, sayfa sayısı, tür, ISBN) herkesin yararlandığı ortak listeye eklenir. Ortak listeye hesap kimliğin, e-postan ya da başka bir tanımlayıcı gönderilmez; notların, puanların, hatıraların ve ödünç kayıtların gönderilmez.</p>
     <p>Kendi çektiğin kapak fotoğrafı ortak listeye yalnızca ilgili kutuyu her seferinde kendin işaretlersen eklenir; kutu varsayılan olarak işaretli değildir. Uygulama, fotoğrafı göndermeden önce yeniden boyutlandırır ve EXIF ile GPS konum bilgileri dahil fotoğraftaki tüm üst verileri siler. Fotoğrafta kitap sahibinin adı, imza, ithaf yazısı ya da arka planda kişisel bir görüntü olmadığından emin olmalısın. Ortak listeye eklenen fotoğraflar seninle ilişkilendirilmeden saklandığı için hesabını sildiğinde kendiliğinden silinmez; kaldırılmasını istediğin bir fotoğraf için başvurabilirsin.</p>
-    <h3>6. Arkadaş profili, takip ve baykuş postası (isteğe bağlı)</h3>
-    <p>Bu özellik kapalı gelir. Profilim &gt; Arkadaşlar bölümünde bir kullanıcı adı seçip "Arkadaş profili oluştur"a dokunmadıkça hiçbir bilgin başka kullanıcılara görünmez ve kimse seni arayamaz.</p>
+    <h3>6. Arkadaş profili, takip ve baykuş postası</h3>
+    <p>Hesabını oluşturduğunda sana, kayıtta seçtiğin kullanıcı adıyla bir arkadaş profili açılır. Profilin <b>gizli hesap</b> olarak başlar: kitaplık özetini yalnızca senin onayladığın takipçiler görür. İstersen Profilim &gt; Arkadaşlar bölümünden hesabını herkese açık yapabilirsin.</p>
     <ul><li><b>Herkese görünenler:</b> kullanıcı adın, avatarındaki ad, avatarın, "hakkımda" yazın ve hesabının gizli ya da açık olduğu. Bunlar, gizli hesapta da oturum açmış kullanıcılar tarafından aranabilir ve görülebilir.</li><li><b>Kitaplık özetin:</b> kitapların ve istek listendeki kitapların künyesi (başlık, yazar, tür, sayfa sayısı, ISBN, kapak bağlantısı), okuma durumları, ekleme ve bitirme tarihleri ve sayıların. Gizli hesapta yalnızca onayladığın takipçilerin, açık hesapta oturum açmış tüm kullanıcılar görür.</li><li><b>Hiçbir durumda paylaşılmayanlar:</b> notların, puanların, hatıraların, kitabı nereden aldığın ve ödünç kayıtların. Hedeflerin, rozetlerin ve başucu kitapların da yalnızca sana görünür.</li><li><b>Arkadaşlık kayıtları:</b> kimi takip ettiğin, seni kimin takip ettiği, takip istekleri ve engellediğin kişiler; baykuşla gönderdiğin ve aldığın kitap önerileri (kitabın künyesi ve en fazla 200 karakterlik not); arkadaşlarının etkinliklerine verdiğin ve aldığın tepkiler (tepki verenin adı ve kullanıcı adıyla birlikte).</li><li><b>Okuma uyumu:</b> senin cihazında, ekranı açtığında hesaplanır; sonucu saklanmaz.</li></ul>
-    <p><b>Hukuki sebep:</b> profil oluşturarak kendi isteğinle talep ettiğin bu hizmetin sunulması (KVKK m. 5/2-c, sözleşmenin kurulması veya ifası). Bu veriler 7. bölümde anlatılan Firebase altyapısında saklanır.</p>
-    <p><b>Silme:</b> "Arkadaş profilini kapat" dediğinde ya da hesabını sildiğinde profilin, kullanıcı adın, kitaplık özetin, takip kayıtların, kutundaki baykuşlar, verdiğin ve aldığın tepkiler hemen silinir. Daha önce arkadaşlarına gönderdiğin baykuşlar, onlar silene kadar onların kutusunda kalır. Engellediğin kişilerin listesi, seni yeniden bulamamaları için profilini kapattığında korunur, hesabını sildiğinde silinir.</p>
+    <p><b>Hukuki sebep:</b> uygulamanın bir parçası olan bu hizmetin sunulması (KVKK m. 5/2-c, sözleşmenin kurulması veya ifası). Bu veriler 7. bölümde anlatılan Firebase altyapısında saklanır.</p>
+    <p><b>Silme:</b> hesabını sildiğinde profilin, kullanıcı adın, kitaplık özetin, takip kayıtların, kutundaki baykuşlar, verdiğin ve aldığın tepkiler hemen silinir. Daha önce arkadaşlarına gönderdiğin baykuşlar, onlar silene kadar onların kutusunda kalır. Engellediğin kişilerin listesi de hesabınla birlikte silinir.</p>
     <p>Başkalarına görünen bilgilerinin onlar tarafından ekran görüntüsü alınarak paylaşılmasını teknik olarak engelleyemeyiz; seni rahatsız eden kişiyi engelleyebilirsin.</p>
     <h3>7. Kişisel verilerin aktarılması ve yurt dışına aktarım</h3>
     <p>Kişisel verilerin, uygulamanın çalışması için gerekli olan şu hizmet sağlayıcılara (veri işleyenlere) aktarılır:</p>
@@ -852,7 +853,7 @@ a{color:var(--roseD)}
     <h3>4. Ortak kitap listesi</h3>
     <p>Barkodla eklediğin kitapların künye bilgileri (başlık, yazar, yayınevi, ISBN gibi) ve kendi isteğinle paylaştığın kapak fotoğrafları, diğer kullanıcıların kitap eklemesini kolaylaştırmak için ortak listeye eklenir ve tüm kullanıcıların ücretsiz kullanımına açılır. Bu katkılar seninle ilişkilendirilmez. Yalnızca kendi çektiğin ve paylaşmaya hakkın olan kapak fotoğraflarını paylaşmalısın.</p>
     <h3>5. Arkadaşlar ve baykuş postası</h3>
-    <ul><li>Arkadaş profili isteğe bağlıdır; açtığında aydınlatma metninin 6. bölümündeki bilgiler diğer kullanıcılara görünür.</li><li>Kullanıcı adında, "hakkımda" yazında ve baykuş notlarında başkasını taklit eden, hakaret, taciz ya da reklam içeren ifadeler kullanmamalısın; başkalarının kişisel bilgilerini paylaşmamalısın.</li><li>Seni rahatsız eden kişiyi engelleyebilirsin; engellenen kişi profilini ve kitaplığını göremez, sana baykuş gönderemez. Kurallara aykırı profilleri bildirebilirsin; geliştirici bu profilleri kaldırabilir.</li></ul>
+    <ul><li>Her hesabın, gizli olarak başlayan bir arkadaş profili vardır; aydınlatma metninin 6. bölümündeki bilgiler bu profil üzerinden diğer kullanıcılara görünür.</li><li>Kullanıcı adında, "hakkımda" yazında ve baykuş notlarında başkasını taklit eden, hakaret, taciz ya da reklam içeren ifadeler kullanmamalısın; başkalarının kişisel bilgilerini paylaşmamalısın.</li><li>Seni rahatsız eden kişiyi engelleyebilirsin; engellenen kişi profilini ve kitaplığını göremez, sana baykuş gönderemez. Kurallara aykırı profilleri bildirebilirsin; geliştirici bu profilleri kaldırabilir.</li></ul>
     <h3>6. Üçüncü taraf hizmetler</h3>
     <p>Uygulama; Google (Firebase), Cloudflare, GitHub, Google Books ve Open Library gibi üçüncü taraf hizmetlerle çalışır. İsteğe bağlı kapak okuma özelliği, senin kendi Google API anahtarın ve Google ile aranızdaki koşullar üzerinden çalışır. Bu hizmetlerdeki kesinti ya da değişiklikler uygulamanın çalışmasını etkileyebilir.</p>
     <h3>7. Sorumluluğun sınırı</h3>
@@ -2812,7 +2813,7 @@ $('peSave').onclick = async () => {
   const user = $('peUser').value.trim().replace(/^@/, '').toLowerCase();
   if (user && !unameOk(user)) { $('peMsg').textContent = 'Kullanıcı adı 3-24 karakter olsun; küçük harf (Türkçe karaktersiz), rakam, nokta ve alt çizgi kullanabilirsin.'; return; }
   if (SOC.on && user !== SOC.prof.username) {
-    if (!user) { $('peMsg').textContent = 'Arkadaş profilin açıkken kullanıcı adı boş olamaz.'; return; }
+    if (!user) { $('peMsg').textContent = 'Kullanıcı adı boş olamaz.'; return; }
     $('peSave').disabled = true;
     try { SOC.prof = await claimUsername(user, SOC.prof.private); } catch (er) { $('peMsg').textContent = er instanceof UErr ? er.message : 'Kullanıcı adı değiştirilemedi.'; $('peSave').disabled = false; return; }
     $('peSave').disabled = false;
@@ -2943,11 +2944,30 @@ let shelfTimer = 0, sprofTimer = 0;
 function socShelfDirty() { if (!SOC.on) return; clearTimeout(shelfTimer); shelfTimer = setTimeout(() => { if (SOC.on && me) FB.setDoc(fd('shelves', me.uid), shelfData()).catch(() => {}); }, 3000); }
 function socProfileDirty() { if (!SOC.on || !SOC.prof) return; clearTimeout(sprofTimer); sprofTimer = setTimeout(() => { if (!SOC.on || !SOC.prof || !me) return; const d = socProfileData(SOC.prof.username, SOC.prof.private); SOC.prof = d; FB.setDoc(fd('profiles', me.uid), d).catch(() => {}); }, 1000); }
 
+// every account has a friend profile (private by default); make one on first sign-in
+const unameSlug = t => String(t || '').toLocaleLowerCase('tr').replace(/ı/g, 'i').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's').replace(/ö/g, 'o').replace(/ç/g, 'c')
+  .normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '.').replace(/[^a-z0-9._]/g, '').replace(/\.{2,}/g, '.').replace(/^[._]+|[._]+$/g, '').slice(0, 20);
+async function autoProfile() {
+  let pend = ''; try { pend = localStorage.getItem('kitapligim.pendingUser') || ''; } catch (e) {}
+  const a = avLoad() || {}, seen = new Set(), base = [pend, profLoad().username, unameSlug(a.name), unameSlug((me.email || '').split('@')[0]), 'okur'].map(x => String(x || '').toLowerCase()).filter(x => { if (!x || seen.has(x)) return false; seen.add(x); return true; });
+  const tries = base.filter(unameOk).concat(base.map(b => (b.slice(0, 18) + '.' + Math.floor(100 + Math.random() * 900)).replace(/^[._]+/, '')).filter(unameOk));
+  for (let i = 0; i < 4; i++) tries.push('okur.' + Math.random().toString(36).slice(2, 8));
+  for (const u of tries) {
+    try {
+      const d = await claimUsername(u, true);
+      try { localStorage.removeItem('kitapligim.pendingUser'); } catch (e) {}
+      if (pend && u !== pend) setTimeout(() => note(`<span><b>@${esc(pend)}</b> alınmış; kullanıcı adın <b>@${esc(u)}</b> oldu. Profilim'den değiştirebilirsin.</span>`, true), 1500);
+      return d;
+    } catch (e) { if (!(e instanceof UErr)) throw e; }
+  }
+  throw new Error('no username');
+}
 async function socStart() {
   socStop();
   try {
     const s = await FB.getDoc(fd('profiles', me.uid));
-    SOC.prof = s.exists() ? s.data() : null; SOC.on = !!SOC.prof;
+    SOC.prof = s.exists() ? s.data() : await autoProfile(); SOC.on = !!SOC.prof;
+    if (SOC.on) drawProfile();
   } catch (e) { SOC.prof = null; SOC.on = false; }
   drawSocial();
   if (!SOC.on) return;
@@ -3122,7 +3142,7 @@ $('sQ').addEventListener('input', () => { clearTimeout(sT); sT = setTimeout(runS
 $('sX').onclick = () => { $('searchOv').hidden = true; };
 $('sRes').addEventListener('click', e => { const li = e.target.closest('[data-user]'); if (li) openUser(li.dataset.user); });
 function openSearch() {
-  if (!SOC.on) { showTab('prof'); setTimeout(() => $('socBox').scrollIntoView({behavior: 'smooth', block: 'center'}), 120); note('Arkadaş aramak için önce Profilim\'de arkadaş profilini oluştur.'); return; }
+  if (!SOC.on) { showTab('prof'); setTimeout(() => $('socBox').scrollIntoView({behavior: 'smooth', block: 'center'}), 120); note('Arkadaş profilin henüz hazır değil; internet bağlantını kontrol edip Profilim\'de "Tekrar dene"ye dokun.'); return; }
   $('searchOv').hidden = false; $('sQ').value = ''; runSearch(); setTimeout(() => $('sQ').focus(), 80);
 }
 
@@ -3209,12 +3229,7 @@ function drawSocial() {
   const box = $('socBox'); if (!box) return;
   if (!me) { box.innerHTML = ''; return; }
   if (!SOC.on) {
-    box.innerHTML = `<div class="pcard"><p style="margin:0 0 10px">Arkadaşlarını bul, kitaplarınızı birbirinize gösterin, baykuşla kitap önerin. Arkadaş profili oluşturmadıkça kimse seni bulamaz.</p>
-      <label class="f">Kullanıcı adın<input id="socUser" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ör. yazgi.okuyor" value="${esc(profLoad().username || '')}"></label>
-      <div class="radios"><label><input type="radio" name="socPriv" value="1" checked> <b>Gizli hesap</b><span class="muted">Kitaplığını yalnızca onayladığın takipçilerin görür</span></label><label><input type="radio" name="socPriv" value="0"> <b>Herkese açık</b><span class="muted">Seni bulan herkes kitaplığını görür</span></label></div>
-      <p class="muted" style="font-size:13px">Paylaşılan: adın, kullanıcı adın, avatarın, "hakkımda" yazın; takipçilerinle kitap listen, istek listen ve sayıların. Notların, puanların, nereden aldığın ve ödünç kayıtların asla paylaşılmaz. <button type="button" class="lnk" data-kvkk>Aydınlatma metni</button></p>
-      <p class="amsg" id="socMsg"></p>
-      <button class="btn primary" type="button" id="socGo" style="width:100%">Arkadaş profilimi oluştur</button></div>`;
+    box.innerHTML = `<div class="pcard"><p style="margin:0 0 10px">Arkadaş profilin hazırlanamadı; internet bağlantını kontrol et.</p><button class="btn primary" type="button" id="socGo" style="width:100%">Tekrar dene</button></div>`;
     return;
   }
   const fl = [...SOC.followers.values()], acc = fl.filter(f => f.status === 'accepted').length, req = fl.filter(f => f.status === 'pending').length;
@@ -3222,26 +3237,14 @@ function drawSocial() {
     <div class="socnums"><button type="button" data-l="followers"><b>${acc}</b><span>takipçi</span></button><button type="button" data-l="following"><b>${SOC.following.size}</b><span>takip</span></button><button type="button" data-l="requests" class="${req ? 'hot' : ''}"><b>${req}</b><span>istek</span></button></div>
     <button class="btn primary" type="button" id="socFind" style="width:100%;margin-top:10px">Arkadaş ara</button>
     <label class="switch"><input type="checkbox" id="socPrivT" ${SOC.prof.private ? 'checked' : ''}><span>Gizli hesap</span><small class="muted">${SOC.prof.private ? 'Kitaplığını yalnızca onayladığın takipçilerin görür.' : 'Kitaplığın herkese açık.'}</small></label>
-    <div class="row" style="margin-top:10px"><button class="btn" type="button" data-l="blocked">Engellediklerin${SOC.blocked.size ? ` (${SOC.blocked.size})` : ''}</button><button class="btn danger" type="button" id="socOff">Arkadaş profilini kapat</button></div>
+    <div class="row" style="margin-top:10px"><button class="btn" type="button" data-l="blocked">Engellediklerin${SOC.blocked.size ? ` (${SOC.blocked.size})` : ''}</button></div>
     <p class="amsg" id="socMsg"></p></div>`;
 }
 $('socBox').addEventListener('click', async e => {
-  const t = e.target.closest('#socGo,#socFind,#socOff,[data-l]'); if (!t) return;
+  const t = e.target.closest('#socGo,#socFind,[data-l]'); if (!t) return;
   if (t.dataset.l) return drawList(t.dataset.l);
   if (t.id === 'socFind') return openSearch();
-  if (t.id === 'socGo') {
-    t.disabled = true; $('socMsg').textContent = '';
-    try {
-      SOC.prof = await claimUsername($('socUser').value, document.querySelector('input[name=socPriv]:checked').value === '1');
-      await socStart(); drawProfile(); sfx.unlock(); sfx.sparkle(); note('<span>Arkadaş profilin hazır! Şimdi arkadaşlarını arayabilirsin.</span>');
-    } catch (er) { $('socMsg').textContent = er instanceof UErr ? er.message : 'Oluşturulamadı. İnternetini kontrol edip tekrar dene.'; t.disabled = false; }
-    return;
-  }
-  if (t.id === 'socOff') {
-    if (!t.dataset.armed) { t.dataset.armed = 1; t.textContent = 'Takipçiler, takipler ve baykuşlar silinecek. Emin misin?'; return; }
-    t.disabled = true;
-    try { await socDisable(); note('Arkadaş profilin kapatıldı.'); } catch (er) { $('socMsg').textContent = 'Kapatılamadı, tekrar dene.'; t.disabled = false; }
-  }
+  if (t.id === 'socGo') { t.disabled = true; await socStart(); }
 });
 $('socBox').addEventListener('change', async e => {
   if (e.target.id !== 'socPrivT') return;
@@ -3390,7 +3393,7 @@ async function loadProfile() {
 function drawAuth() {
   const up = authMode === 'up';
   for (const b of $('authTabs').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.t === authMode));
-  $('typePick').hidden = !up; $('pw2Box').hidden = !up; $('kvkkBox').hidden = !up; $('privacy').hidden = !up; $('forgot').hidden = up;
+  $('typePick').hidden = !up; $('unameBox').hidden = !up; $('pw2Box').hidden = !up; $('kvkkBox').hidden = !up; $('privacy').hidden = !up; $('forgot').hidden = up;
   $('authGo').textContent = up ? 'Kayıt ol' : 'Giriş yap';
   $('authF').elements.pw.autocomplete = up ? 'new-password' : 'current-password';
   $('authSub').textContent = up ? 'Bir hesap oluştur; kitapların her cihazda seninle olsun.' : 'Kitaplığına girmek için giriş yap.';
@@ -3410,13 +3413,16 @@ function openLegal(which) { const k = which === 'k'; $('docA').hidden = k; $('do
 document.addEventListener('click', e => { if (e.target.closest('[data-kvkk]')) { e.preventDefault(); openLegal('a'); } else if (e.target.closest('[data-kosul]')) { e.preventDefault(); openLegal('k'); } });
 $('kvX').onclick = $('kvOk').onclick = () => { $('kvkkOv').hidden = true; };
 $('kvkkOv').addEventListener('click', e => { if (e.target === $('kvkkOv')) $('kvkkOv').hidden = true; });
+$('authF').elements.uname.addEventListener('change', e => { const v = unameSlug(e.target.value); if (v) e.target.value = v; });
 $('authTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { authMode = b.dataset.t; drawAuth(); } });
 $('tpick').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { pickType = b.dataset.t; drawAuth(); sfx.unlock(); sfx.tick(); } });
 $('authF').addEventListener('submit', async e => {
   e.preventDefault();
   const F = $('authF').elements, email = F.email.value.trim(), pw = F.pw.value, msg = $('authMsg');
   msg.textContent = '';
+  const uname = (F.uname.value || '').trim().replace(/^@/, '').toLowerCase();
   if (authMode === 'up') {
+    if (!unameOk(uname)) { msg.textContent = 'Kullanıcı adı 3-24 karakter olsun; küçük harf (Türkçe karaktersiz), rakam, nokta ve alt çizgi kullanabilirsin.'; return; }
     if (pw.length < 8) { msg.textContent = 'Şifre en az 8 karakter olsun.'; return; }
     if (pw !== F.pw2.value) { msg.textContent = 'Şifreler birbirini tutmuyor.'; return; }
     if (!$('kvkk').checked) { msg.textContent = 'Devam etmek için Kullanım Koşulları\'nı kabul etmelisin.'; return; }
@@ -3425,14 +3431,14 @@ $('authF').addEventListener('submit', async e => {
   $('authGo').disabled = true;
   try {
     if (authMode === 'up') {
-      try { localStorage.setItem('kitapligim.pendingType', pickType); const now = new Date().toISOString(); localStorage.setItem('kitapligim.ack', JSON.stringify({aydinlatma: {surum: '1.2', sunuldu: now}, kosullar: {surum: '1.1', kabul: now}})); } catch (x) {}
+      try { localStorage.setItem('kitapligim.pendingType', pickType); localStorage.setItem('kitapligim.pendingUser', uname); const now = new Date().toISOString(); localStorage.setItem('kitapligim.ack', JSON.stringify({aydinlatma: {surum: '1.2', sunuldu: now}, kosullar: {surum: '1.1', kabul: now}})); } catch (x) {}
       const cred = await FB.createUserWithEmailAndPassword(fbAuth, email, pw);
       await FB.sendEmailVerification(cred.user, {url: location.origin + location.pathname}).catch(() => {});
       showVerify(cred.user);
     } else {
       await FB.signInWithEmailAndPassword(fbAuth, email, pw);
     }
-    F.pw.value = ''; F.pw2.value = '';
+    F.pw.value = ''; F.pw2.value = ''; F.uname.value = '';
   } catch (er) { msg.textContent = authErr(er); }
   finally { $('authGo').disabled = false; }
 });
