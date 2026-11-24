@@ -228,6 +228,34 @@ body.selecting{padding-bottom:170px}
 .hlist .item{cursor:pointer}
 .tag{display:inline-block;font:800 12px "Nunito",sans-serif;border-radius:99px;padding:2px 9px;background:var(--sage);color:var(--on);margin-top:4px}
 .tag.w{background:var(--butter)}
+/* profile */
+.phead{display:flex;gap:14px;align-items:center}
+.pav{width:80px;height:120px;image-rendering:pixelated;flex:none;animation:avbob 2.4s ease-in-out infinite}
+.pname{font:600 28px/1.15 var(--serif);font-variation-settings:"SOFT" 100;margin:0}
+.puser{margin:2px 0 0;font-weight:800;color:var(--roseD)}:root:not([data-theme=light]) .puser{color:var(--rose)}
+.pbio{margin:6px 0 0;font-size:15px}.psince{margin:6px 0 0;font-size:13px}
+.prow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.prow .btn{min-height:42px;font-size:14px;padding:6px 8px}
+.pstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ptile{background:var(--field);border-radius:16px;padding:10px 6px;text-align:center;border-bottom:4px solid var(--c)}
+.ptile b{display:block;font:700 26px/1.1 var(--serif)}.ptile span{font-size:12px;font-weight:800;color:var(--mute)}
+.psec{font:600 20px var(--serif);font-variation-settings:"SOFT" 100;margin:20px 0 8px}
+.pcard{background:var(--field);border-radius:18px;padding:14px}
+.gtop{display:flex;align-items:center;justify-content:space-between;gap:8px}.gtop .btn{min-height:32px;padding:2px 6px;font-size:14px}
+.gbar{height:14px;border-radius:7px;background:var(--line);overflow:hidden;margin-top:10px}.gbar i{display:block;height:100%;border-radius:7px;background:linear-gradient(90deg,var(--sage),var(--rose));transition:width .6s}
+.pfavs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.fav{box-sizing:border-box;width:100%;min-width:0;border:0;background:var(--field);border-radius:16px;padding:8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;color:var(--ink);font:700 12px/1.2 "Nunito",sans-serif;min-height:150px}
+.fav .cv{width:62px;height:92px}.fav span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-align:center}
+.fav.empty{border:2px dashed var(--line);background:none;justify-content:center;color:var(--mute)}.fav.empty i{font:400 32px var(--serif);font-style:normal}
+.gbars{display:grid;gap:8px}.gb{display:grid;grid-template-columns:96px 1fr 28px;align-items:center;gap:8px;font-size:13px;font-weight:700}
+.gb span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gb i{display:block;height:14px;border-radius:7px;width:var(--w);background:var(--c)}.gb b{text-align:right}
+.facts{list-style:none;padding:0;margin:12px 0 0;display:grid;gap:8px}.facts li{display:flex;justify-content:space-between;gap:10px;font-size:14px}.facts span{color:var(--mute)}.facts b{text-align:right}
+.pbadges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.badge{background:var(--field);border-radius:16px;padding:10px 6px;text-align:center;opacity:.6}
+.badge.on{opacity:1;box-shadow:inset 0 0 0 2px color-mix(in srgb,var(--butter) 50%,transparent)}
+.badge .medal{width:52px;height:54px;display:block;margin:0 auto 4px}
+.badge b{display:block;font-size:13px;line-height:1.2}.badge span{display:block;font-size:11px;color:var(--mute);margin-top:2px;line-height:1.25}
+.hlist .item.on{box-shadow:0 0 0 3px var(--rose)}
 .wadd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.wadd .btn{font-size:14px;padding:8px 6px;min-height:46px}
 .witem{grid-template-columns:46px minmax(0,1fr) auto}
 .witem .n{color:var(--mute);font-size:13px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -567,7 +595,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 28</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 29</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -752,6 +780,48 @@ a{color:var(--roseD)}
     <p>Bu koşullara Türkiye Cumhuriyeti hukuku uygulanır. Soruların için: <span class="tbd">iletişim e-postası eklenecek</span>.</p>
     </div>
     <button class="btn primary" id="kvOk" type="button" style="width:100%;margin-top:8px">Kapat</button>
+  </div>
+</div>
+
+<div class="ov" id="profOv" hidden>
+  <div class="sheet prof" role="dialog" aria-modal="true" aria-labelledby="pTitle">
+    <div class="sh-head"><h2 id="pTitle">Profilim</h2><button class="x" id="pX" type="button" aria-label="Kapat">×</button></div>
+    <div id="pView">
+      <div class="phead">
+        <img id="pAv" class="pav" alt="">
+        <div><p class="pname" id="pName"></p><p class="puser" id="pUser"></p><p class="pbio" id="pBio" hidden></p><p class="muted psince" id="pSince"></p></div>
+      </div>
+      <div class="prow"><button class="btn" id="pEditBtn" type="button">Profili düzenle</button><button class="btn" id="pAvEdit" type="button">Avatarı değiştir</button></div>
+      <div class="pstats" id="pStats"></div>
+      <h3 class="psec">Okuma hedefi</h3>
+      <div class="pcard" id="pGoal"></div>
+      <p class="muted" id="pGoalNote" style="font-size:13px;margin:6px 2px 0">Bitirdiğin tarih bu yıl olan kitaplar sayılır. Bir kitabı "Okundu" yaptığında tarih kendiliğinden bugün olarak dolar.</p>
+      <h3 class="psec">Başucu kitaplarım</h3>
+      <div class="pfavs" id="pFavs"></div>
+      <h3 class="psec">Okuma zevkin</h3>
+      <div class="pcard" id="pTaste"></div>
+      <h3 class="psec">Rozetler <span class="muted" id="pBadgeN"></span></h3>
+      <div class="pbadges" id="pBadges"></div>
+      <button class="btn primary" id="pShare" type="button" style="width:100%;margin-top:18px">Profil kartını paylaş</button>
+      <p class="muted" id="pShareMsg" style="text-align:center;margin:8px 0 0"></p>
+      <p class="muted" style="font-size:13px;text-align:center;margin:6px 0 0">Profilin yalnızca sana görünür.</p>
+    </div>
+    <div id="pEdit" hidden>
+      <label class="f">Görünen adın<input id="peName" maxlength="30" autocomplete="off" placeholder="Örn. Yazgı"></label>
+      <label class="f">Kullanıcı adı<input id="peUser" maxlength="25" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Örn. yazgi.okuyor"></label>
+      <label class="f">Hakkımda<textarea id="peBio" maxlength="140" placeholder="Bir cümleyle okur olarak sen"></textarea></label>
+      <label class="f"><span><span id="peYear"></span> okuma hedefim (kitap)</span><input id="peGoal" type="number" inputmode="numeric" min="0" max="999" placeholder="Örn. 24"></label>
+      <p class="amsg" id="peMsg" role="alert"></p>
+      <div class="row"><button class="btn primary" id="peSave" type="button">Kaydet</button><button class="btn" id="peCancel" type="button">Vazgeç</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="favOv" hidden style="z-index:10">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="fpTitle">
+    <div class="sh-head"><h2 id="fpTitle">Başucu kitabı seç</h2><button class="x" id="fpX" type="button" aria-label="Kapat">×</button></div>
+    <input type="search" id="fpQ" placeholder="Başlık ya da yazar ara" autocomplete="off">
+    <ul class="hlist" id="fpList"></ul>
   </div>
 </div>
 
@@ -1845,7 +1915,7 @@ f.addEventListener('submit', e => {
     const prev = books;
     books = old ? books.map(b => b.id === editId ? data : b) : [...books, data];
     if (!persist()) { books = prev; return; }
-    if (convertId) { wishes = wishes.filter(w => w.id !== convertId); persistWish(); }
+    if (convertId) { data.fromWish = true; wishes = wishes.filter(w => w.id !== convertId); persistWish(); persist(); }
   }
   const scanned = fromScan && !old;
   if (sel.kind === 'own' && $('cvShare').checked && validIsbn(data.isbn)) shareCover(data, sel.blob);
@@ -2379,6 +2449,201 @@ async function syncShared() {
 }
 window.addEventListener('online', syncShared);
 
+// --- Profile: name, goal, taste, badges and a shareable card (private to the owner) ---
+const PROF_KEY = 'kitapligim.prof';
+function profLoad() { try { const p = JSON.parse(localStorage.getItem(PROF_KEY) || 'null'); return p && typeof p === 'object' ? p : {}; } catch (e) { return {}; } }
+function profSave(p) { try { localStorage.setItem(PROF_KEY, JSON.stringify(p)); } catch (e) {} profileDirty(); }
+const YEAR = () => String(new Date().getFullYear());
+function profStats() {
+  const yr = YEAR(), read = books.filter(b => b.status === 'okundu');
+  const n = s => books.filter(b => b.status === s).length;
+  const genres = new Map();
+  for (const b of books) { const g = normGenre(b.genre); if (g) genres.set(g, (genres.get(g) || 0) + 1); }
+  const authors = new Map();
+  for (const b of books) for (const a of String(b.author || '').split(/\s*[,;&]\s*/).filter(Boolean)) authors.set(a, (authors.get(a) || 0) + 1);
+  const topAuthor = [...authors].sort((a, b) => b[1] - a[1])[0];
+  const thick = [...books].filter(b => +b.pages > 0).sort((a, b) => b.pages - a.pages)[0];
+  const rated = books.filter(b => +b.rating > 0);
+  return {
+    total: books.length, read: read.length, reading: n('okunuyor'), toRead: n('okunacak'), half: n('yarim'), wish: wishes.length,
+    pages: read.reduce((s, b) => s + (+b.pages || 0), 0),
+    thisYear: read.filter(b => String(b.finishedAt || '').startsWith(yr)).length,
+    genres: [...genres].sort((a, b) => b[1] - a[1]), readGenres: new Set(read.map(b => normGenre(b.genre)).filter(Boolean)).size,
+    topAuthor: topAuthor && topAuthor[1] > 1 ? topAuthor : null, thick, avgRating: rated.length ? rated.reduce((s, b) => s + +b.rating, 0) / rated.length : 0, rated: rated.length,
+    lent: books.filter(b => b.lentTo).length, fromWish: books.filter(b => b.fromWish).length,
+  };
+}
+const BADGES = [
+  ['ilk', 'İlk kitap', 'Kitaplığına ilk kitabı ekle', s => [s.total, 1], '1'],
+  ['on', 'Raf doluyor', '10 kitap', s => [s.total, 10], '10'],
+  ['elli', 'Kitap kurdu', '50 kitap', s => [s.total, 50], '50'],
+  ['yuz', 'Yüzüncü kitap', '100 kitap', s => [s.total, 100], '100'],
+  ['okur', 'İlk son sayfa', 'Bir kitabı bitir', s => [s.read, 1], '✓'],
+  ['okur10', 'Sıkı okur', '10 kitap bitir', s => [s.read, 10], '10✓'],
+  ['bin', 'Bin sayfa', 'Bitirdiğin kitaplarda 1.000 sayfa', s => [s.pages, 1000], '1B'],
+  ['onbin', 'On bin sayfa', 'Bitirdiğin kitaplarda 10.000 sayfa', s => [s.pages, 10000], '10B'],
+  ['tur', 'Tür kâşifi', '5 farklı türde kitap bitir', s => [s.readGenres, 5], '5T'],
+  ['dilek', 'Dilek gerçek oldu', 'İstek listendeki bir kitabı al', s => [s.fromWish, 1], '★'],
+  ['ele', 'Eleştirmen', '10 kitaba puan ver', s => [s.rated, 10], '✎'],
+  ['hedef', 'Hedefe ulaştın', 'Bu yılın okuma hedefini tamamla', s => { const g = +(profLoad().goals || {})[YEAR()] || 0; return g ? [s.thisYear, g] : [0, 1]; }, '✦'],
+];
+function medal(face, on) {
+  const t = themeNow(), c1 = on ? 'var(--m1, var(--butter))' : 'var(--line)', c2 = on ? 'var(--m2, var(--butterD))' : 'var(--field)', ink = on ? 'var(--on)' : 'var(--mute)';
+  const shape = t === 'cadi' ? '<path d="M24 4h12v8c10 3 16 11 16 21 0 13-10 23-22 23S8 46 8 33c0-10 6-18 16-21z"/>'
+    : t === 'buyucu' ? '<path d="M30 3l6 9 10-3 1 10 10 3-5 9 5 9-10 3-1 10-10-3-6 9-6-9-10 3-1-10-10-3 5-9-5-9 10-3 1-10 10 3z"/>'
+    : '<circle cx="30" cy="31" r="25"/><path d="M20 52l-6 8 10-2 6 4M40 52l6 8-10-2-6 4" opacity=".8"/>';
+  return `<svg viewBox="0 0 60 62" class="medal" aria-hidden="true"><defs><linearGradient id="mg${on ? 1 : 0}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:${c1}"/><stop offset="1" style="stop-color:${c2}"/></linearGradient></defs><g fill="url(#mg${on ? 1 : 0})" style="stroke:${on ? 'var(--m2, var(--butterD))' : 'var(--line)'}" stroke-width="2">${shape}</g><text x="30" y="${t === 'cadi' ? 40 : 37}" text-anchor="middle" font-family="Fraunces, serif" font-weight="700" font-size="${face.length > 2 ? 14 : 18}" style="fill:${ink}">${esc(face)}</text></svg>`;
+}
+function drawProfile() {
+  const p = profLoad(), a = avLoad() || {...AV_DEFAULT}, s = profStats(), yr = YEAR(), goal = +(p.goals || {})[yr] || 0;
+  $('pAv').src = avURL(a, {});
+  $('pName').textContent = a.name || 'Adını ekle';
+  $('pUser').textContent = p.username ? '@' + p.username : '';
+  $('pBio').textContent = p.bio || '';
+  $('pBio').hidden = !p.bio;
+  const since = (me && me.metadata && me.metadata.creationTime) || books.map(b => b.addedAt).filter(Boolean).sort()[0];
+  $('pSince').textContent = since ? `${new Date(since).toLocaleDateString('tr-TR', {month: 'long', year: 'numeric'})} tarihinden beri kitaplık sahibi` : '';
+  const tiles = [[s.total, 'kitap', 'rose'], [s.read, 'okundu', 'sage'], [s.reading, 'okunuyor', 'butter'], [s.toRead, 'okunacak', 'sky'], [s.wish, 'istek listesi', 'lav'], [s.pages.toLocaleString('tr-TR'), 'sayfa okundu', 'peach']];
+  $('pStats').innerHTML = tiles.map(([v, l, c]) => `<div class="ptile" style="--c:var(--${c})"><b>${v}</b><span>${l}</span></div>`).join('');
+  // yearly goal
+  const pct = goal ? Math.min(100, Math.round(s.thisYear / goal * 100)) : 0;
+  $('pGoal').innerHTML = goal
+    ? `<div class="gtop"><b>${yr} hedefim: ${goal} kitap</b><button class="btn link" type="button" id="pGoalEdit">Değiştir</button></div><div class="gbar"><i style="width:${pct}%"></i></div><p class="muted" style="margin:6px 0 0">${s.thisYear} / ${goal} · ${s.thisYear >= goal ? 'Hedefini tamamladın!' : `${goal - s.thisYear} kitap kaldı`}</p>`
+    : `<div class="gtop"><b>${yr} için bir okuma hedefin yok</b></div><button class="btn primary" type="button" id="pGoalEdit" style="width:100%;margin-top:8px">Hedef koy</button>`;
+  $('pGoalNote').hidden = !goal;
+  // bedside books
+  const favs = (p.favs || []).map(id => books.find(b => b.id === id)).filter(Boolean);
+  $('pFavs').innerHTML = [0, 1, 2].map(i => favs[i] ? `<button class="fav" type="button" data-fav="${i}">${coverEl(favs[i])}<span>${esc(favs[i].title)}</span></button>` : `<button class="fav empty" type="button" data-fav="${i}"><i>+</i><span>Kitap seç</span></button>`).join('');
+  // taste
+  const top = s.genres.slice(0, 5), max = top.length ? top[0][1] : 1;
+  $('pTaste').innerHTML = (top.length ? `<div class="gbars">${top.map(([g, c]) => `<div class="gb"><span>${esc(g)}</span><i style="--w:${Math.max(8, c / max * 100)}%;--c:${genreColor(g)}"></i><b>${c}</b></div>`).join('')}</div>` : '<p class="muted">Türü belirtilmiş kitap eklendikçe burada zevkin görünecek.</p>')
+    + `<ul class="facts">${[s.topAuthor && `<li><span>En çok kitabın olan yazar</span><b>${esc(s.topAuthor[0])} (${s.topAuthor[1]})</b></li>`, s.thick && `<li><span>En kalın kitabın</span><b>${esc(s.thick.title)} · ${s.thick.pages} sayfa</b></li>`, s.rated && `<li><span>Ortalama puanın</span><b>${s.avgRating.toFixed(1).replace('.', ',')} / 5 (${s.rated} kitap)</b></li>`].filter(Boolean).join('')}</ul>`;
+  // badges
+  const earned = BADGES.map(([k, name, hint, fn, face]) => { const [v, need] = fn(s); return {k, name, hint, face, on: v >= need, left: Math.max(0, need - v)}; });
+  $('pBadgeN').textContent = `${earned.filter(b => b.on).length} / ${BADGES.length}`;
+  $('pBadges').innerHTML = earned.map(b => `<div class="badge${b.on ? ' on' : ''}" title="${esc(b.hint)}">${medal(b.face, b.on)}<b>${esc(b.name)}</b><span>${b.on ? 'Kazanıldı' : esc(b.hint)}</span></div>`).join('');
+  hydrate($('pFavs'));
+  // celebrate once when this year's goal is reached
+  if (goal && s.thisYear >= goal && !(p.celebrated || {})[yr]) {
+    p.celebrated = {...(p.celebrated || {}), [yr]: true}; profSave(p);
+    setTimeout(() => { sfx.unlock(); sfx.sparkle(); note(`<span><b>Tebrikler!</b> ${yr} okuma hedefin olan ${goal} kitabı tamamladın.</span>`); }, 400);
+  }
+}
+function openProfile() { $('profOv').hidden = false; $('pEdit').hidden = true; $('pView').hidden = false; drawProfile(); $('profOv').querySelector('.sheet').scrollTop = 0; }
+$('avBtn').onclick = () => { if (!avLoad()) return openAv(); openProfile(); };
+$('pX').onclick = () => { $('profOv').hidden = true; };
+$('profOv').addEventListener('click', e => { if (e.target === $('profOv')) $('profOv').hidden = true; });
+$('pAvEdit').onclick = () => { $('profOv').hidden = true; openAv(); };
+function openProfEdit(focusGoal) {
+  const p = profLoad(), a = avLoad() || {};
+  $('peName').value = a.name || ''; $('peUser').value = p.username || ''; $('peBio').value = p.bio || ''; $('peGoal').value = (p.goals || {})[YEAR()] || '';
+  $('peYear').textContent = YEAR(); $('peMsg').textContent = '';
+  $('pView').hidden = true; $('pEdit').hidden = false;
+  if (focusGoal) setTimeout(() => $('peGoal').focus(), 60);
+}
+$('pEditBtn').onclick = () => openProfEdit(false);
+$('pGoal').addEventListener('click', e => { if (e.target.closest('#pGoalEdit')) openProfEdit(true); });
+$('peCancel').onclick = () => { $('pEdit').hidden = true; $('pView').hidden = false; };
+$('peSave').onclick = () => {
+  const user = $('peUser').value.trim().replace(/^@/, '');
+  if (user && !/^[a-z0-9._ğüşıöç]{2,24}$/i.test(user)) { $('peMsg').textContent = 'Kullanıcı adı 2-24 karakter olsun; harf, rakam, nokta ve alt çizgi kullanabilirsin.'; return; }
+  const goal = Math.max(0, Math.min(999, parseInt($('peGoal').value, 10) || 0));
+  const p = profLoad(); p.username = user; p.bio = $('peBio').value.trim().slice(0, 140);
+  p.goals = {...(p.goals || {})}; if (goal) p.goals[YEAR()] = goal; else delete p.goals[YEAR()];
+  if (p.celebrated && goal) delete p.celebrated[YEAR()];
+  profSave(p);
+  const a = avLoad(); if (a) { a.name = $('peName').value.trim().slice(0, 30); avSave(a); renderAvatarHead(); }
+  $('pEdit').hidden = true; $('pView').hidden = false; drawProfile(); sfx.unlock(); sfx.tick();
+};
+// choose bedside books
+let favSlot = 0;
+$('pFavs').addEventListener('click', e => { const b = e.target.closest('[data-fav]'); if (!b) return; favSlot = +b.dataset.fav; $('fpQ').value = ''; drawFavPick(); $('favOv').hidden = false; });
+function drawFavPick() {
+  const q = fold($('fpQ').value), favs = profLoad().favs || [];
+  const list = books.filter(b => !q || fold(b.title + ' ' + (b.author || '')).includes(q)).sort((a, b) => (b.status === 'okundu') - (a.status === 'okundu') || coll.compare(a.title || '', b.title || '')).slice(0, 60);
+  $('fpList').innerHTML = (favs[favSlot] ? `<li class="item" data-pick=""><div class="cv" style="--c:var(--line)">–</div><div><div class="t">Bu yeri boşalt</div></div></li>` : '')
+    + list.map(b => `<li class="item${favs.includes(b.id) ? ' on' : ''}" data-pick="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div></li>`).join('')
+    || '<li class="muted" style="padding:12px">Kitap bulunamadı.</li>';
+  hydrate($('fpList'));
+}
+$('fpQ').addEventListener('input', drawFavPick);
+$('fpX').onclick = () => { $('favOv').hidden = true; };
+$('fpList').addEventListener('click', e => {
+  const li = e.target.closest('[data-pick]'); if (!li) return;
+  const p = profLoad(), favs = [...(p.favs || [])], id = li.dataset.pick;
+  const at = favs.indexOf(id); if (id && at >= 0) favs[at] = favs[favSlot] || '';
+  favs[favSlot] = id; p.favs = favs.slice(0, 3); profSave(p);
+  $('favOv').hidden = true; drawProfile(); sfx.unlock(); sfx.tick();
+});
+// a story-sized card to share
+async function profileCard() {
+  const W = 1080, H = 1920, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const x = c.getContext('2d'), css = getComputedStyle(document.documentElement), v = k => css.getPropertyValue(k).trim() || '#888';
+  const p = profLoad(), a = avLoad() || {...AV_DEFAULT}, s = profStats(), yr = YEAR(), goal = +(p.goals || {})[yr] || 0;
+  try { await Promise.all(['700 80px Fraunces', '800 40px Nunito', '600 40px Nunito'].map(f => document.fonts.load(f))); } catch (e) {}
+  const bg = x.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, v('--bg')); bg.addColorStop(1, v('--wall'));
+  x.fillStyle = bg; x.fillRect(0, 0, W, H);
+  x.fillStyle = v('--ink'); x.globalAlpha = .5;
+  for (let i = 0; i < 70; i++) { const sx = (i * 397) % W, sy = (i * 761) % 700; x.fillRect(sx, sy, i % 3 ? 3 : 5, i % 3 ? 3 : 5); }
+  x.globalAlpha = 1;
+  const round = (X, Y, w, h, r, fill) => { x.beginPath(); x.roundRect(X, Y, w, h, r); x.fillStyle = fill; x.fill(); };
+  // avatar
+  const img = new Image(); img.src = avURL(a, {}); await img.decode().catch(() => {});
+  x.imageSmoothingEnabled = false; x.drawImage(img, W / 2 - 120, 110, 240, 360);
+  x.textAlign = 'center'; x.fillStyle = v('--ink');
+  x.font = '700 92px Fraunces, serif'; x.fillText(a.name || 'Kitaplığım', W / 2, 580);
+  x.font = '800 40px Nunito, sans-serif'; x.fillStyle = v('--mute');
+  if (p.username) x.fillText('@' + p.username, W / 2, 640);
+  if (p.bio) { x.font = '600 38px Nunito, sans-serif'; x.fillStyle = v('--ink'); wrap(x, p.bio, W / 2, 712, 900, 50, 2); }
+  // numbers
+  const tiles = [[s.total, 'kitap'], [s.read, 'okundu'], [s.pages.toLocaleString('tr-TR'), 'sayfa']];
+  tiles.forEach(([n, l], i) => {
+    const X = 80 + i * 320;
+    round(X, 830, 280, 210, 40, v('--paper'));
+    x.fillStyle = v('--ink'); x.font = '700 84px Fraunces, serif'; x.fillText(String(n), X + 140, 950);
+    x.fillStyle = v('--mute'); x.font = '800 34px Nunito, sans-serif'; x.fillText(l, X + 140, 1005);
+  });
+  // year
+  round(80, 1080, 920, goal ? 220 : 150, 40, v('--paper'));
+  x.textAlign = 'left'; x.fillStyle = v('--ink'); x.font = '700 52px Fraunces, serif';
+  x.fillText(`${yr}'de ${s.thisYear} kitap bitirdim`, 130, 1160);
+  if (goal) {
+    round(130, 1200, 820, 34, 17, v('--field')); round(130, 1200, Math.max(34, 820 * Math.min(1, s.thisYear / goal)), 34, 17, v('--sage'));
+    x.fillStyle = v('--mute'); x.font = '800 32px Nunito, sans-serif'; x.fillText(`Hedef: ${goal} kitap`, 130, 1278);
+  }
+  // genres
+  let Y = goal ? 1380 : 1310;
+  const favs = (p.favs || []).map(id => books.find(b => b.id === id)).filter(Boolean);
+  const top = s.genres.slice(0, favs.length ? 3 : 5), max = top.length ? top[0][1] : 1;
+  if (top.length) {
+    x.fillStyle = v('--ink'); x.font = '700 46px Fraunces, serif'; x.fillText('En sevdiğim türler', 80, Y); Y += 30;
+    for (const [g, n] of top) {
+      round(80, Y, 920, 56, 28, v('--paper')); round(80, Y, Math.max(56, 920 * n / max), 56, 28, genreColor(g));
+      x.fillStyle = '#fff'; x.font = '800 30px Nunito, sans-serif'; x.fillText(g, 110, Y + 38);
+      x.textAlign = 'right'; x.fillStyle = v('--ink'); x.fillText(String(n), 970, Y + 38); x.textAlign = 'left'; Y += 70;
+    }
+  }
+  // bedside books
+  if (favs.length) {
+    Y += 40; x.fillStyle = v('--ink'); x.font = '700 46px Fraunces, serif'; x.fillText('Başucu kitaplarım', 80, Y);
+    x.font = '700 34px Nunito, sans-serif';
+    favs.forEach((b, i) => { x.fillStyle = v('--mute'); x.fillText('· ' + clip(x, b.title, 880), 100, Y + 56 + i * 48); });
+  }
+  x.textAlign = 'center'; x.fillStyle = v('--mute'); x.font = '700 40px Fraunces, serif'; x.fillText('Kitaplığım', W / 2, H - 40);
+  return new Promise(ok => c.toBlob(ok, 'image/png'));
+}
+function wrap(x, t, cx, y, w, lh, maxLines) { const words = String(t).split(/\s+/); let line = '', n = 0; for (const wd of words) { const tst = line ? line + ' ' + wd : wd; if (x.measureText(tst).width > w && line) { x.fillText(line, cx, y + n * lh); line = wd; if (++n >= maxLines) return; } else line = tst; } if (line) x.fillText(line, cx, y + n * lh); }
+function clip(x, t, w) { t = String(t); if (x.measureText(t).width <= w) return t; while (t.length > 1 && x.measureText(t + '…').width > w) t = t.slice(0, -1); return t + '…'; }
+$('pShare').onclick = async () => {
+  $('pShare').disabled = true; $('pShareMsg').textContent = 'Kart hazırlanıyor…';
+  try {
+    const blob = await profileCard(), file = new File([blob], `kitapligim-${YEAR()}.png`, {type: 'image/png'});
+    if (navigator.canShare && navigator.canShare({files: [file]})) { await navigator.share({files: [file], title: 'Kitaplığım'}); $('pShareMsg').textContent = ''; }
+    else { const u = URL.createObjectURL(blob), l = document.createElement('a'); l.href = u; l.download = file.name; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); $('pShareMsg').textContent = 'Kart indirildi.'; }
+  } catch (e) { $('pShareMsg').textContent = e && e.name === 'AbortError' ? '' : 'Kart paylaşılamadı.'; }
+  finally { $('pShare').disabled = false; }
+};
+
 // --- Accounts: sign-in with Firebase; each person's books live in their own corner of the database ---
 const FB_CFG = {apiKey: 'AIzaSyDIc6YSDyZ2TB4Rb93qHsce30AjSmjwBMQ', authDomain: 'kitapligim-80e6a.firebaseapp.com', projectId: 'kitapligim-80e6a', storageBucket: 'kitapligim-80e6a.firebasestorage.app', messagingSenderId: '127488815555', appId: '1:127488815555:web:219d14ef48ea3151eb0d76'};
 const LEGACY_B = 'kitapligim.books.v1', LEGACY_W = 'kitapligim.wish.v1';
@@ -2495,13 +2760,14 @@ let profTimer = 0;
 function profileDirty() {
   if (!me || !profileReady) return;
   clearTimeout(profTimer);
-  profTimer = setTimeout(() => { FB.setDoc(FB.doc(fbDb, 'users', me.uid), {avatar: avLoad() || null, theme: themeNow(), email: me.email || '', updatedAt: Date.now()}, {merge: true}).catch(() => {}); }, 800);
+  profTimer = setTimeout(() => { FB.setDoc(FB.doc(fbDb, 'users', me.uid), {avatar: avLoad() || null, theme: themeNow(), prof: profLoad(), email: me.email || '', updatedAt: Date.now()}, {merge: true}).catch(() => {}); }, 800);
 }
 async function loadProfile() {
   try {
     const s = await FB.getDoc(FB.doc(fbDb, 'users', me.uid)), p = s.exists() ? s.data() : {};
     if (p.avatar && typeof p.avatar === 'object') { avSave(p.avatar); renderAvatarHead(); }
     if (p.theme && THEMES.includes(p.theme) && p.theme !== themeNow()) setTheme(p.theme);
+    if (p.prof && typeof p.prof === 'object') try { localStorage.setItem(PROF_KEY, JSON.stringify(p.prof)); } catch (e) {}
     profileReady = true;
     if (!s.exists() || !p.avatar) profileDirty();
     const ack = localStorage.getItem('kitapligim.ack');
@@ -2604,7 +2870,7 @@ function leaveApp() {
 $('logout').onclick = async () => {
   const pending = books.some(x => synced.b[x.id] !== sortedJSON(x)) || wishes.some(x => synced.w[x.id] !== sortedJSON(x));
   if (pending && !confirmOnce('logout', 'Bazı değişiklikler henüz hesabına gönderilmedi. İnternete bağlanıp birkaç saniye bekle; yine de çıkmak için bir kez daha dokun.')) return;
-  try { localStorage.removeItem('kitapligim.avatar'); } catch (e) {}
+  try { localStorage.removeItem('kitapligim.avatar'); localStorage.removeItem(PROF_KEY); } catch (e) {}
   if (!pending) {
     for (const x of [...books, ...wishes]) if (x.coverLocal) { idb.del(x.id).catch(() => {}); forgetLocal(x.id); }
     try { localStorage.removeItem(KEY); localStorage.removeItem(WKEY); localStorage.removeItem(SYNKEY); } catch (e) {}
@@ -2632,7 +2898,7 @@ $('delAcct').onclick = async () => {
     const mine = [...books, ...wishes].filter(x => x.coverLocal).map(x => x.id);
     await FB.deleteUser(fbAuth.currentUser);
     for (const id of mine) { idb.del(id).catch(() => {}); forgetLocal(id); }
-    try { localStorage.removeItem(KEY); localStorage.removeItem(WKEY); localStorage.removeItem(SYNKEY); localStorage.removeItem('kitapligim.avatar'); } catch (e) {}
+    try { localStorage.removeItem(KEY); localStorage.removeItem(WKEY); localStorage.removeItem(SYNKEY); localStorage.removeItem('kitapligim.avatar'); localStorage.removeItem(PROF_KEY); } catch (e) {}
     $('acctMsg').textContent = '';
   } catch (er) { $('acctMsg').textContent = authErr(er); }
 };
@@ -2653,6 +2919,7 @@ async function startAuth() {
   });
 }
 
+f.elements.status.addEventListener('change', () => { if (f.elements.status.value === 'okundu' && !f.elements.finishedAt.value) f.elements.finishedAt.value = today(); });
 f.elements.genre.innerHTML = '<option value="">Belirtilmedi</option>' + GENRES.map(([g]) => `<option>${esc(g)}</option>`).join('');
 setTheme(themeNow()); drawSound(); renderAvatarHead(); startAuth();
 if (false) { try { localStorage.setItem('kitapligim.avAsked', '1'); } catch (e) {} setTimeout(() => { note('<span>Kendine küçük bir cadı avatarı oluşturmak ister misin?</span><button class="btn primary" type="button" id="avGo">Oluştur</button>', true); $('avGo').onclick = () => { $('note').hidden = true; openAv(); }; }, 2800); } setTimeout(syncShared, 1500);
