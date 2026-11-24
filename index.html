@@ -175,6 +175,8 @@ summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weig
 .scan p{margin:0;font-size:15px;font-weight:600}
 .seg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
 #f.wishing .nw{display:none}
+.findbtn{grid-column:1/-1;background:color-mix(in srgb,var(--sage) 30%,var(--paper))}.findbtn svg{color:var(--sageD,var(--ink))}
+.fitem{grid-template-columns:46px minmax(0,1fr) auto;cursor:pointer}.fitem .st{margin-top:4px;display:inline-block;font-size:11px;padding:1px 8px}.fadd{width:34px;height:34px;border-radius:50%;background:var(--rose);color:var(--on);display:grid;place-items:center;font:900 22px/1 "Nunito",sans-serif}
 .havebtn{background:color-mix(in srgb,var(--sky) 30%,var(--paper))}
 .havebtn svg{color:var(--lavD)}
 .wishbtn{background:color-mix(in srgb,var(--butter) 28%,var(--paper))}
@@ -328,7 +330,7 @@ body.selecting .tabbar{display:none}
 .owl.new{background:color-mix(in srgb,var(--butter) 10%,transparent);border-radius:14px}
 .note.toast{position:fixed;left:12px;right:12px;bottom:calc(72px + var(--sb));z-index:30;margin:0 auto;max-width:620px;box-shadow:0 10px 30px #0007;padding-right:44px;animation:up .25s ease-out}
 .note .nx{position:absolute;top:6px;right:6px;width:32px;height:32px;border:0;border-radius:50%;background:none;color:var(--mute);font-size:22px;line-height:1;cursor:pointer}
-.wadd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.wadd .btn{font-size:14px;padding:8px 6px;min-height:46px}
+.wadd{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.wadd .btn{font-size:14px;padding:8px 6px;min-height:46px}
 .witem{grid-template-columns:46px minmax(0,1fr) auto}
 .witem .n{color:var(--mute);font-size:13px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .witem .btn{min-height:40px;padding:6px 12px;font-size:14px}
@@ -639,6 +641,7 @@ a{color:var(--roseD)}
       <svg width="18" height="20" viewBox="0 0 18 20" aria-hidden="true"><path d="M2 1h12a2 2 0 0 1 2 2v16H4a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 6h6M6 10h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       Kapaktan ekle
     </button>
+    <button class="btn findbtn" id="findBtn" type="button"><svg width="22" height="20" viewBox="0 0 22 20" aria-hidden="true"><path d="M2 2h7a2 2 0 0 1 2 2v13a2 2 0 0 0-2-2H2z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="15.5" cy="11.5" r="4" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M18.5 14.5l2.5 2.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Adıyla ekle</button>
     <button class="btn havebtn" id="haveBtn" type="button"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M13 13l5 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Bende var mı?</button>
     <button class="btn wishbtn" id="wishBtn" type="button"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5l2.5 5.2 5.7.8-4.1 4 1 5.7L10 14.5l-5.1 2.7 1-5.7-4.1-4 5.7-.8z" fill="currentColor"/></svg>İstek listem<b id="wishN"></b></button>
     <button class="btn link" id="manual" type="button">Elle ekle</button>
@@ -693,7 +696,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 42</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 43</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -989,6 +992,14 @@ a{color:var(--roseD)}
   </div>
 </div>
 
+<div class="ov" id="findOv" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="fTitle">
+    <div class="sh-head"><h2 id="fTitle">Adıyla ekle</h2><button class="x" id="fX" type="button" aria-label="Kapat">×</button></div>
+    <input type="search" id="fQ" placeholder="Kitabın adı, istersen yazarı da" autocomplete="off" enterkeyhint="search">
+    <p class="muted" id="fHint" style="font-size:14px">Örneğin "Uğultulu Tepeler" ya da "Sefiller Victor Hugo". Bulduğun kitaba dokununca bilgileri ve kapağı doldurulur; kontrol edip kaydedersin.</p>
+    <div id="fRes" aria-live="polite"></div>
+  </div>
+</div>
 <div class="ov" id="haveOv" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="hTitle">
     <div class="sh-head"><h2 id="hTitle">Bende var mı?</h2><button class="x" id="hX" type="button" aria-label="Kapat">×</button></div>
@@ -1014,7 +1025,7 @@ a{color:var(--roseD)}
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="wTitle">
     <div class="sh-head"><h2 id="wTitle">İstek listem</h2><button class="x" id="wX" type="button" aria-label="Kapat">×</button></div>
     <p class="muted" style="margin-top:0">Kitapçıda gözüne kestirdiklerin, almak istediklerin. Aldığında "Aldım"a dokun; kitap yeni üye sahnesiyle kitaplığına geçer.</p>
-    <div class="wadd"><button class="btn primary" id="wScan" type="button">Barkod okut</button><button class="btn lav" id="wCover" type="button">Kapaktan</button><button class="btn" id="wManual" type="button">Elle ekle</button></div>
+    <div class="wadd"><button class="btn primary" id="wScan" type="button">Barkod okut</button><button class="btn lav" id="wCover" type="button">Kapaktan</button><button class="btn" id="wFind" type="button">Adıyla</button><button class="btn" id="wManual" type="button">Elle ekle</button></div>
     <ul id="wishList"></ul>
     <button class="btn" id="wShare" type="button" style="width:100%;margin-top:14px" hidden>Listeyi paylaş</button>
     <p class="muted" id="wMsg" style="margin:8px 0 0"></p>
@@ -1824,6 +1835,68 @@ f.elements.isbn.addEventListener('change', () => {
 
 $('scanBtn').onclick = () => { wishNext = false; checkNext = false; startScan(); };
 $('camClose').onclick = () => { wishNext = false; if (checkNext) { checkNext = false; stopScan(); openHave(); return; } stopScan(); };
+// --- Find a book by its name (Google Books + Open Library) and add it ---
+let findSeq = 0, findT = 0, findWish = false, findRes = [];
+function openFind(wish) {
+  findWish = !!wish; $('fTitle').textContent = wish ? 'İstek listesine adıyla ekle' : 'Adıyla ekle';
+  $('findOv').hidden = false; $('fQ').value = ''; $('fRes').innerHTML = ''; $('fHint').hidden = false;
+  setTimeout(() => $('fQ').focus(), 80);
+}
+const isbnOf = v => { const ids = v.industryIdentifiers || []; const a = ids.find(x => x.type === 'ISBN_13') || ids.find(x => x.type === 'ISBN_10'); return a ? isbn13(a.identifier) || '' : ''; };
+async function findBooks(q) {
+  const out = [], seen = new Set();
+  const add = b => { const k = b.isbn || fold(b.title) + '|' + fold(b.author).split(' ')[0]; if (!b.title || seen.has(k)) return; seen.add(k); out.push(b); };
+  const g = fetch('https://www.googleapis.com/books/v1/volumes?printType=books&maxResults=20&q=' + encodeURIComponent(q)).then(r => r.json()).then(j => {
+    for (const it of j.items || []) {
+      const v = it.volumeInfo || {}, cat = (v.categories || [])[0] || '', img = (v.imageLinks && (v.imageLinks.thumbnail || v.imageLinks.smallThumbnail)) || '';
+      add({title: v.title + (v.subtitle ? ': ' + v.subtitle : ''), author: (v.authors || []).join(', '), publisher: v.publisher || '', year: parseInt(v.publishedDate, 10) || '', pages: v.pageCount || '', genre: GENRE[cat.toLowerCase()] || '', isbn: isbnOf(v), cover: img.replace(/^http:/, 'https:').replace('&edge=curl', ''), src: 'Google Books'});
+    }
+  }).catch(() => {});
+  const o = fetch('https://openlibrary.org/search.json?limit=12&fields=title,author_name,first_publish_year,isbn,cover_i,number_of_pages_median,publisher&q=' + encodeURIComponent(q)).then(r => r.json()).then(j => j.docs || []).catch(() => []);
+  await g; const docs = await o;
+  for (const d of docs) add({title: d.title, author: (d.author_name || []).slice(0, 3).join(', '), publisher: (d.publisher || [])[0] || '', year: d.first_publish_year || '', pages: d.number_of_pages_median || '', genre: '', isbn: (d.isbn || []).map(isbn13).find(Boolean) || '', cover: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg` : '', src: 'Open Library'});
+  return out.slice(0, 24);
+}
+function haveIt(b) {
+  const t = fold(b.title);
+  return [...books, ...wishes].find(x => (b.isbn && x.isbn && isbn13(x.isbn) === b.isbn) || (fold(x.title) === t && (!b.author || fold(x.author).split(' ')[0] === fold(b.author).split(' ')[0])));
+}
+async function runFind() {
+  const q = $('fQ').value.trim(), seq = ++findSeq, box = $('fRes');
+  if (q.length < 2) { box.innerHTML = ''; $('fHint').hidden = false; return; }
+  $('fHint').hidden = true;
+  if (!navigator.onLine) { box.innerHTML = '<p class="muted">İnternet yok. Bağlanınca tekrar dene ya da elle ekle.</p>'; return; }
+  box.innerHTML = '<p class="muted">Aranıyor…</p>';
+  const list = await findBooks(q);
+  if (seq !== findSeq) return;
+  findRes = list;
+  box.innerHTML = (list.length ? `<ul class="hlist">${list.map((b, i) => {
+    const h = haveIt(b), c = colorOf(b);
+    return `<li class="item fitem" data-i="${i}">${okUrl(b.cover) ? `<img class="cv" style="--c:${c}" src="${esc(b.cover)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'cv',textContent:'${esc(initial(b.title))}'}))">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || 'Yazar bilinmiyor')}</div><div class="a muted">${esc([b.publisher, b.year].filter(Boolean).join(' · '))}</div>${h ? `<span class="st" style="--c:var(--sage)">${wishes.includes(h) ? 'İstek listende' : 'Kitaplığında var'}</span>` : ''}</div><span class="fadd" aria-hidden="true">+</span></li>`;
+  }).join('')}</ul>` : '<p class="muted">Bu adla bir kitap bulunamadı. Yazarın adını da ekleyerek dene.</p>')
+    + '<button class="btn link" type="button" id="fManual" style="width:100%;margin-top:6px">Bulamadın mı? Elle ekle</button>';
+}
+function pickFound(b) {
+  $('findOv').hidden = true;
+  wishNext = findWish; openSheet(null, false);
+  for (const k of ['title', 'author', 'publisher', 'year', 'pages']) if (b[k]) f.elements[k].value = String(b[k]).slice(0, 300);
+  if (b.genre) f.elements.genre.value = normGenre(b.genre);
+  if (b.isbn) { f.elements.isbn.value = b.isbn; checkDup(b.isbn); }
+  if (okUrl(b.cover)) addTile({key: b.cover, kind: 'web', url: okUrl(b.cover)}, true);
+  searchCovers(false);
+  $('scanBox').hidden = false; $('scanMsg').textContent = `Bilgiler ${b.src}'tan geldi. Kontrol edip kaydet.`;
+  $('shTitle').textContent = findWish ? 'İstek listesine ekle' : 'Adıyla ekle';
+}
+$('findBtn').onclick = () => openFind(false);
+$('wFind').onclick = () => { $('wishOv').hidden = true; openFind(true); };
+$('fX').onclick = () => { $('findOv').hidden = true; };
+$('findOv').addEventListener('click', e => { if (e.target === $('findOv')) $('findOv').hidden = true; });
+$('fQ').addEventListener('input', () => { clearTimeout(findT); findT = setTimeout(runFind, 450); });
+$('fQ').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); clearTimeout(findT); runFind(); $('fQ').blur(); } });
+$('fRes').addEventListener('click', e => {
+  if (e.target.closest('#fManual')) { $('findOv').hidden = true; wishNext = findWish; openSheet(null, false); f.elements.title.value = $('fQ').value.trim(); setTimeout(() => f.elements.author.focus(), 60); return; }
+  const li = e.target.closest('[data-i]'); if (li) pickFound(findRes[+li.dataset.i]);
+});
 $('manual').onclick = () => { wishNext = false; openSheet(null, false); setTimeout(() => f.elements.title.focus(), 60); };
 $('x').onclick = closeSheet;
 $('ov').addEventListener('click', e => { if (e.target === $('ov')) closeSheet(); });
