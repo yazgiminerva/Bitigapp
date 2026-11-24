@@ -16,6 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <script>try{if(localStorage.getItem("kitapligim.themeV")!=="2"){localStorage.setItem("kitapligim.theme","antique");localStorage.setItem("kitapligim.themeV","2")}document.documentElement.dataset.theme=localStorage.getItem("kitapligim.theme")||"antique"}catch(e){document.documentElement.dataset.theme="antique"}</script>
+<script id="fbjs" src="firebase.js" async></script>
 <style>
 /* VOICE: warm, soft and a little magical; a cosy reading room in pastel
    IDEA: a secret bookcase that swings open onto your own sunny library
@@ -167,6 +168,25 @@ summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weig
 .wishbtn svg{color:var(--butterD)}
 .wishbtn b{min-width:24px;height:24px;padding:0 7px;border-radius:99px;background:var(--butter);color:var(--on);font:900 13px/24px "Nunito",sans-serif}
 .wishbtn b:empty{display:none}
+/* sign-in screen */
+.auth{position:fixed;inset:0;z-index:55;overflow-y:auto;background:var(--bodyBg,var(--bg));padding:calc(var(--st) + 24px) 16px calc(var(--sb) + 24px);display:flex;justify-content:center;align-items:flex-start}
+.authbox{width:min(440px,100%);background:var(--paper);border-radius:26px;padding:20px 18px 18px;box-shadow:0 14px 34px var(--shadow);text-align:center;margin:auto 0}
+:root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) .authbox{background:linear-gradient(#ffffff06,#0000),var(--card);box-shadow:inset 0 0 0 1px var(--cardE),0 14px 34px #0009}
+.authbox h1{font-size:40px}
+.authav{width:64px;height:96px;image-rendering:pixelated;display:block;margin:0 auto 6px;animation:avbob 2.4s ease-in-out infinite}
+#authF{text-align:left;display:grid;gap:10px;margin-top:14px}
+#verifyBox{text-align:left;margin-top:12px}
+.seg2{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:var(--bg);padding:4px;border-radius:14px;margin-top:14px}
+.seg2 button{border:0;border-radius:11px;background:none;color:var(--mute);font:800 15px "Nunito",sans-serif;min-height:42px;cursor:pointer}
+.seg2 button[aria-pressed=true]{background:var(--field);color:var(--ink);box-shadow:0 2px 0 var(--line)}
+#typePick>span{font-size:13px;font-weight:800;color:var(--mute)}
+.tpick{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:6px}
+.tpick button{border:3px solid var(--line);background:var(--field);border-radius:16px;padding:8px 4px 6px;color:var(--ink);font:800 14px "Nunito",sans-serif;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
+.tpick button[aria-pressed=true]{border-color:var(--rose);background:var(--segOn)}
+.tpick img{width:40px;height:60px;image-rendering:pixelated}
+.amsg{margin:0;color:#e88594;font-weight:700;font-size:14px}
+.amsg:empty{display:none}
+.authbox details{font-size:14px;padding:2px 12px}
 .wadd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.wadd .btn{font-size:14px;padding:8px 6px;min-height:46px}
 .witem{grid-template-columns:46px minmax(0,1fr) auto}
 .witem .n{color:var(--mute);font-size:13px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -474,6 +494,13 @@ a{color:var(--roseD)}
     <div class="chips" id="gchips" role="group" aria-label="Türe göre süz"></div>
     <ul id="list"></ul>
     <div class="more">
+      <details id="acctBox">
+        <summary>Hesabım</summary>
+        <p style="margin:0 0 4px"><b id="acctMail"></b></p>
+        <p class="muted" id="syncInfo" style="margin:0 0 10px"></p>
+        <div class="bk"><button class="btn" id="pwReset" type="button">Şifremi değiştir</button><button class="btn" id="logout" type="button">Çıkış yap</button><button class="btn danger" id="delAcct" type="button">Hesabımı ve kitaplarımı sil</button></div>
+        <p class="muted" id="acctMsg"></p>
+      </details>
       <details id="bkBox">
         <summary>Yedekleme</summary>
         <div class="bk">
@@ -497,7 +524,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 19</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 20</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -593,6 +620,34 @@ a{color:var(--roseD)}
   </div>
 </div>
 
+<div class="auth" id="auth" hidden>
+  <div class="authbox">
+    <img class="authav" id="authAv" alt="">
+    <h1>Kitaplığım</h1>
+    <p class="muted" id="authSub" style="margin:4px 0 0">Kitaplığına girmek için giriş yap.</p>
+    <div id="authForm">
+      <div class="seg2" id="authTabs" role="group"><button type="button" data-t="in" aria-pressed="true">Giriş yap</button><button type="button" data-t="up" aria-pressed="false">Kayıt ol</button></div>
+      <form id="authF" autocomplete="on" novalidate>
+        <div id="typePick" hidden><span>Kim olarak geliyorsun?</span><div class="tpick" id="tpick"></div></div>
+        <label class="f">E-posta<input name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" required></label>
+        <label class="f">Şifre<input name="pw" type="password" autocomplete="current-password" required></label>
+        <label class="f" id="pw2Box" hidden>Şifre tekrar (en az 8 karakter)<input name="pw2" type="password" autocomplete="new-password"></label>
+        <details id="privacy" hidden><summary>Gizlilik notu</summary><p style="margin-top:0">Hesabını açmak için e-posta adresin ve şifren Google Firebase üzerinden işlenir; şifreni biz göremeyiz. Kitapların, notların, istek listen ve avatarın hesabına bağlı olarak Firebase veritabanında (Frankfurt, Almanya) saklanır ve onları yalnızca sen görebilirsin. Barkodla eklediğin kitapların yalnızca künye bilgileri (başlık, yazar, yayınevi gibi) herkesin yararlandığı ortak listeye eklenir ve seninle ilişkilendirilmez. Hesabını Ayarlar'daki "Hesabım" bölümünden istediğin zaman silebilirsin; silince hesaptaki bütün kitapların da silinir.</p></details>
+        <label class="share" id="kvkkBox" hidden><input type="checkbox" id="kvkk"><span>Gizlilik notunu okudum; e-postamın ve kitaplarımın bu şekilde saklanmasını kabul ediyorum.</span></label>
+        <button class="btn primary" id="authGo" type="submit">Giriş yap</button>
+        <button class="btn link" id="forgot" type="button">Şifremi unuttum</button>
+        <p class="amsg" id="authMsg" role="alert"></p>
+      </form>
+    </div>
+    <div id="verifyBox" hidden>
+      <p>Doğrulama bağlantısını <b id="vEmail"></b> adresine gönderdik. Maildeki bağlantıya dokun, sonra buraya dönüp "Doğruladım"a bas.</p>
+      <p class="muted">Mail birkaç dakika içinde gelmezse gereksiz/spam klasörüne bak.</p>
+      <div class="bk"><button class="btn primary" id="vDone" type="button">Doğruladım</button><button class="btn" id="vAgain" type="button">Bağlantıyı tekrar gönder</button><button class="btn link" id="vOut" type="button">Başka bir hesapla gir</button></div>
+      <p class="amsg" id="vMsg" role="alert"></p>
+    </div>
+  </div>
+</div>
+
 <div class="ov" id="wishOv" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="wTitle">
     <div class="sh-head"><h2 id="wTitle">İstek listem</h2><button class="x" id="wX" type="button" aria-label="Kapat">×</button></div>
@@ -670,7 +725,8 @@ a{color:var(--roseD)}
 {
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const KEY = 'kitapligim.books.v1', BKEY = 'kitapligim.lastBackup';
+let KEY = 'kitapligim.books.v1';
+const BKEY = 'kitapligim.lastBackup';
 const THEMES = ['antique', 'cadi', 'buyucu', 'dark', 'light'];
 const RICH = t => t === 'antique' || t === 'cadi' || t === 'buyucu';
 const PALS = {cadi: ['#5e2f7a','#3f5a3a','#7a2f4a','#2d3b5c','#6a4a8a','#4a2c3a','#2e4f4c','#8a5a9a','#3a2a5a'], buyucu: ['#26355e','#7d5a24','#2e4f4c','#4a2f6a','#2d3b5c','#6f2c2a','#3f5a7a','#5c4a24','#1f3a4a'], antique: ['#6f2c2a','#2f4a35','#2d3b5c','#7d5a24','#4e2f4a','#5c3a24','#2e4f4c','#6a3b2c','#3f4a28'], light: ['#f3b9c0','#cfe3cf','#dcd3f3','#f7e3a3','#cfe2f3','#f8d2bd','#e9c6dc','#c6e3df','#f1d1a6'], dark: ['#b9858e','#8fa891','#9a8fbf','#c7aa64','#859fb8','#c08f78','#a7869f','#83a6a1','#b99566']};
@@ -711,7 +767,7 @@ const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let gfilter = null;
 let books = [], filter = 'all', editId = null, rating = 0, fromScan = false, acq = 'existing';
 // wish list: books you want, kept apart from the ones you own
-const WKEY = 'kitapligim.wish.v1';
+let WKEY = 'kitapligim.wish.v1';
 let wishes = [], wishNext = false, convertId = null;
 
 function load() {
@@ -719,11 +775,11 @@ function load() {
   try { wishes = JSON.parse(localStorage.getItem(WKEY) || '[]'); if (!Array.isArray(wishes)) wishes = []; } catch (e) { wishes = []; }
 }
 function persistWish() {
-  try { localStorage.setItem(WKEY, JSON.stringify(wishes)); return true; }
+  try { localStorage.setItem(WKEY, JSON.stringify(wishes)); scheduleSync(); return true; }
   catch (e) { note('Kaydedilemedi: telefonda yer kalmamış olabilir.', true); return false; }
 }
 function persist() {
-  try { localStorage.setItem(KEY, JSON.stringify(books)); return true; }
+  try { localStorage.setItem(KEY, JSON.stringify(books)); scheduleSync(); return true; }
   catch (e) { note('Kaydedilemedi: telefonda yer kalmamış olabilir. Hemen yedek al.', true); return false; }
 }
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
@@ -862,13 +918,14 @@ function render() {
   const lb = localStorage.getItem(BKEY);
   const days = lb ? Math.floor((Date.now() - +lb) / 864e5) : null;
   $('keyInfo').textContent = getKey() ? 'Kapak okuma açık. Anahtarı değiştirebilir ya da silebilirsin.' : 'Kapak okuma henüz kurulmadı. "Kapaktan ekle"ye dokunduğunda kurulum adımları açılır.';
-  $('bkInfo').textContent = 'Kitapların bu telefonda saklanıyor; barkodlu kitapların yalnızca künye bilgileri (başlık, yazar, yayınevi gibi) herkesin yararlanacağı ortak listeye de eklenir. Notların, puanların ve hatıraların gönderilmez. Telefon değişirse ya da Safari verileri silinirse kaybolmasın diye ara ara yedek al. ' + (lb ? `Son yedek: ${days === 0 ? 'bugün' : days + ' gün önce'}.` : 'Henüz yedek alınmadı.');
+  $('bkInfo').textContent = 'Kitapların hem bu telefonda hem hesabında saklanıyor; barkodlu kitapların yalnızca künye bilgileri (başlık, yazar, yayınevi gibi) herkesin yararlanacağı ortak listeye de eklenir. Notların, puanların ve hatıraların gönderilmez. İstersen ara ara ayrıca bir yedek dosyası da alabilirsin. ' + (lb ? `Son yedek: ${days === 0 ? 'bugün' : days + ' gün önce'}.` : 'Henüz yedek alınmadı.');
   if (books.length >= 5 && (days === null || days > 30) && !sessionStorage.getItem('bkNag')) { sessionStorage.setItem('bkNag', 1); note('<span>Uzun zamandır yedek almadın.</span><button class="btn" type="button" id="goBk">Yedekle</button>', true); $('goBk').onclick = () => { goPage(0); $('bkBox').open = true; $('bkBox').scrollIntoView({behavior: 'smooth'}); $('note').hidden = true; }; }
 }
 
 function setTheme(t) {
   if (!THEMES.includes(t)) t = 'antique';
   document.documentElement.dataset.theme = t; try { localStorage.setItem('kitapligim.theme', t); } catch (e) {}
+  profileDirty();
   PAL = PALS[t];
   document.querySelector('meta[name=theme-color]').content = {light: '#fbf5ef', dark: '#211b22', cadi: '#160e20', buyucu: '#0d1222'}[t] || '#17100c';
   $('topdeco').innerHTML = TOPDECO[t] || '';
@@ -1240,7 +1297,7 @@ const AV = {
 const AV_DEFAULT = {type: 'cadi', skin: 1, style: 'dalgali', hairColor: 2, freckles: true, hood: false, tip: 'r', hat: true, cloak: 0, name: ''};
 const AV_W = 24, AV_H = 36, OY = 4;
 function avLoad() { try { const a = JSON.parse(localStorage.getItem(AV_KEY) || 'null'); return a && typeof a === 'object' ? {...AV_DEFAULT, ...a} : null; } catch (e) { return null; } }
-function avSave(a) { try { localStorage.setItem(AV_KEY, JSON.stringify(a)); } catch (e) {} }
+function avSave(a) { try { localStorage.setItem(AV_KEY, JSON.stringify(a)); } catch (e) {} profileDirty(); }
 const shade = (hex, k) => { const n = parseInt(hex.slice(1), 16); const f = c => Math.max(0, Math.min(255, Math.round(c * k))); return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(f).map(v => v.toString(16).padStart(2, '0')).join(''); };
 
 // draws the avatar into a pixel buffer; frame: {blink, wave, step}
@@ -1988,9 +2045,271 @@ async function syncShared() {
 }
 window.addEventListener('online', syncShared);
 
+// --- Accounts: sign-in with Firebase; each person's books live in their own corner of the database ---
+const FB_CFG = {apiKey: 'AIzaSyDIc6YSDyZ2TB4Rb93qHsce30AjSmjwBMQ', authDomain: 'kitapligim-80e6a.firebaseapp.com', projectId: 'kitapligim-80e6a', storageBucket: 'kitapligim-80e6a.firebasestorage.app', messagingSenderId: '127488815555', appId: '1:127488815555:web:219d14ef48ea3151eb0d76'};
+const LEGACY_B = 'kitapligim.books.v1', LEGACY_W = 'kitapligim.wish.v1';
+let fbAuth = null, fbDb = null, me = null, unsubs = [], SYNKEY = '', synced = {b: {}, w: {}, c: {}}, remote = {b: null, w: null}, authMode = 'in', pickType = 'cadi', profileReady = false;
+const coverBusy = new Set(), coverTried = new Set();
+const fbReady = new Promise(ok => { if (window.FB) ok(); else { const s = $('fbjs'); s.addEventListener('load', ok); s.addEventListener('error', () => ok()); } });
+const AUTH_ERR = {
+  'auth/invalid-credential': 'E-posta ya da şifre hatalı.', 'auth/wrong-password': 'E-posta ya da şifre hatalı.', 'auth/user-not-found': 'Bu e-postayla bir hesap yok. Kayıt olabilirsin.',
+  'auth/invalid-email': 'E-posta adresi geçerli görünmüyor.', 'auth/email-already-in-use': 'Bu e-postayla zaten bir hesap var. Giriş yapmayı dene.',
+  'auth/weak-password': 'Şifre çok kısa; en az 8 karakter olsun.', 'auth/password-does-not-meet-requirements': 'Şifre yeterince güçlü değil; en az 8 karakter olsun.',
+  'auth/too-many-requests': 'Çok fazla deneme oldu. Birkaç dakika bekleyip tekrar dene.', 'auth/network-request-failed': 'İnternete bağlanılamadı. Bağlantını kontrol edip tekrar dene.',
+  'auth/missing-password': 'Şifreni yaz.', 'auth/requires-recent-login': 'Güvenlik için çıkış yapıp tekrar giriş yap, sonra yeniden dene.',
+  'auth/api-key-not-valid.-please-pass-a-valid-api-key.': 'Uygulama ayarında bir sorun var (API anahtarı).',
+};
+const authErr = e => AUTH_ERR[e && e.code] || 'Bir şeyler ters gitti' + (e && e.code ? ` (${e.code.replace('auth/', '')})` : '') + '. Tekrar dene.';
+const sortedJSON = o => JSON.stringify(o, Object.keys(o).sort());
+const bookRef = (kind, id) => FB.doc(fbDb, 'users', me.uid, kind === 'b' ? 'books' : 'wishes', id);
+const saveSynced = () => { try { localStorage.setItem(SYNKEY, JSON.stringify(synced)); } catch (e) {} };
+
+function setUserKeys(uid) {
+  KEY = 'kitapligim.books.v1:' + uid; WKEY = 'kitapligim.wish.v1:' + uid; SYNKEY = 'kitapligim.sync:' + uid;
+  try { synced = {b: {}, w: {}, c: {}, ...JSON.parse(localStorage.getItem(SYNKEY) || '{}')}; } catch (e) { synced = {b: {}, w: {}, c: {}}; }
+  // books saved on this phone before accounts existed move into the first account that signs in here
+  try {
+    if (!localStorage.getItem('kitapligim.legacyOwner') && (localStorage.getItem(LEGACY_B) || localStorage.getItem(LEGACY_W))) {
+      const merge = (from, to) => { const a = JSON.parse(localStorage.getItem(from) || '[]'), b = JSON.parse(localStorage.getItem(to) || '[]'); const ids = new Set(b.map(x => x.id)); localStorage.setItem(to, JSON.stringify([...b, ...a.filter(x => x && !ids.has(x.id))])); };
+      merge(LEGACY_B, KEY); merge(LEGACY_W, WKEY);
+      localStorage.setItem('kitapligim.legacyOwner', uid); localStorage.removeItem(LEGACY_B); localStorage.removeItem(LEGACY_W);
+    }
+  } catch (e) {}
+}
+
+// Two-way merge: whatever changed since the last agreed copy wins; if both sides changed, the newer edit wins.
+function reconcile(kind) {
+  if (!me || !remote[kind]) return;
+  const S = synced[kind], R = remote[kind], L = new Map((kind === 'b' ? books : wishes).map(x => [x.id, x]));
+  const ids = new Set([...L.keys(), ...R.keys(), ...Object.keys(S)]);
+  const ops = []; let localDirty = false;
+  for (const id of ids) {
+    const l = L.get(id), r = R.get(id), ln = l ? sortedJSON(l) : undefined, rn = r ? sortedJSON(r) : undefined, sn = S[id];
+    if (ln === rn) { if (ln === undefined) delete S[id]; else S[id] = ln; continue; }
+    const lc = ln !== sn, rc = rn !== sn;
+    const useLocal = lc && !rc ? true : rc && !lc ? false : l && r ? (l.updatedAt || 0) >= (r.updatedAt || 0) : !!l;
+    if (useLocal) {
+      if (l) { if (lc) { l.updatedAt = Date.now(); localDirty = true; } const n = sortedJSON(l); ops.push(['set', id, JSON.parse(n)]); S[id] = n; R.set(id, JSON.parse(n)); }
+      else { ops.push(['del', id]); delete S[id]; R.delete(id); }
+    } else {
+      if (r) { L.set(id, r); S[id] = rn; } else { L.delete(id); delete S[id]; }
+      localDirty = true;
+    }
+  }
+  if (localDirty) {
+    const arr = [...L.values()];
+    if (kind === 'b') books = arr; else wishes = arr;
+    try { localStorage.setItem(kind === 'b' ? KEY : WKEY, JSON.stringify(arr)); } catch (e) {}
+    render();
+  }
+  saveSynced();
+  if (ops.length) pushOps(kind, ops);
+  syncCovers();
+}
+async function pushOps(kind, ops) {
+  try {
+    for (let i = 0; i < ops.length; i += 400) {
+      const batch = FB.writeBatch(fbDb);
+      for (const [op, id, data] of ops.slice(i, i + 400)) {
+        if (op === 'set') batch.set(bookRef(kind, id), data);
+        else { batch.delete(bookRef(kind, id)); if (!books.some(x => x.id === id) && !wishes.some(x => x.id === id)) { batch.delete(FB.doc(fbDb, 'users', me.uid, 'covers', id)); delete synced.c[id]; } }
+      }
+      await batch.commit();
+    }
+    syncState('ok');
+  } catch (e) {
+    // forget the optimistic agreement so the next pass retries
+    for (const [, id] of ops) delete synced[kind][id];
+    saveSynced(); syncState('err');
+  }
+}
+// own cover photos travel as small base64 documents next to the books
+async function syncCovers() {
+  if (!me) return;
+  for (const x of [...books, ...wishes]) {
+    if (!x.coverLocal || synced.c[x.id] || coverBusy.has(x.id)) continue;
+    coverBusy.add(x.id);
+    (async () => {
+      try {
+        const blob = await idb.get(x.id);
+        if (blob) {
+          const data = await new Promise(ok => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1] || ''); r.readAsDataURL(blob); });
+          if (data.length < 950000) { await FB.setDoc(FB.doc(fbDb, 'users', me.uid, 'covers', x.id), {mime: blob.type || 'image/jpeg', data}); synced.c[x.id] = 1; saveSynced(); }
+        } else if (!coverTried.has(x.id)) {
+          coverTried.add(x.id);
+          const s = await FB.getDoc(FB.doc(fbDb, 'users', me.uid, 'covers', x.id));
+          if (s.exists()) { const d = s.data(), bin = atob(d.data); const u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i); await idbPutRaw(x.id, new Blob([u8], {type: d.mime || 'image/jpeg'})); synced.c[x.id] = 1; saveSynced(); forgetLocal(x.id); render(); }
+        }
+      } catch (e) {} finally { coverBusy.delete(x.id); }
+    })();
+  }
+}
+const idbPutRaw = idb.put;
+idb.put = (k, v) => idbPutRaw(k, v).then(r => { delete synced.c[k]; coverTried.delete(k); scheduleSync(); return r; });
+let syncTimer = 0;
+function scheduleSync() { if (!me) return; clearTimeout(syncTimer); syncTimer = setTimeout(() => { reconcile('b'); reconcile('w'); }, 500); }
+function syncState(s) {
+  const el = $('syncInfo'); if (!el) return;
+  el.textContent = s === 'ok' ? 'Kitapların hesabına kaydedildi.' : s === 'off' ? 'Şu an çevrimdışısın; kitapların telefonda duruyor, internete bağlanınca hesabına gönderilecek.' : s === 'wait' ? 'Hesabınla eşitleniyor…' : 'Hesaba gönderilemedi; biraz sonra yeniden denenecek.';
+}
+window.addEventListener('online', () => { syncState('wait'); scheduleSync(); });
+window.addEventListener('offline', () => syncState('off'));
+
+// profile: avatar and theme follow the account to other devices
+let profTimer = 0;
+function profileDirty() {
+  if (!me || !profileReady) return;
+  clearTimeout(profTimer);
+  profTimer = setTimeout(() => { FB.setDoc(FB.doc(fbDb, 'users', me.uid), {avatar: avLoad() || null, theme: themeNow(), email: me.email || '', updatedAt: Date.now()}, {merge: true}).catch(() => {}); }, 800);
+}
+async function loadProfile() {
+  try {
+    const s = await FB.getDoc(FB.doc(fbDb, 'users', me.uid)), p = s.exists() ? s.data() : {};
+    if (p.avatar && typeof p.avatar === 'object') { avSave(p.avatar); renderAvatarHead(); }
+    if (p.theme && THEMES.includes(p.theme) && p.theme !== themeNow()) setTheme(p.theme);
+    profileReady = true;
+    if (!s.exists() || !p.avatar) profileDirty();
+  } catch (e) { profileReady = true; }
+  if (!avLoad()) {
+    let t = 'cadi'; try { t = localStorage.getItem('kitapligim.pendingType') || 'cadi'; } catch (e) {}
+    setTimeout(() => { avDraft = {...AV_DEFAULT, type: t}; $('avName').value = ''; drawAvUI(); $('avOv').hidden = false; }, 500);
+  }
+}
+
+// --- the sign-in screen ---
+function drawAuth() {
+  const up = authMode === 'up';
+  for (const b of $('authTabs').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.t === authMode));
+  $('typePick').hidden = !up; $('pw2Box').hidden = !up; $('kvkkBox').hidden = !up; $('privacy').hidden = !up; $('forgot').hidden = up;
+  $('authGo').textContent = up ? 'Kayıt ol' : 'Giriş yap';
+  $('authF').elements.pw.autocomplete = up ? 'new-password' : 'current-password';
+  $('authSub').textContent = up ? 'Bir hesap oluştur; kitapların her cihazda seninle olsun.' : 'Kitaplığına girmek için giriş yap.';
+  $('tpick').innerHTML = AV.types.map(([t, l]) => `<button type="button" data-t="${t}" aria-pressed="${t === pickType}"><img src="${avURL({...AV_DEFAULT, type: t, hood: t === 'cadi'}, {})}" alt="">${l}</button>`).join('');
+  $('authAv').src = avURL(up ? {...AV_DEFAULT, type: pickType, hood: pickType === 'cadi'} : avLoad() || {...AV_DEFAULT, hood: true}, {});
+  $('authMsg').textContent = '';
+}
+function showAuth(mode) {
+  authMode = mode || authMode; $('verifyBox').hidden = true; $('authForm').hidden = false; $('auth').hidden = false; drawAuth();
+}
+function showVerify(user) {
+  $('auth').hidden = false; $('authForm').hidden = true; $('verifyBox').hidden = false;
+  $('vEmail').textContent = user.email || ''; $('vMsg').textContent = '';
+  $('authSub').textContent = 'Bir adım kaldı.';
+}
+$('authTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { authMode = b.dataset.t; drawAuth(); } });
+$('tpick').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { pickType = b.dataset.t; drawAuth(); sfx.unlock(); sfx.tick(); } });
+$('authF').addEventListener('submit', async e => {
+  e.preventDefault();
+  const F = $('authF').elements, email = F.email.value.trim(), pw = F.pw.value, msg = $('authMsg');
+  msg.textContent = '';
+  if (authMode === 'up') {
+    if (pw.length < 8) { msg.textContent = 'Şifre en az 8 karakter olsun.'; return; }
+    if (pw !== F.pw2.value) { msg.textContent = 'Şifreler birbirini tutmuyor.'; return; }
+    if (!$('kvkk').checked) { msg.textContent = 'Devam etmek için gizlilik notunu onayla.'; return; }
+  }
+  if (!fbAuth) { msg.textContent = 'Giriş servisine ulaşılamadı. İnternetini kontrol edip sayfayı yenile.'; return; }
+  $('authGo').disabled = true;
+  try {
+    if (authMode === 'up') {
+      try { localStorage.setItem('kitapligim.pendingType', pickType); } catch (x) {}
+      const cred = await FB.createUserWithEmailAndPassword(fbAuth, email, pw);
+      await FB.sendEmailVerification(cred.user, {url: location.origin + location.pathname}).catch(() => {});
+      showVerify(cred.user);
+    } else {
+      await FB.signInWithEmailAndPassword(fbAuth, email, pw);
+    }
+    F.pw.value = ''; F.pw2.value = '';
+  } catch (er) { msg.textContent = authErr(er); }
+  finally { $('authGo').disabled = false; }
+});
+$('forgot').onclick = async () => {
+  const email = $('authF').elements.email.value.trim(), msg = $('authMsg');
+  if (!email) { msg.textContent = 'Önce e-posta adresini yaz, sonra "Şifremi unuttum"a dokun.'; return; }
+  try { await FB.sendPasswordResetEmail(fbAuth, email); msg.textContent = 'Şifre yenileme bağlantısı gönderildi (bu e-postayla bir hesap varsa). Gereksiz/spam klasörüne de bak.'; }
+  catch (er) { msg.textContent = authErr(er); }
+};
+$('vDone').onclick = async () => {
+  const u = fbAuth && fbAuth.currentUser; if (!u) return showAuth('in');
+  $('vMsg').textContent = 'Kontrol ediliyor…';
+  try { await FB.reload(u); if (u.emailVerified) { await u.getIdToken(true); enterApp(u); } else $('vMsg').textContent = 'Henüz doğrulanmamış görünüyor. Maildeki bağlantıya dokundun mu? Gereksiz/spam klasörüne de bak.'; }
+  catch (er) { $('vMsg').textContent = authErr(er); }
+};
+$('vAgain').onclick = async () => {
+  const u = fbAuth && fbAuth.currentUser; if (!u) return;
+  try { await FB.sendEmailVerification(u, {url: location.origin + location.pathname}); $('vMsg').textContent = 'Yeni bağlantı gönderildi.'; } catch (er) { $('vMsg').textContent = authErr(er); }
+};
+$('vOut').onclick = () => { FB.signOut(fbAuth).catch(() => {}); };
+
+function enterApp(user) {
+  if (me && me.uid === user.uid) { $('auth').hidden = true; return; }
+  me = user; profileReady = false; remote = {b: null, w: null};
+  setUserKeys(user.uid); load(); render();
+  $('auth').hidden = true; $('acctMail').textContent = user.email || '';
+  syncState(navigator.onLine ? 'wait' : 'off');
+  loadProfile();
+  const watch = (kind, name) => FB.onSnapshot(FB.collection(fbDb, 'users', user.uid, name), snap => {
+    if (snap.metadata && snap.metadata.fromCache) return;
+    remote[kind] = new Map(snap.docs.map(d => [d.id, d.data()]));
+    reconcile(kind);
+    if (remote.b && remote.w) syncState('ok');
+  }, () => syncState('err'));
+  unsubs = [watch('b', 'books'), watch('w', 'wishes')];
+}
+function leaveApp() {
+  for (const u of unsubs) try { u(); } catch (e) {}
+  unsubs = []; me = null; remote = {b: null, w: null}; profileReady = false;
+  books = []; wishes = []; render();
+}
+$('logout').onclick = async () => {
+  const pending = books.some(x => synced.b[x.id] !== sortedJSON(x)) || wishes.some(x => synced.w[x.id] !== sortedJSON(x));
+  if (pending && !confirmOnce('logout', 'Bazı değişiklikler henüz hesabına gönderilmedi. İnternete bağlanıp birkaç saniye bekle; yine de çıkmak için bir kez daha dokun.')) return;
+  try { localStorage.removeItem('kitapligim.avatar'); } catch (e) {}
+  if (!pending) try { localStorage.removeItem(KEY); localStorage.removeItem(WKEY); localStorage.removeItem(SYNKEY); } catch (e) {}
+  await FB.signOut(fbAuth).catch(() => {});
+  renderAvatarHead(); goPage(0);
+};
+const confirmed = new Set();
+function confirmOnce(k, text) { if (confirmed.has(k)) return true; confirmed.add(k); $('acctMsg').textContent = text; setTimeout(() => confirmed.delete(k), 8000); return false; }
+$('pwReset').onclick = async () => {
+  try { await FB.sendPasswordResetEmail(fbAuth, me.email); $('acctMsg').textContent = 'Şifre değiştirme bağlantısı e-postana gönderildi.'; } catch (er) { $('acctMsg').textContent = authErr(er); }
+};
+$('delAcct').onclick = async () => {
+  if (!confirmOnce('del', 'Hesabın ve hesaptaki bütün kitapların kalıcı olarak silinecek. Eminsen bir kez daha dokun.')) return;
+  $('acctMsg').textContent = 'Siliniyor…';
+  try {
+    const uid = me.uid;
+    for (const name of ['books', 'wishes', 'covers']) {
+      const s = await FB.getDocs(FB.collection(fbDb, 'users', uid, name));
+      for (let i = 0; i < s.docs.length; i += 400) { const b = FB.writeBatch(fbDb); for (const d of s.docs.slice(i, i + 400)) b.delete(d.ref); await b.commit(); }
+    }
+    await FB.deleteDoc(FB.doc(fbDb, 'users', uid));
+    for (const u of unsubs) try { u(); } catch (e) {}
+    unsubs = [];
+    await FB.deleteUser(fbAuth.currentUser);
+    try { localStorage.removeItem(KEY); localStorage.removeItem(WKEY); localStorage.removeItem(SYNKEY); localStorage.removeItem('kitapligim.avatar'); } catch (e) {}
+    $('acctMsg').textContent = '';
+  } catch (er) { $('acctMsg').textContent = authErr(er); }
+};
+
+async function startAuth() {
+  await fbReady;
+  if (!window.FB) { $('auth').hidden = false; $('authMsg').textContent = 'Giriş servisi yüklenemedi. İnternetini kontrol edip uygulamayı yeniden aç.'; drawAuth(); return; }
+  try {
+    const app = FB.initializeApp(FB_CFG);
+    fbAuth = FB.initializeAuth(app, {persistence: [FB.indexedDBLocalPersistence, FB.browserLocalPersistence]});
+    fbAuth.languageCode = 'tr';
+    fbDb = FB.initializeFirestore(app, {localCache: FB.memoryLocalCache(), ignoreUndefinedProperties: true});
+  } catch (e) { showAuth('in'); $('authMsg').textContent = 'Giriş servisi başlatılamadı.'; return; }
+  FB.onAuthStateChanged(fbAuth, user => {
+    if (!user) { if (me) leaveApp(); showAuth(localStorage.getItem(LEGACY_B) ? 'up' : 'in'); return; }
+    if (!user.emailVerified) { if (me) leaveApp(); showVerify(user); return; }
+    enterApp(user);
+  });
+}
+
 f.elements.genre.innerHTML = '<option value="">Belirtilmedi</option>' + GENRES.map(([g]) => `<option>${esc(g)}</option>`).join('');
-load(); setTheme(themeNow()); drawSound(); renderAvatarHead();
-if (!avLoad() && !localStorage.getItem('kitapligim.avAsked')) { try { localStorage.setItem('kitapligim.avAsked', '1'); } catch (e) {} setTimeout(() => { note('<span>Kendine küçük bir cadı avatarı oluşturmak ister misin?</span><button class="btn primary" type="button" id="avGo">Oluştur</button>', true); $('avGo').onclick = () => { $('note').hidden = true; openAv(); }; }, 2800); } setTimeout(syncShared, 1500);
+setTheme(themeNow()); drawSound(); renderAvatarHead(); startAuth();
+if (false) { try { localStorage.setItem('kitapligim.avAsked', '1'); } catch (e) {} setTimeout(() => { note('<span>Kendine küçük bir cadı avatarı oluşturmak ister misin?</span><button class="btn primary" type="button" id="avGo">Oluştur</button>', true); $('avGo').onclick = () => { $('note').hidden = true; openAv(); }; }, 2800); } setTimeout(syncShared, 1500);
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
