@@ -184,6 +184,7 @@ summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weig
 .tpick button{border:3px solid var(--line);background:var(--field);border-radius:16px;padding:8px 4px 6px;color:var(--ink);font:800 14px "Nunito",sans-serif;display:flex;flex-direction:column;align-items:center;gap:2px;cursor:pointer}
 .tpick button[aria-pressed=true]{border-color:var(--rose);background:var(--segOn)}
 .tpick img{width:40px;height:60px;image-rendering:pixelated}
+.tpick small{font:700 11px "Nunito",sans-serif;color:var(--mute)}
 .amsg{margin:0;color:#e88594;font-weight:700;font-size:14px}
 .amsg:empty{display:none}
 .authbox details{font-size:14px;padding:2px 12px}
@@ -524,7 +525,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 20</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 21</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -680,10 +681,12 @@ a{color:var(--roseD)}
     <div class="sh-head"><h2 id="avTitle">Avatarın</h2><button class="x" id="avX" type="button" aria-label="Kapat">×</button></div>
     <div class="avstage"><canvas id="avBig" width="24" height="36"></canvas></div>
     <div class="avopt" style="margin-top:0"><span>Kim olacaksın?</span><div class="tg big" id="avType"></div></div>
+    <div class="avopt" id="avGenderBox"><span>Kadın mı, erkek mi?</span><div class="tg" id="avGender"><button type="button" data-v="k">Kadın</button><button type="button" data-v="e">Erkek</button></div></div>
     <label class="f">Adın<input id="avName" maxlength="24" placeholder="Seni nasıl çağıralım?"></label>
     <div class="avopt"><span>Ten rengi</span><div class="sw" id="avSkin"></div></div>
     <div class="avopt"><span>Saç modeli</span><div class="tg" id="avStyle"></div></div>
     <div class="avopt"><span>Saç rengi</span><div class="sw" id="avHair"></div></div>
+    <div class="avopt" id="avBeardBox"><span>Sakal</span><div class="tg" id="avBeard"></div></div>
     <div class="avopt"><span>Çil</span><div class="tg" id="avFreck"><button type="button" data-v="1">Var</button><button type="button" data-v="0">Yok</button></div></div>
     <div class="avopt" id="avHatBox"><span>Büyücü şapkası</span><div class="tg" id="avHat"><button type="button" data-v="1">Var</button><button type="button" data-v="0">Yok</button></div></div>
     <div class="avopt" id="avHoodBox"><span>Kukuleta</span><div class="tg" id="avHood"><button type="button" data-v="1">Var</button><button type="button" data-v="0">Yok</button></div></div>
@@ -1293,8 +1296,16 @@ const AV = {
   },
   outfitLabel: {cadi: 'Pelerin rengi', buyucu: 'Cüppe rengi', insan: 'Kazak rengi'},
   styles: [['duz', 'Düz'], ['dalgali', 'Dalgalı'], ['kivircik', 'Kıvırcık'], ['topuz', 'Topuz']],
+  stylesE: [['kisa', 'Kısa'], ['daginik', 'Dağınık'], ['kivkisa', 'Kıvırcık'], ['omuz', 'Omuz boyu']],
+  beards: [['yok', 'Yok'], ['kirli', 'Kirli sakal'], ['kisa', 'Kısa sakal'], ['uzun', 'Uzun sakal']],
 };
-const AV_DEFAULT = {type: 'cadi', skin: 1, style: 'dalgali', hairColor: 2, freckles: true, hood: false, tip: 'r', hat: true, cloak: 0, name: ''};
+const AV_DEFAULT = {type: 'cadi', gender: 'k', skin: 1, style: 'dalgali', hairColor: 2, freckles: true, hood: false, tip: 'r', hat: true, cloak: 0, beard: 'yok', name: ''};
+// a witch is always a woman, a wizard always a man; a human can be either
+const avGender = a => a.type === 'cadi' ? 'k' : a.type === 'buyucu' ? 'e' : a.gender === 'e' ? 'e' : 'k';
+const avStyles = a => avGender(a) === 'e' ? AV.stylesE : AV.styles;
+const avStyle = a => avStyles(a).some(([k]) => k === a.style) ? a.style : avGender(a) === 'e' ? 'kisa' : 'dalgali';
+const avPreset = t => ({...AV_DEFAULT, type: t, ...(t === 'cadi' ? {hood: true} : t === 'buyucu' ? {style: 'kisa', beard: 'kisa', hairColor: 1, freckles: false} : {})});
+const mixHex = (x, y, t) => { const a = parseInt(x.slice(1), 16), b = parseInt(y.slice(1), 16); return '#' + [16, 8, 0].map(s => Math.round(((a >> s) & 255) * (1 - t) + ((b >> s) & 255) * t).toString(16).padStart(2, '0')).join(''); };
 const AV_W = 24, AV_H = 36, OY = 4;
 function avLoad() { try { const a = JSON.parse(localStorage.getItem(AV_KEY) || 'null'); return a && typeof a === 'object' ? {...AV_DEFAULT, ...a} : null; } catch (e) { return null; } }
 function avSave(a) { try { localStorage.setItem(AV_KEY, JSON.stringify(a)); } catch (e) {} profileDirty(); }
@@ -1313,7 +1324,7 @@ function avPixels(a, frame = {}) {
   const cl = (pal[a.cloak] || pal[0])[0], clD = shade(cl, .7), clL = shade(cl, 1.25);
   const gold = '#d8b56a';
   const face = y => [[6, 9, 14], [7, 8, 15], [8, 7, 16], [9, 7, 16], [10, 7, 16], [11, 7, 16], [12, 7, 16], [13, 7, 16], [14, 7, 16], [15, 8, 15], [16, 9, 14]].find(r => r[0] === y);
-  const st = a.style;
+  const male = avGender(a) === 'e', st = avStyle(a);
   rect(6, 31, 17, 31, '#00000033');
   // hair behind the head (hidden inside a hood)
   if (!hood) {
@@ -1331,14 +1342,22 @@ function avPixels(a, frame = {}) {
     }
     if (st === 'topuz' && !hat) { disc(11.5, 9.5, 6.2, hb); disc(11.5, 3, 3, hb); P(10, 2, hl); P(11, 2, hl); rect(9, 5, 14, 5, hd); }
     if (st === 'topuz' && hat) disc(11.5, 9.5, 6.2, hb);
+    if (st === 'kisa' || st === 'daginik') disc(11.5, 9, 6.2, hb);
+    if (st === 'kivkisa') { for (const [x, y, r] of [[11.5, 8.5, 6.4], [6.5, 8.5, 2.2], [16.5, 8.5, 2.2], [8, 4.2, 2.4], [11.5, 3.4, 2.6], [15, 4.2, 2.4]]) disc(x, y, r, hb); for (const [x, y] of [[6, 6], [17, 6], [9, 2], [14, 2], [5, 10], [18, 10]]) P(x, y, hd); for (const [x, y] of [[10, 2], [13, 3]]) P(x, y, hl); }
+    if (st === 'omuz') { disc(11.5, 9.5, 6.5, hb); rect(5, 10, 18, 18, hb); rect(5, 18, 18, 18, hd); P(5, 17, hd); P(18, 17, hd); }
   }
   // ---- body ----
   if (type === 'insan') {
     const step = frame.step ? 1 : 0;
-    for (let y = 25; y <= 28; y++) { const w = 4 + ((y - 25) >> 1); rect(11.5 - w - .5, y, 11.5 + w + .5, y, '#3b3550'); P(11.5 - w - .5, y, '#2a2540'); }
-    rect(9, 29 - step, 10, 29, '#2c2632'); rect(13, 29, 14, 29, '#2c2632');
+    if (male) {
+      const jn = '#3e4a66', jd = '#2c3550';
+      rect(8, 25, 15, 26, jn); rect(8, 27 - step, 10, 29 - step, jn); rect(13, 27, 15, 29, jn); P(8, 26, jd); P(8, 28 - step, jd); P(13, 28, jd); rect(11, 26, 12, 26, jd);
+    } else {
+      for (let y = 25; y <= 28; y++) { const w = 4 + ((y - 25) >> 1); rect(11.5 - w - .5, y, 11.5 + w + .5, y, '#3b3550'); P(11.5 - w - .5, y, '#2a2540'); }
+      rect(9, 29 - step, 10, 29, '#2c2632'); rect(13, 29, 14, 29, '#2c2632');
+    }
     rect(8 + step, 30 - step, 10 + step, 30 - step, '#4a2f22'); rect(13 - step, 30, 15 - step, 30, '#4a2f22');
-    for (let y = 17; y <= 25; y++) { const w = y < 19 ? 4 : 5; rect(11.5 - w - .5, y, 11.5 + w + .5, y, cl); for (let x = 7; x <= 16; x++) if ((x + y) % 4 === 0) P(x, y, clD); }
+    for (let y = 17; y <= 25; y++) { const w = y < 19 ? (male ? 5 : 4) : 5; rect(11.5 - w - .5, y, 11.5 + w + .5, y, cl); for (let x = 7; x <= 16; x++) if ((x + y) % 4 === 0) P(x, y, clD); }
     rect(5, 18, 6, 24, cl); rect(17, 18, 18, 24, cl); P(5, 24, clD); P(18, 24, clD);
     rect(10, 17, 13, 17, '#f2ede4'); P(10, 18, '#f2ede4'); P(13, 18, '#f2ede4');
     rect(6, 25, 17, 25, clD);
@@ -1385,7 +1404,7 @@ function avPixels(a, frame = {}) {
   rect(8, 15, 15, 15, sk); P(7, 14, skD); P(16, 14, skD);
   if (frame.blink) { rect(9, 12, 10, 12, '#3a2a35'); rect(13, 12, 14, 12, '#3a2a35'); }
   else { rect(9, 11, 9, 12, '#2a1f2a'); rect(14, 11, 14, 12, '#2a1f2a'); P(10, 11, '#fff'); P(15, 11, '#fff'); P(10, 12, '#2a1f2a'); P(15, 12, '#2a1f2a'); }
-  P(8, 14, '#f0a0a8'); P(15, 14, '#f0a0a8');
+  if (male) { rect(9, 10, 10, 10, hd); rect(14, 10, 15, 10, hd); } else { P(8, 14, '#f0a0a8'); P(15, 14, '#f0a0a8'); }
   if (a.freckles) for (const [x, y] of [[9, 13], [10, 14], [8, 13], [14, 13], [13, 14], [15, 13]]) P(x, y, shade(sk, .78));
   rect(11, 15, 12, 15, '#b36a6a');
   // ---- bangs and front locks ----
@@ -1393,6 +1412,24 @@ function avPixels(a, frame = {}) {
   if (st === 'dalgali') { rect(7, 6, 16, 7, hb); P(7, 8, hb); P(8, 8, hb); P(15, 8, hb); P(16, 8, hb); P(11, 8, hb); if (!hood) for (let y = 9; y <= 21; y++) { const o = (y >> 1) % 2; P(6 + o, y, hb); P(17 - o, y, hb); } P(9, 6, hl); P(10, 6, hl); }
   if (st === 'kivircik') { for (const [x, y, r] of [[8.5, 7, 1.8], [11.5, 6.5, 1.8], [14.5, 7, 1.8]]) disc(x, y, r, hb); P(10, 6, hl); P(13, 6, hl); if (!hood) for (const [x, y] of [[6, 10], [6, 13], [17, 10], [17, 13]]) disc(x, y, 1.2, hb); }
   if (st === 'topuz') { rect(7, 6, 16, 7, hb); P(7, 8, hb); P(16, 8, hb); P(7, 9, hd); P(16, 9, hd); P(9, 6, hl); }
+  if (st === 'kisa') { rect(7, 5, 16, 6, hb); rect(7, 7, 9, 7, hb); rect(14, 7, 16, 7, hb); P(7, 8, hb); P(16, 8, hb); P(9, 5, hl); P(10, 5, hl); }
+  if (st === 'daginik') { rect(7, 5, 16, 6, hb); for (const [x, y] of [[7, 7], [8, 7], [10, 7], [11, 8], [13, 7], [15, 7], [16, 7], [16, 8], [7, 8], [6, 4], [8, 3], [9, 4], [11, 2], [12, 3], [14, 3], [15, 4], [17, 4]]) P(x, y, hb); P(10, 4, hl); P(13, 4, hl); }
+  if (st === 'kivkisa') { for (const [x, y, r] of [[8.5, 6.4, 1.6], [11.5, 6, 1.6], [14.5, 6.4, 1.6]]) disc(x, y, r, hb); P(10, 5, hl); P(13, 5, hl); }
+  if (st === 'omuz') { rect(7, 6, 16, 7, hb); rect(7, 8, 9, 8, hb); P(16, 8, hb); if (!hood) { rect(6, 9, 6, 18, hb); rect(17, 9, 17, 18, hb); } P(10, 6, hl); P(11, 6, hl); }
+  if (male && a.beard && a.beard !== 'yok') {
+    if (a.beard === 'kirli') { const sc = mixHex(sk, hb, .42); for (const [x, y] of [[7, 13], [16, 13], [7, 14], [16, 14], [8, 15], [9, 15], [10, 15], [13, 15], [14, 15], [15, 15], [9, 16], [10, 16], [11, 16], [12, 16], [13, 16], [14, 16], [10, 14], [13, 14]]) P(x, y, sc); }
+    else {
+      rect(7, 12, 7, 14, hb); rect(16, 12, 16, 14, hb); rect(8, 15, 10, 15, hb); rect(13, 15, 15, 15, hb); rect(8, 16, 15, 16, hb); rect(9, 17, 14, 17, hb);
+      rect(10, 14, 13, 14, hb); P(9, 14, hd); P(14, 14, hd);
+      if (a.beard === 'uzun') {
+        for (let y = 18; y <= 25; y++) { const w = y < 21 ? 3 : y < 24 ? 2 : 1; rect(11.5 - w + .5, y, 11.5 + w - .5, y, hb); }
+        for (let y = 17; y <= 24; y += 2) { P(10, y, hd); P(13, y + 1, hd); }
+        P(11, 25, hd);
+      }
+      for (let y = 15; y <= 16; y++) { P(8, y, hd); P(15, y, hd); }
+      P(10, 16, hl);
+    }
+  }
   if (hood) {
     if (st === 'kivircik') for (const [x, y, r] of [[6.6, 13, 1.4], [16.4, 13, 1.4], [6.8, 17, 1.6], [16.2, 17, 1.6], [7.2, 20.5, 1.6], [15.8, 20.5, 1.6]]) disc(x, y, r, hb);
     if (st === 'duz') { rect(6, 9, 6, 22, hb); rect(17, 9, 17, 22, hb); P(6, 22, hd); P(17, 22, hd); }
@@ -1448,7 +1485,12 @@ function drawAvUI() {
   $('avCloakLbl').textContent = AV.outfitLabel[a.type] || 'Pelerin rengi';
   $('avHoodBox').hidden = a.type !== 'cadi'; $('avHatBox').hidden = a.type !== 'buyucu';
   for (const b of $('avHat').children) b.setAttribute('aria-pressed', String(!!+b.dataset.v === (a.hat !== false)));
-  $('avStyle').innerHTML = AV.styles.map(([k, n]) => `<button type="button" data-k="${k}" aria-pressed="${a.style === k}">${n}</button>`).join('');
+  a.style = avStyle(a);
+  $('avStyle').innerHTML = avStyles(a).map(([k, n]) => `<button type="button" data-k="${k}" aria-pressed="${a.style === k}">${n}</button>`).join('');
+  $('avGenderBox').hidden = a.type !== 'insan';
+  for (const b of $('avGender').children) b.setAttribute('aria-pressed', String(b.dataset.v === avGender(a)));
+  $('avBeardBox').hidden = avGender(a) !== 'e';
+  $('avBeard').innerHTML = AV.beards.map(([k, n]) => `<button type="button" data-k="${k}" aria-pressed="${(a.beard || 'yok') === k}">${n}</button>`).join('');
   for (const b of $('avFreck').children) b.setAttribute('aria-pressed', String(!!+b.dataset.v === !!a.freckles));
   for (const b of $('avHood').children) b.setAttribute('aria-pressed', String(!!+b.dataset.v === !!a.hood));
   for (const b of $('avTip').children) b.setAttribute('aria-pressed', String(b.dataset.v === (a.tip || 'r')));
@@ -1474,10 +1516,12 @@ pick('avStyle', b => { avDraft.style = b.dataset.k; });
 pick('avFreck', b => { avDraft.freckles = !!+b.dataset.v; });
 pick('avHood', b => { avDraft.hood = !!+b.dataset.v; });
 pick('avTip', b => { avDraft.tip = b.dataset.v; });
-pick('avType', b => { avDraft.type = b.dataset.k; });
+pick('avType', b => { const was = avGender(avDraft); avDraft.type = b.dataset.k; if (b.dataset.k === 'buyucu' && was !== 'e' && (!avDraft.beard || avDraft.beard === 'yok')) avDraft.beard = 'kisa'; });
+pick('avGender', b => { avDraft.gender = b.dataset.v; });
+pick('avBeard', b => { avDraft.beard = b.dataset.k; });
 pick('avHat', b => { avDraft.hat = !!+b.dataset.v; });
 $('avName').addEventListener('input', e => { avDraft.name = e.target.value.trim().slice(0, 24); });
-$('avRand').onclick = () => { const r = n => Math.floor(Math.random() * n); avDraft = {...avDraft, skin: r(AV.skins.length), hairColor: r(AV.hairs.length), cloak: r(5), style: AV.styles[r(AV.styles.length)][0], freckles: Math.random() < .5, hood: Math.random() < .4, hat: Math.random() < .7, tip: Math.random() < .5 ? 'l' : 'r'}; drawAvUI(); };
+$('avRand').onclick = () => { const r = n => Math.floor(Math.random() * n); avDraft = {...avDraft, skin: r(AV.skins.length), hairColor: r(AV.hairs.length), cloak: r(5), style: avStyles(avDraft)[r(4)][0], beard: AV.beards[r(4)][0], freckles: Math.random() < .5, hood: Math.random() < .4, hat: Math.random() < .7, tip: Math.random() < .5 ? 'l' : 'r'}; drawAvUI(); };
 $('avSave').onclick = () => { avSave(avDraft); $('avOv').hidden = true; renderAvatarHead(); sfx.unlock(); sfx.sparkle();
   const hi = `${avDraft.name ? esc(avDraft.name) + ', avatarın' : 'Avatarın'} hazır!`, home = {cadi: ['cadi', 'Cadı kulübesi'], buyucu: ['buyucu', 'Büyücü kulesi']}[avDraft.type];
   if (home && themeNow() !== home[0]) { note(`<span>${hi} Kitaplığın da ${home[1]} olsun mu?</span><button class="btn" type="button" id="goHome">Evet</button>`, true); $('goHome').onclick = () => { setTheme(home[0]); $('note').hidden = true; sfx.sparkle(); }; }
@@ -2172,7 +2216,7 @@ async function loadProfile() {
   } catch (e) { profileReady = true; }
   if (!avLoad()) {
     let t = 'cadi'; try { t = localStorage.getItem('kitapligim.pendingType') || 'cadi'; } catch (e) {}
-    setTimeout(() => { avDraft = {...AV_DEFAULT, type: t}; $('avName').value = ''; drawAvUI(); $('avOv').hidden = false; }, 500);
+    setTimeout(() => { avDraft = avPreset(t); $('avName').value = ''; drawAvUI(); $('avOv').hidden = false; }, 500);
   }
 }
 
@@ -2184,8 +2228,8 @@ function drawAuth() {
   $('authGo').textContent = up ? 'Kayıt ol' : 'Giriş yap';
   $('authF').elements.pw.autocomplete = up ? 'new-password' : 'current-password';
   $('authSub').textContent = up ? 'Bir hesap oluştur; kitapların her cihazda seninle olsun.' : 'Kitaplığına girmek için giriş yap.';
-  $('tpick').innerHTML = AV.types.map(([t, l]) => `<button type="button" data-t="${t}" aria-pressed="${t === pickType}"><img src="${avURL({...AV_DEFAULT, type: t, hood: t === 'cadi'}, {})}" alt="">${l}</button>`).join('');
-  $('authAv').src = avURL(up ? {...AV_DEFAULT, type: pickType, hood: pickType === 'cadi'} : avLoad() || {...AV_DEFAULT, hood: true}, {});
+  $('tpick').innerHTML = AV.types.map(([t, l]) => `<button type="button" data-t="${t}" aria-pressed="${t === pickType}"><img src="${avURL(avPreset(t), {})}" alt="">${l}<small>${t === 'cadi' ? 'kadın' : t === 'buyucu' ? 'erkek' : 'kadın ya da erkek'}</small></button>`).join('');
+  $('authAv').src = avURL(up ? avPreset(pickType) : avLoad() || avPreset('cadi'), {});
   $('authMsg').textContent = '';
 }
 function showAuth(mode) {
