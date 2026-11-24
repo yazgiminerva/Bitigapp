@@ -28,6 +28,12 @@ function toText(html) {
 
 export default {
   async fetch(req) {
+    try { return await handle(req); }
+    catch (e) { return json(req, {ok: false, error: 'Aracıda hata', detail: String(e && e.stack || e)}); }
+  },
+};
+
+async function handle(req) {
     if (req.method === 'OPTIONS') return new Response(null, {headers: cors(req)});
     const url = new URL(req.url);
     const isbn = (url.searchParams.get('isbn') || '').replace(/[^0-9Xx]/g, '').toUpperCase();
@@ -39,7 +45,7 @@ export default {
       r = await fetch(MK(isbn), {headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; Kitapligim/1.0; kisisel kitaplik uygulamasi)',
         'Accept': 'text/html', 'Accept-Language': 'tr-TR,tr;q=0.9',
-      }, cf: {cacheTtl: 86400, cacheEverything: true}});
+      }, signal: AbortSignal.timeout(20000)});
     } catch (e) {
       return json(req, {ok: false, error: 'Katalog sitesine ulaşılamadı', detail: String(e)});
     }
@@ -50,5 +56,4 @@ export default {
     const at = text.indexOf(isbn);
     const snippet = at >= 0 ? text.slice(Math.max(0, at - 1500), at + 1500) : text.slice(0, 3000);
     return json(req, {ok: r.ok, isbn, status: r.status, found: at >= 0, length: html.length, text: snippet, source: 'Milli Kütüphane'}, 200, r.ok ? {'Cache-Control': 'public, max-age=86400'} : {});
-  },
-};
+}
