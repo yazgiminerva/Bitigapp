@@ -15,7 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-<script>try{document.documentElement.dataset.theme=localStorage.getItem("kitapligim.theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
+<script>try{if(localStorage.getItem("kitapligim.themeV")!=="2"){localStorage.setItem("kitapligim.theme","antique");localStorage.setItem("kitapligim.themeV","2")}document.documentElement.dataset.theme=localStorage.getItem("kitapligim.theme")||"antique"}catch(e){document.documentElement.dataset.theme="antique"}</script>
 <style>
 /* VOICE: warm, soft and a little magical; a cosy reading room in pastel
    IDEA: a secret bookcase that swings open onto your own sunny library
@@ -26,6 +26,9 @@
 --rose:#f3b9c0;--roseD:#d4838f;--sage:#cfe3cf;--sageD:#7fae8c;--lav:#dcd3f3;--lavD:#9a8ad0;--butter:#f7e3a3;--butterD:#d7b04c;--sky:#cfe2f3;--peach:#f8d2bd;
 --wood:#ecd3b2;--woodD:#d5b086;--wall:#f6e7dc;--st:env(safe-area-inset-top);--sb:env(safe-area-inset-bottom);--serif:"Fraunces",Georgia,serif;
 --on:#40353f;--field:#fff;--dot:#f3e3d8;--gilt:color-mix(in srgb,var(--c) 62%,#6b4f5f);--noteBg:var(--sage);--segOn:#fdebed;--storyBg:#fff8f1;--shadow:#e6d3c41f;--chipOn:#fff}
+:root[data-theme=antique]{color-scheme:dark;--bg:#17100c;--paper:#261b15;--ink:#f0e2c8;--mute:#b5a083;--line:#3a2a20;
+--rose:#c9965c;--roseD:#8d6633;--sage:#93a27b;--sageD:#5f6e4d;--lav:#bba27e;--lavD:#7f6448;--butter:#d6b56a;--butterD:#dcb45c;--sky:#93a3aa;--peach:#c48d6f;
+--wood:#6a4630;--woodD:#3c2619;--wall:#1b120d;--on:#22170f;--field:#1f1712;--dot:transparent;--gilt:linear-gradient(#f3d98f,#a8823a);--noteBg:#33281c;--segOn:#3a2a1d;--storyBg:#140d09;--shadow:#0000007a;--chipOn:#17100c}
 :root[data-theme=dark]{color-scheme:dark;--bg:#211b22;--paper:#2b232c;--ink:#f0e6dc;--mute:#b3a3ad;--line:#3b3140;
 --rose:#c98f99;--roseD:#9c6470;--sage:#94ad96;--sageD:#68826d;--lav:#a698ca;--lavD:#77699d;--butter:#d2b56e;--butterD:#d7b45a;--sky:#8ea8c0;--peach:#c99a84;
 --wood:#6e4c37;--woodD:#4a3224;--wall:#2a2129;--on:#231b22;--field:#261f27;--dot:#2c2430;--gilt:#d8bb76;--noteBg:#33423a;--segOn:#3a2b33;--storyBg:#1d181e;--shadow:#00000040;--chipOn:#211b22}
@@ -47,7 +50,7 @@ background:radial-gradient(circle at 12px 12px,var(--dot) 1.5px,transparent 2px)
 .navbtn.r{position:absolute;right:max(4vw,16px);top:26px;margin:0}
 .seeall{flex:none;align-self:flex-end;height:150px;width:58px;border:2px dashed var(--mute);border-radius:6px;background:none;color:var(--ink);font:800 12px/1.2 "Nunito",sans-serif;cursor:pointer;margin-left:6px;opacity:.85}
 /* big bookcase */
-.bigcase{margin:4px max(3vw,10px) 24px;background:var(--woodD);border-radius:18px;padding:10px;box-shadow:0 14px 30px var(--shadow);display:flex;flex-wrap:wrap;gap:8px}
+.bigcase{margin:4px max(3vw,10px) 24px;background:var(--woodD);border-radius:18px;padding:10px;box-shadow:0 14px 30px var(--shadow);position:relative}
 .gsec{flex:1 1 auto;min-width:118px;max-width:100%;background:var(--wall);border-radius:10px;padding:10px 6px 0}
 .plate{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(#ecd393,#c99f4e);color:#3d2c14;font:600 14px var(--serif);font-variation-settings:"SOFT" 100;padding:3px 12px;border-radius:7px;box-shadow:0 2px 0 #8f6a2c;margin:0 0 10px 2px}
 .plate i{width:10px;height:10px;border-radius:50%;background:var(--c);box-shadow:inset 0 0 0 1px #0002}
@@ -175,7 +178,10 @@ a{color:var(--roseD)}
 .splash{position:fixed;inset:0;z-index:60;display:flex;perspective:1400px;cursor:pointer}
 .splash::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 50% 50%,#fffbe8 0,#fff1d2cc 35%,#fde3c800 75%);opacity:0;transition:opacity 1.2s}
 .splash.open::before{opacity:1}
-.door{flex:1;position:relative;background:#7a5741;display:flex;flex-direction:column;justify-content:space-evenly;padding:calc(var(--st) + 18px) 10px calc(var(--sb) + 18px);box-shadow:inset 0 0 0 8px #6a4a36,inset 0 0 40px #0005;transition:transform 1.5s cubic-bezier(.55,.05,.3,1)}
+.door{flex:1;position:relative;background:#24160e url(splash.jpg) no-repeat;background-size:auto 100%;transition:transform 1.5s cubic-bezier(.55,.05,.3,1)}
+.door.l{background-position:calc(50vw - 37.5vh) 0;box-shadow:inset -18px 0 24px -12px #000c}
+.door.r{background-position:-37.5vh 0;box-shadow:inset 18px 0 24px -12px #000c}
+.splash.go .door.l::after{content:"";position:absolute;right:0;top:0;bottom:0;width:3px;background:linear-gradient(transparent,#ffe9a8,transparent);box-shadow:0 0 18px 6px #ffd98a88;animation:fadeIn .6s forwards;opacity:0}
 .door.l{transform-origin:left center;border-right:2px solid #5a3e2d}
 .door.r{transform-origin:right center;border-left:2px solid #5a3e2d}
 .dshelf{display:flex;align-items:flex-end;gap:2px;height:16vh;border-bottom:10px solid #9b7356;box-shadow:0 6px 0 #5f412f;padding:0 4px;overflow:hidden}
@@ -259,6 +265,39 @@ a{color:var(--roseD)}
 @keyframes dust{0%{opacity:.8;transform:translate(0,0) scale(.4)}100%{opacity:0;transform:translate(var(--dx),-10px) scale(1.4)}}
 @keyframes nudge{40%{transform:rotate(var(--r))}}
 @media(max-width:600px){.grid{grid-template-columns:minmax(0,1fr)}}
+/* ---- antique library theme ---- */
+:root[data-theme=antique] body{background:linear-gradient(#000000a8,#000000c0),url(wood-v.jpg) 0 0/256px 512px,#17100c}
+:root[data-theme=antique] h1,:root[data-theme=antique] h2{color:#f1dcae;text-shadow:0 1px 0 #000,0 0 18px #c9965c33}
+:root[data-theme=antique] .swash path{stroke:#c9965c}
+:root[data-theme=antique] .case,:root[data-theme=antique] .bigcase{background:url(wood-v.jpg) 0 0/256px 512px;box-shadow:inset 0 0 0 2px #8a5f3c,inset 0 0 0 6px #2a1a10,inset 0 0 0 8px #6b4a30,0 16px 34px #000a}
+:root[data-theme=antique] .case{padding:12px 12px 0}
+:root[data-theme=antique] .back,:root[data-theme=antique] .gsec{background:linear-gradient(#0000004d,#000000b8),url(wood-v.jpg) 40px 0/256px 512px;box-shadow:inset 0 10px 18px #000c,inset 0 -2px 6px #0009}
+:root[data-theme=antique] .board{height:18px;background:linear-gradient(#ffffff22,#0000 30%,#00000059),url(wood-h-light.jpg) 0 0/512px 256px;box-shadow:0 5px 0 #2a1a10,0 9px 12px #000a;border-radius:0 0 4px 4px}
+:root[data-theme=antique] .rows{background:repeating-linear-gradient(to bottom,transparent 0 116px,#0000 116px),repeating-linear-gradient(to bottom,transparent 0 116px,#7a5236 116px 117px,#a87a52 117px 119px,#6a4630 119px 126px,#2d1c12 126px 128px)}
+:root[data-theme=antique] .sp{color:#efd38d;text-shadow:0 1px 1px #000c;background:url(leather.png) 0 0/96px,linear-gradient(to bottom,transparent 30%,#0006 30%,#ffffff26 31.6%,#0005 33%,transparent 33%,transparent 66%,#0006 66%,#ffffff26 67.6%,#0005 69%,transparent 69%),linear-gradient(90deg,#000a,#ffffff21 32%,#0000 58%,#000b),var(--c);box-shadow:inset 0 0 0 1px #00000040}
+:root[data-theme=antique] .sp::before,:root[data-theme=antique] .sp::after{background:linear-gradient(#f6dd95,#a17a35);box-shadow:0 1px 0 #0007}
+:root[data-theme=antique] .sp i{color:#efd38d;opacity:.85}
+:root[data-theme=antique] .cv{background:url(leather.png) 0 0/96px,linear-gradient(90deg,#0008 0 4px,#0000 4px),var(--c);color:#efd38d;text-shadow:0 1px 1px #000a}
+:root[data-theme=antique] .item,:root[data-theme=antique] details,:root[data-theme=antique] .sheet,:root[data-theme=antique] .welcome{background:linear-gradient(#ffffff06,#0000),#241913;box-shadow:inset 0 0 0 1px #4a3424,0 8px 18px #0008}
+:root[data-theme=antique] .item .t{color:#f1dcae}
+:root[data-theme=antique] .btn.primary{background:linear-gradient(#e2bf75,#b98a42);box-shadow:0 3px 0 #6d4c22,inset 0 1px 0 #fff6}
+:root[data-theme=antique] .btn.lav{background:linear-gradient(#d9c7a4,#a98f68);box-shadow:0 3px 0 #5e4a30,inset 0 1px 0 #fff6}
+:root[data-theme=antique] .ghost{border-color:#b5a083}
+:root[data-theme=antique] .gsec{position:relative;overflow:hidden;padding-top:22px}
+:root[data-theme=antique] .gsec::before{content:"";position:absolute;top:4px;left:50%;width:54px;margin-left:-27px;height:7px;border-radius:4px;background:linear-gradient(#f6dd95,#9b7432);box-shadow:0 2px 3px #000a;z-index:2}
+:root[data-theme=antique] .gsec::after{content:"";position:absolute;top:0;left:50%;width:240px;margin-left:-120px;height:170px;background:radial-gradient(ellipse at 50% 0,#ffd98a55,#ffd98a14 45%,#0000 70%);pointer-events:none;z-index:1}
+:root[data-theme=antique] .plate,:root[data-theme=antique] .rows{position:relative;z-index:2}
+:root[data-theme=antique] .bigcase{position:relative;padding:14px 34px 14px 12px}
+.rail,.ladder,.antq{display:none}
+:root[data-theme=antique] .rail{display:block;position:absolute;left:8px;right:8px;top:6px;height:6px;border-radius:3px;background:linear-gradient(#f6dd95,#8f6a2c);box-shadow:0 2px 3px #000a;z-index:4;pointer-events:none}
+:root[data-theme=antique] .ladder{display:block;position:absolute;right:2px;top:0;bottom:0;width:54px;z-index:5;pointer-events:none;filter:drop-shadow(-6px 6px 6px #000a)}
+:root[data-theme=antique] .antq{display:block;width:calc(100% - 2 * max(3vw,10px));margin:0 auto;border-radius:6px}
+:root[data-theme=antique] .antq.cornice{margin-bottom:-2px;border-radius:10px 10px 0 0;box-shadow:0 8px 16px #000a}
+:root[data-theme=antique] .antq.cabinet{margin-top:-24px;border-radius:0 0 10px 10px}
+:root[data-theme=antique] .libtop{text-align:left}
+.orn{flex:none;display:block}
+.flame{transform-box:fill-box;transform-origin:50% 100%;animation:flicker 1.6s ease-in-out infinite}
+@keyframes flicker{25%{transform:scale(.92,1.06) rotate(-2deg)}50%{transform:scale(1.05,.95)}75%{transform:scale(.96,1.04) rotate(2deg)}}
 :root[data-theme=dark] .settle svg{filter:saturate(.9) brightness(.95)}
 :root[data-theme=dark] .cv{color:color-mix(in srgb,var(--c) 30%,#1d161c)}
 .themes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -320,12 +359,13 @@ a{color:var(--roseD)}
       <details>
         <summary>Görünüm</summary>
         <div class="themes" id="themes">
+          <button type="button" data-theme="antique" style="grid-column:1/-1;background:linear-gradient(#0008,#0008),url(wood-v.jpg) 0 0/256px;color:#f1dcae"><i><b style="background:#7a2f2a"></b><b style="background:#2f4a33"></b><b style="background:#2c3a5a"></b><b style="background:#8a6a2f"></b></i>Antika kütüphane</button>
           <button type="button" data-theme="dark" style="background:#211b22;color:#f0e6dc"><i><b style="background:#c98f99"></b><b style="background:#94ad96"></b><b style="background:#a698ca"></b><b style="background:#d2b56e"></b></i>Koyu kütüphane</button>
           <button type="button" data-theme="light" style="background:#fbf5ef;color:#40353f"><i><b style="background:#f3b9c0"></b><b style="background:#cfe3cf"></b><b style="background:#dcd3f3"></b><b style="background:#f7e3a3"></b></i>Açık pastel</button>
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 11</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 12</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -344,7 +384,9 @@ a{color:var(--roseD)}
     <svg class="swash" viewBox="0 0 150 12" aria-hidden="true"><path d="M2 8c30-6 60-6 90-2s40 2 56-3" fill="none" stroke="#f3b9c0" stroke-width="4" stroke-linecap="round"/></svg>
     <p class="muted" id="libSub" style="margin:0"></p>
   </header>
-  <div class="bigcase" id="bigcase"></div>
+  <img class="antq cornice" src="cornice.jpg" alt="" aria-hidden="true">
+  <div class="bigcase"><div class="rail"></div><svg class="ladder" viewBox="0 0 54 600" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="lw" x1="0" x2="1"><stop offset="0" stop-color="#4a2f1e"/><stop offset=".5" stop-color="#8a5f3c"/><stop offset="1" stop-color="#3a2416"/></linearGradient></defs><rect x="8" y="0" width="7" height="600" rx="3" fill="url(#lw)"/><rect x="40" y="0" width="7" height="600" rx="3" fill="url(#lw)"/><g fill="#7a5236"><rect x="9" y="30" width="37" height="5" rx="2"/><rect x="9" y="78" width="37" height="5" rx="2"/><rect x="9" y="126" width="37" height="5" rx="2"/><rect x="9" y="174" width="37" height="5" rx="2"/><rect x="9" y="222" width="37" height="5" rx="2"/><rect x="9" y="270" width="37" height="5" rx="2"/><rect x="9" y="318" width="37" height="5" rx="2"/><rect x="9" y="366" width="37" height="5" rx="2"/><rect x="9" y="414" width="37" height="5" rx="2"/><rect x="9" y="462" width="37" height="5" rx="2"/><rect x="9" y="510" width="37" height="5" rx="2"/><rect x="9" y="558" width="37" height="5" rx="2"/></g><circle cx="11.5" cy="5" r="5" fill="#d8b56a"/><circle cx="43.5" cy="5" r="5" fill="#d8b56a"/></svg><div id="bigcase" style="display:flex;flex-wrap:wrap;gap:8px"></div></div>
+  <img class="antq cabinet" src="cabinet.jpg" alt="" aria-hidden="true">
 </div>
 </section>
 </main>
@@ -463,9 +505,10 @@ a{color:var(--roseD)}
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const KEY = 'kitapligim.books.v1', BKEY = 'kitapligim.lastBackup';
-const PALS = {light: ['#f3b9c0','#cfe3cf','#dcd3f3','#f7e3a3','#cfe2f3','#f8d2bd','#e9c6dc','#c6e3df','#f1d1a6'], dark: ['#b9858e','#8fa891','#9a8fbf','#c7aa64','#859fb8','#c08f78','#a7869f','#83a6a1','#b99566']};
+const PALS = {antique: ['#6f2c2a','#2f4a35','#2d3b5c','#7d5a24','#4e2f4a','#5c3a24','#2e4f4c','#6a3b2c','#3f4a28'], light: ['#f3b9c0','#cfe3cf','#dcd3f3','#f7e3a3','#cfe2f3','#f8d2bd','#e9c6dc','#c6e3df','#f1d1a6'], dark: ['#b9858e','#8fa891','#9a8fbf','#c7aa64','#859fb8','#c08f78','#a7869f','#83a6a1','#b99566']};
 const isDark = () => document.documentElement.dataset.theme !== 'light';
-let PAL = PALS[isDark() ? 'dark' : 'light'];
+const themeNow = () => { const t = document.documentElement.dataset.theme; return t === 'light' || t === 'dark' ? t : 'antique'; };
+let PAL = PALS[themeNow()];
 const hash = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.codePointAt(0)) | 0; return Math.abs(h); };
 // Every genre has its own colour; "Belirtilmedi" stays a quiet grey
 const GENRES = [['Roman',8],['Romantik',335],['Klasik',35],['Tarih',20],['Siyaset',212],['Polisiye',228],['Gerilim',285],['Korku',300],['Fantastik',262],['Bilim kurgu',188],['Deneme',90],['Şiir',318],['Biyografi',48],['Felsefe',172],['Psikoloji',152],['Kişisel gelişim',125],['Bilim',200],['Çocuk',56],['Çizgi roman',14],['Din',64],['Sanat',348],['Diğer',30]];
@@ -481,8 +524,10 @@ function normGenre(g) {
 const genreIdx = g => { const n = normGenre(g); const i = GENRES.findIndex(x => x[0] === n); return i < 0 ? GENRES.length : i; };
 function genreColor(g, v = 0) {
   const n = normGenre(g), e = GENRES.find(x => x[0] === n), dark = document.documentElement.dataset.theme !== 'light';
-  if (!e) return dark ? `hsl(300 6% ${54 + v}%)` : `hsl(30 10% ${84 + v}%)`;
+  const ant = document.documentElement.dataset.theme === 'antique';
+  if (!e) return ant ? `hsl(30 10% ${27 + v}%)` : dark ? `hsl(300 6% ${54 + v}%)` : `hsl(30 10% ${84 + v}%)`;
   const other = n === 'Diğer';
+  if (ant) return `hsl(${e[1]} ${other ? 14 : 44}% ${29 + v}%)`;
   return dark ? `hsl(${e[1]} ${other ? 14 : 32}% ${58 + v}%)` : `hsl(${e[1]} ${other ? 25 : 62}% ${82 + v}%)`;
 }
 const colorOf = b => genreColor(b.genre, hash((b.title || '') + (b.author || '')) % 7 - 3);
@@ -511,6 +556,15 @@ function note(html, keep) { const n = $('note'); n.innerHTML = html; n.hidden = 
 // --- the bookcase ---
 const PLANT = '<svg class="deco" width="44" height="70" viewBox="0 0 44 70" aria-hidden="true"><path d="M22 40C10 34 6 20 10 10c8 4 12 16 12 30zM22 40c10-8 16-20 12-32-9 5-12 18-12 32zM22 42c-8-2-16 0-20 6 8 3 15 1 20-6z" fill="#9cc7a4"/><path d="M22 42c6-4 14-4 20 2-8 4-15 2-20-2z" fill="#86b893"/><path d="M8 46h28l-4 24H12z" fill="#f3b9c0"/><path d="M6 44h32v6H6z" fill="#e9a3ac"/></svg>';
 const CAT = '<svg class="deco" width="78" height="46" viewBox="0 0 78 46" aria-hidden="true"><ellipse cx="40" cy="34" rx="30" ry="12" fill="#f8d2bd"/><path d="M62 30c10 0 14 8 6 12-6 3-18 2-26 0" fill="none" stroke="#f1bfa3" stroke-width="7" stroke-linecap="round"/><circle cx="18" cy="30" r="13" fill="#f8d2bd"/><path d="M8 22l2-12 8 8zM28 22l-2-12-8 8z" fill="#f8d2bd"/><path d="M10 13l1.5 6 4-4zM26 13l-1.5 6-4-4z" fill="#f3b9c0"/><path d="M12 30q3 2 6 0M20 30q3 2 6 0" fill="none" stroke="#7a5b66" stroke-width="1.6" stroke-linecap="round"/><path d="M38 26q6-4 12 0M46 30q6-4 12 0" fill="none" stroke="#f1bfa3" stroke-width="2" stroke-linecap="round"/><text x="34" y="12" font-family="Nunito" font-weight="800" font-size="10" fill="#b9a9c9">z z</text></svg>';
+// small curiosities for the antique bookcase
+const ORN = {
+  bust: (k = 1) => `<svg class="orn" width="${30 * k}" height="${64 * k}" viewBox="0 0 30 64" aria-hidden="true"><defs><linearGradient id="bz" x1="0" x2="1"><stop offset="0" stop-color="#5a4128"/><stop offset=".45" stop-color="#b08a55"/><stop offset="1" stop-color="#4a3320"/></linearGradient></defs><rect x="6" y="50" width="18" height="14" rx="1" fill="#2c1d13"/><rect x="4" y="48" width="22" height="4" rx="1" fill="#4a3320"/><path d="M4 48c0-9 5-13 11-13s11 4 11 13z" fill="url(#bz)"/><rect x="12" y="29" width="6" height="8" fill="url(#bz)"/><ellipse cx="15" cy="21" rx="8" ry="10" fill="url(#bz)"/><path d="M7 19c0-8 4-11 8-11s8 3 8 11c-2-4-5-6-8-6s-6 2-8 6z" fill="#4a3320"/></svg>`,
+  globe: (k = 1) => `<svg class="orn" width="${34 * k}" height="${62 * k}" viewBox="0 0 34 62" aria-hidden="true"><path d="M5 30a13 13 0 0 1 24 0" fill="none" stroke="#c9a25a" stroke-width="2"/><circle cx="17" cy="28" r="12" fill="#6f8a7a"/><path d="M9 22c4 2 6-1 9 1s1 6 5 6M8 31c3 0 4 3 7 2M20 37c1-3 4-3 5-5" fill="none" stroke="#c9b48a" stroke-width="1.6"/><path d="M5 28a12 12 0 0 0 24 0" fill="none" stroke="#e2c27a" stroke-width="1.5"/><rect x="15.5" y="40" width="3" height="14" fill="#a57f3c"/><path d="M8 62l3-8h12l3 8z" fill="#6b4a2c"/><circle cx="17" cy="28" r="12" fill="url(#gsh)"/><defs><radialGradient id="gsh" cx=".35" cy=".3"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#000" stop-opacity=".35"/></radialGradient></defs></svg>`,
+  hourglass: (k = 1) => `<svg class="orn" width="${26 * k}" height="${52 * k}" viewBox="0 0 26 52" aria-hidden="true"><rect x="1" y="0" width="24" height="5" rx="1" fill="#5a3a24"/><rect x="1" y="47" width="24" height="5" rx="1" fill="#5a3a24"/><rect x="3" y="5" width="2" height="42" fill="#a57f3c"/><rect x="21" y="5" width="2" height="42" fill="#a57f3c"/><path d="M6 6h14c0 9-6 13-6 20 0 7 6 11 6 20H6c0-9 6-13 6-20 0-7-6-11-6-20z" fill="#e8f0ee" opacity=".28"/><path d="M8.5 14h9c-1 4-4 7-4.5 10-.5-3-3.5-6-4.5-10z" fill="#d9b36a"/><path d="M7 46c1-6 4-8 6-9 2 1 5 3 6 9z" fill="#d9b36a"/></svg>`,
+  candle: (k = 1) => `<svg class="orn" width="${24 * k}" height="${60 * k}" viewBox="0 0 24 60" aria-hidden="true"><circle cx="12" cy="10" r="10" fill="#ffd98a" opacity=".18"/><path class="flame" d="M12 3c3 4 3 8 0 10-3-2-3-6 0-10z" fill="#ffcf6a"/><rect x="11.5" y="12" width="1" height="3" fill="#333"/><rect x="8" y="15" width="8" height="30" rx="1" fill="#efe3c8"/><path d="M8 18c1 2 2 2 2 5" stroke="#d9ccb0" stroke-width="1.5" fill="none"/><ellipse cx="12" cy="46" rx="9" ry="3" fill="#b98a42"/><rect x="10" y="46" width="4" height="9" fill="#a57f3c"/><ellipse cx="12" cy="56" rx="8" ry="3" fill="#8f6a2c"/></svg>`,
+  stack: (k = 1) => `<svg class="orn" width="${44 * k}" height="${30 * k}" viewBox="0 0 44 30" aria-hidden="true"><rect x="2" y="20" width="40" height="10" rx="2" fill="#5c2a26"/><rect x="2" y="23" width="40" height="2" fill="#d8b56a"/><rect x="5" y="11" width="35" height="9" rx="2" fill="#2f4a35"/><rect x="5" y="14" width="35" height="1.5" fill="#d8b56a"/><rect x="8" y="3" width="30" height="8" rx="2" fill="#7d5a24"/><rect x="8" y="5.5" width="30" height="1.5" fill="#f0d590"/></svg>`,
+};
+const ORN_SEQ = ['bust', 'hourglass', 'globe', 'candle', 'stack'];
 function shelfHTML(list) {
   if (!list.length) return Array.from({length: 6}, (_, i) => `<div class="ghost" style="height:${110 + (i * 23) % 50}px"></div>`).join('') + '<p class="empty">Rafın boş. İlk kitabını ekle.</p>' + CAT;
   const spines = list.map(b => {
@@ -518,7 +572,7 @@ function shelfHTML(list) {
     const w = Math.min(52, 30 + Math.round((+b.pages || 200 + h % 300) / 40));
     return `<button class="sp" data-id="${esc(b.id)}" title="${esc(b.title)}" style="--c:${colorOf(b)};height:${130 + h % 40}px;width:${w}px"><span>${esc(b.title)}</span><i>${esc(initial(b.author))}</i></button>`;
   });
-  spines.splice(Math.min(4, spines.length), 0, PLANT);
+  spines.splice(Math.min(4, spines.length), 0, themeNow() === 'antique' ? ORN.globe(1.15) : PLANT);
   return CAT + spines.join('') + (books.length > list.length ? `<button class="seeall" type="button" data-go="lib">Tüm kitaplık ›<br><small>${books.length}</small></button>` : '');
 }
 
@@ -557,9 +611,10 @@ function render() {
 }
 
 function setTheme(t) {
+  if (!['antique', 'dark', 'light'].includes(t)) t = 'antique';
   document.documentElement.dataset.theme = t; try { localStorage.setItem('kitapligim.theme', t); } catch (e) {}
-  PAL = PALS[t === 'light' ? 'light' : 'dark'];
-  document.querySelector('meta[name=theme-color]').content = t === 'light' ? '#fbf5ef' : '#211b22';
+  PAL = PALS[t];
+  document.querySelector('meta[name=theme-color]').content = t === 'light' ? '#fbf5ef' : t === 'dark' ? '#211b22' : '#17100c';
   for (const b of $('themes').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.theme === t));
   render();
 }
@@ -823,10 +878,13 @@ function renderLib() {
   $('libSub').textContent = books.length ? `${books.length} kitap, ${keys.length} tür rafında` : '';
   $('bigcase').innerHTML = books.length ? keys.map(g => {
     const list = groups.get(g).sort((a, b) => coll.compare(a.author || '', b.author || '') || coll.compare(a.title || '', b.title || ''));
-    return `<section class="gsec"><div class="plate"><i style="--c:${genreColor(g)}"></i>${esc(g || 'Belirtilmedi')}<small>${list.length}</small></div><div class="rows">${list.map(b => {
+    const ant = themeNow() === 'antique';
+    let oi = hash(g) % ORN_SEQ.length;
+    return `<section class="gsec"><div class="plate"><i style="--c:${genreColor(g)}"></i>${esc(g || 'Belirtilmedi')}<small>${list.length}</small></div><div class="rows">${list.map((b, i) => {
+      const orn = ant && i > 0 && i % 7 === 0 ? `<div class="slot">${ORN[ORN_SEQ[oi++ % ORN_SEQ.length]](1)}</div>` : '';
       const h = hash(b.title + b.author), w = Math.min(32, 17 + Math.round((+b.pages || 180 + h % 300) / 55));
-      return `<div class="slot"><button class="sp mini" data-id="${esc(b.id)}" title="${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" style="--c:${colorOf(b)};height:${82 + h % 30}px;width:${w}px">${b.status === 'okunuyor' ? '<b class="rib"></b>' : ''}<span>${esc(b.title)}</span></button></div>`;
-    }).join('')}</div></section>`;
+      return orn + `<div class="slot"><button class="sp mini" data-id="${esc(b.id)}" title="${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" style="--c:${colorOf(b)};height:${82 + h % 30}px;width:${w}px">${b.status === 'okunuyor' ? '<b class="rib"></b>' : ''}<span>${esc(b.title)}</span></button></div>`;
+    }).join('')}${ant && list.length < 7 ? `<div class="slot">${ORN[ORN_SEQ[oi % ORN_SEQ.length]](1)}</div>` : ''}</div></section>`;
   }).join('') : '<p class="libempty">Kitaplığın henüz boş. Ana ekrandan ilk kitabını ekle, burada türlerine göre dizilsin.</p>';
 }
 const pager = $('pager');
@@ -1085,21 +1143,6 @@ function playSettle(b, scanned) {
   const sp = $('splash');
   if (sessionStorage.getItem('opened')) { sp.remove(); $('plaque').remove(); $('hint').remove(); return; }
   sessionStorage.setItem('opened', '1');
-  const JEWEL = ['#8e3b46', '#3f6b57', '#3b4f7a', '#a07a2f', '#6b4a6e', '#7a5a3a', '#4f7a7a', '#9a5a46', '#5c6b3a'];
-  const fill = (door, side) => {
-    let html = '';
-    for (let r = 0; r < 5; r++) {
-      let s = '';
-      for (let i = 0; i < 16; i++) {
-        const h = hash(side + r + '-' + i);
-        const lever = side === 'r' && r === 2 && i === 3;
-        s += `<b class="${lever ? 'lever' : ''}" style="--c:${lever ? '#b0453f' : JEWEL[h % JEWEL.length]};--w:${12 + h % 10}px;--h:${62 + h % 30}%"></b>`;
-      }
-      html += `<div class="dshelf">${s}</div>`;
-    }
-    door.innerHTML = html;
-  };
-  fill($('doorL'), 'l'); fill($('doorR'), 'r');
   let gone = false;
   const finish = () => { if (gone) return; gone = true; sp.classList.add('fade'); setTimeout(() => { sp.remove(); $('plaque').remove(); $('hint').remove(); }, 480); };
   const open = () => {
@@ -1300,7 +1343,7 @@ async function syncShared() {
 window.addEventListener('online', syncShared);
 
 f.elements.genre.innerHTML = '<option value="">Belirtilmedi</option>' + GENRES.map(([g]) => `<option>${esc(g)}</option>`).join('');
-load(); setTheme(isDark() ? 'dark' : 'light'); drawSound(); setTimeout(syncShared, 1500);
+load(); setTheme(themeNow()); drawSound(); setTimeout(syncShared, 1500);
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
