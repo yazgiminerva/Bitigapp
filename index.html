@@ -274,6 +274,82 @@ a{color:var(--roseD)}
 @keyframes rays{0%{opacity:0;transform:scale(.3) rotate(0)}15%{opacity:.9}100%{opacity:.75;transform:scale(1.4) rotate(60deg)}}
 @keyframes spark{0%{opacity:0;transform:translate(0,0) scale(.3)}20%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1) rotate(90deg)}}
 @keyframes glow{0%{opacity:0;transform:scale(.05)}40%{opacity:.95}100%{opacity:.6;transform:scale(1)}}
+/* pixel avatar inside scenes */
+.spr .fb,.spr .fc,.spr .fd{opacity:0}
+@keyframes flip{0%,49.9%{opacity:1}50%,100%{opacity:0}}
+@keyframes flipInv{0%,49.9%{opacity:0}50%,100%{opacity:1}}
+.scene .p1 .spr .fa{animation:flipInv .32s .4s linear 6}
+.scene .p1 .spr .fb{animation:flip .32s .4s linear 6}
+.scene .p2 .spr .fa{animation:flipInv .32s 2.7s linear 4,fadeOut .1s 4.8s forwards}
+.scene .p2 .spr .fb{animation:flip .32s 2.7s linear 4}
+.scene .p2 .spr .fc{animation:fadeIn .1s 4.8s forwards}
+.scene .breath{transform-box:fill-box;transform-origin:50% 100%}
+.scene .p2 .breath{animation:breath 1.1s 4.75s ease-in-out}
+.scene .bagPos2{transform:translate(20px,2px)}
+.scene .p2 .bagPos2{animation:place2 .7s 4.0s cubic-bezier(.4,0,.3,1) forwards}
+@keyframes place2{45%{transform:translate(45px,-75px)}100%{transform:translate(65px,-54px)}}
+/* witch: broom flight to the cottage */
+.wch .w1{animation:fadeOut .3s 2.5s forwards}
+.wch .w2{opacity:0;animation:fadeIn .3s 2.5s forwards,fadeOut .3s 4.2s forwards}
+.wch .w3{opacity:0;animation:fadeIn .4s 4.2s forwards}
+.wch .wp1{transform:translate(52px,230px);animation:wfly1 2.3s .3s forwards}
+@keyframes wfly1{0%{transform:translate(52px,230px)}35%{transform:translate(150px,230px)}48%{transform:translate(150px,224px)}100%{transform:translate(440px,30px) rotate(-14deg)}}
+.wch .wp1 .bob{animation:bob .32s .3s 3}
+.wch .wp1 .spr .fa{animation:flipInv .32s .3s linear 3}
+.wch .wp1 .spr .fb{animation:flip .32s .3s linear 3}
+.wch .wp1 .broom{opacity:0;animation:fadeIn .2s 1.1s forwards}
+.wch .trail circle{opacity:0;animation:trail .6s ease-out forwards}
+@keyframes trail{30%{opacity:1}100%{opacity:0;transform:translateX(-14px)}}
+.wch .wp2{transform:translate(-70px,180px);animation:wfly2 1.6s 2.65s linear forwards}
+@keyframes wfly2{50%{transform:translate(180px,128px)}100%{transform:translate(440px,110px)}}
+.wch .sway{transform-box:fill-box;transform-origin:50% 100%;animation:sway .6s ease-in-out infinite}
+@keyframes sway{50%{transform:translateY(-4px) rotate(-4deg)}}
+.wch .wp3{transform:translate(150px,232px);opacity:0;animation:fadeIn .3s 4.3s forwards}
+.wch .wp3 .bob{animation:bob .9s ease-in-out infinite}
+.wch .wp3 .spr .fa{animation:fadeOut .05s 4.6s forwards,fadeIn .05s 5.7s forwards}
+.wch .wp3 .spr .fd{animation:fadeIn .05s 4.6s forwards,fadeOut .05s 5.7s forwards}
+.wch .bub{opacity:0;transform-box:fill-box;animation:bub 1.1s ease-out infinite}
+@keyframes bub{0%{opacity:0;transform:translateY(0) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translateY(-34px) scale(1.2)}}
+.wch .brew{animation:brew .5s 4.8s ease-in-out 4 alternate}
+@keyframes brew{to{fill:#c9a6ff}}
+.wch .wglowc{opacity:0;transform-box:fill-box;transform-origin:50% 50%;animation:glow 1.2s 5.2s ease-out forwards}
+.wch .rays{animation-delay:5.4s}
+.wch .wbook{opacity:0;transform-box:fill-box;transform-origin:50% 50%;animation:wrise 1s 5.6s cubic-bezier(.3,1.4,.5,1) forwards}
+@keyframes wrise{from{opacity:1;transform:translate(0,0) scale(.7)}to{opacity:1;transform:translate(0,-86px) scale(1.7) rotate(-4deg)}}
+.cateye{transform-box:fill-box;transform-origin:50% 50%;animation:catblink 4s 1s infinite}
+@keyframes catblink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.1)}}
+/* wizard: teleport to the tower */
+.wzd .z1{animation:fadeOut .3s 1.9s forwards}
+.wzd .z2{opacity:0;animation:fadeIn .3s 1.95s forwards}
+.wzd .zp1{transform:translate(52px,232px);animation:zwalk .65s .3s linear forwards}
+@keyframes zwalk{to{transform:translate(150px,232px)}}
+.wzd .zp1 .bob{animation:bob .32s .3s 2}
+.wzd .zp1 .spr .fa{animation:flipInv .32s .3s linear 2,fadeOut .05s 1s forwards}
+.wzd .zp1 .spr .fb{animation:flip .32s .3s linear 2}
+.wzd .zp1 .spr .fd{animation:fadeIn .05s 1s forwards}
+.wzd .zsq{transform-box:fill-box;transform-origin:50% 100%;animation:zout .45s 1.4s ease-in forwards}
+@keyframes zout{to{transform:scale(.1,1.6);opacity:0}}
+.wzd .zbeam1,.wzd .zbeam2{opacity:0;transform-box:fill-box;transform-origin:50% 100%}
+.wzd .zbeam1{animation:zbeam .9s 1.15s ease-out forwards}
+.wzd .zbeam2{animation:zbeam .9s 2.05s ease-out forwards}
+@keyframes zbeam{0%{opacity:0;transform:scaleX(.2)}40%{opacity:1;transform:scaleX(1)}100%{opacity:0;transform:scaleX(.3)}}
+.wzd .zp2{transform:translate(98px,234px)}
+.wzd .zsq2{opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:zin .45s 2.35s ease-out forwards}
+@keyframes zin{from{opacity:0;transform:scale(.1,1.6)}to{opacity:1;transform:scale(1)}}
+.wzd .zp2 .bob{animation:bob .9s ease-in-out infinite}
+.wzd .zp2 .spr .fa{animation:fadeOut .05s 3.0s forwards}
+.wzd .zp2 .spr .fd{animation:fadeIn .05s 3.0s forwards}
+.wzd .zring{animation:zring 1.4s 3.2s ease-in-out forwards}
+@keyframes zring{to{stroke:#bfe9ff;stroke-width:3.4}}
+.wzd .zrunes{animation:zrunes .5s 3.2s ease-in-out 6 alternate}
+@keyframes zrunes{to{fill:#eaf8ff;opacity:.6}}
+.wzd .zglowc{opacity:0;transform-box:fill-box;transform-origin:50% 50%;animation:glow 1.2s 4.2s ease-out forwards}
+.wzd .rays{animation-delay:4.7s}
+.wzd .zbook{opacity:0;transform-box:fill-box;transform-origin:50% 50%;animation:zbook 1.2s 4.2s ease-out forwards}
+@keyframes zbook{0%{opacity:0;transform:translate(0,40px) scale(.2)}40%{opacity:1;transform:translate(0,20px) scale(.8)}100%{opacity:1;transform:translate(0,-58px) scale(1.7) rotate(-4deg)}}
+.orb{animation:orb 2s ease-in-out infinite}
+@keyframes orb{50%{opacity:.75}}
+.fcandle{animation:float 3s ease-in-out infinite}
 /* settle animation (book already owned) */
 .settle .drop{transform-box:fill-box;transform-origin:50% 100%;animation:drop .8s .15s cubic-bezier(.5,0,.6,1.4) both}
 .settle .dust{opacity:0;transform-box:fill-box;transform-origin:50% 50%;animation:dust .7s .85s ease-out forwards}
@@ -386,7 +462,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 16</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 17</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -980,6 +1056,10 @@ const sfx = (() => {
     sigh: () => { noise({a: .35, f: 1100, fTo: 450, q: 1.2, peak: .07, dec: .9}); tone(220, {a: .3, peak: .015, dec: .8, to: 180}); },
     sparkle: () => { [1047, 1319, 1568, 2093, 2637].forEach((fq, i) => tone(fq, {at: i * .07, peak: .07, dec: .7})); noise({at: .1, f: 7000, q: 1, peak: .03, dec: .8, type: 'highpass'}); },
     thud: () => { tone(140, {peak: .25, dec: .18, to: 55}); noise({f: 500, q: .6, peak: .08, dec: .25, type: 'lowpass'}); },
+    whoosh: () => noise({a: .25, f: 400, fTo: 2400, q: .8, peak: .12, dec: .7}),
+    bubble: () => { for (let i = 0; i < 5; i++) tone(180 + Math.random() * 120, {at: i * .11, peak: .08, dec: .09, to: 420}); },
+    zap: () => { tone(300, {a: .02, peak: .12, dec: .5, to: 1600, type: 'triangle'}); noise({f: 3000, q: 2, peak: .05, dec: .4}); },
+    hum: () => { tone(110, {a: .3, peak: .05, dec: 1.4}); tone(165, {a: .3, peak: .03, dec: 1.4}); },
   };
 })();
 document.addEventListener('pointerdown', sfx.unlock, {passive: true});
@@ -1049,8 +1129,10 @@ function avPixels(a, frame = {}) {
     rect(6, 25, 17, 25, clD);
     const by = frame.wave ? -2 : 0;
     P(5, 25 + by, sk); P(18, 25, sk);
-    rect(2, 22 + by, 5, 22 + by, '#a8916a'); P(2, 23 + by, '#a8916a'); P(5, 23 + by, '#a8916a');
-    rect(1, 24 + by, 6, 29 + by, '#e6d3b0'); rect(1, 29 + by, 6, 29 + by, '#cdb88f'); rect(2, 23 + by, 3, 24 + by, '#c97f86'); P(4, 26 + by, '#c97f86'); P(3, 27 + by, '#c97f86');
+    if (!frame.noBag) {
+      rect(2, 22 + by, 5, 22 + by, '#a8916a'); P(2, 23 + by, '#a8916a'); P(5, 23 + by, '#a8916a');
+      rect(1, 24 + by, 6, 29 + by, '#e6d3b0'); rect(1, 29 + by, 6, 29 + by, '#cdb88f'); rect(2, 23 + by, 3, 24 + by, '#c97f86'); P(4, 26 + by, '#c97f86'); P(3, 27 + by, '#c97f86');
+    }
   } else {
     for (let y = 17; y <= 30; y++) { const w = hood ? Math.min(8, 6 + ((y - 17) >> 2)) : Math.min(7, 4 + ((y - 17) >> 2)); rect(11.5 - w - .5, y, 11.5 + w + .5, y, cl); P(11.5 - w - .5, y, clD); P(11.5 + w + .5, y, clD); }
     if (type === 'buyucu') {
@@ -1218,9 +1300,135 @@ $('delYes').onclick = () => {
   note(`<span>${esc(t)} silindi.</span>`);
 };
 
+// --- Scenes drawn around the pixel avatar ---
+function spriteImgs(a, k, noBag) {
+  const im = (fr, cls) => `<image class="${cls}" href="${avURL(a, {...fr, noBag})}" x="${-12 * k}" y="${-35 * k}" width="${24 * k}" height="${36 * k}" style="image-rendering:pixelated"/>`;
+  return im({}, 'fa') + im({step: 1}, 'fb') + im({blink: true}, 'fc') + im({wave: 1}, 'fd');
+}
+const BAG = `<path d="M-5 -20 q0 -8 5 -8 q5 0 5 8" fill="none" stroke="#a07a55" stroke-width="1.6"/><path d="M-9 -20 h18 l-1.5 20 h-15z" fill="#e3c08f"/><path d="M-9 -20 h18 v3 h-18z" fill="#d5ad78"/><path d="M-3 -12 l1.2 2.4 2.6.4 -1.9 1.8 .5 2.6 -2.4 -1.2 -2.4 1.2 .5 -2.6 -1.9 -1.8 2.6 -.4z" fill="#f3b9c0"/>`;
+function spritePerson(cls, a, withBag) {
+  return `<g class="${cls}"><g class="bob"><g class="breath spr">${spriteImgs(a, 2.7, true)}</g></g>${withBag ? `<g class="bagPos2"><g class="bagWig"><g transform="scale(.95)">${BAG}</g></g></g>` : ''}</g>`;
+}
+function sparksAt(cx, cy, delay, cols) {
+  return `<g transform="translate(${cx} ${cy})">` + SPARKS.map(([dx, dy], i) => `<path class="spark" style="--dx:${dx}px;--dy:${dy}px;animation-delay:${(delay + (i % 4) * .05).toFixed(2)}s" d="M0 -6 L1.5 -1.5 L6 0 L1.5 1.5 L0 6 L-1.5 1.5 L-6 0 L-1.5 -1.5 Z" fill="${cols[i % cols.length]}"/>`).join('') + '</g>';
+}
+const raysAt = (cx, cy, col) => `<g transform="translate(${cx} ${cy})"><g class="rays">${Array.from({length: 12}, (_, i) => `<path d="M0 0 L-7 -120 L7 -120 Z" fill="${col}" transform="rotate(${i * 30})"/>`).join('')}</g></g>`;
+const starsField = (n, seed, maxY) => Array.from({length: n}, (_, i) => { const h = hash(seed + i); return `<circle cx="${h % 360}" cy="${(h >> 5) % maxY}" r="${(h >> 3) % 3 === 0 ? 1.6 : 1}" fill="#fff6dc" opacity="${.5 + ((h >> 7) % 5) / 10}"/>`; }).join('');
+const bookG = (cls, c, x, y) => `<g class="${cls}"><rect x="${x - 14}" y="${y - 19}" width="28" height="38" rx="3" fill="${c}"/><rect x="${x - 14}" y="${y - 19}" width="5" height="38" rx="2" fill="#0000001f"/><rect x="${x - 5}" y="${y - 9}" width="14" height="3" rx="1.5" fill="#ffffffaa"/><rect x="${x - 5}" y="${y - 3}" width="10" height="3" rx="1.5" fill="#ffffffaa"/></g>`;
+const BROOM = `<g class="broom"><path d="M-30 -11 L38 -19" stroke="#7a5236" stroke-width="4" stroke-linecap="round"/><path d="M-28 -11 l-26 -10 l3 9 l-5 3 l5 4 l-3 9z" fill="#d9b45f"/><path d="M-30 -11 l-20 -7M-30 -11 l-23 0M-30 -11 l-20 7" stroke="#a8823a" stroke-width="1.4"/><rect x="-33" y="-15" width="6" height="8" rx="2" fill="#8a3b4a"/></g>`;
+
+function sceneWitch(b, a) {
+  const c = colorOf(b), spr = spriteImgs(a, 2.7, true);
+  const shelfBottles = [['#7ee0a1', 34], ['#e07eb7', 58], ['#7eb3e0', 82], ['#e0c27e', 104], ['#b98ef0', 126]].map(([col, x], i) => `<g transform="translate(${x} 96)"><circle cx="0" cy="-8" r="${7 - (i % 2)}" fill="${col}" opacity=".9"/><rect x="-2" y="-${21 - (i % 2)}" width="4" height="7" fill="${col}" opacity=".9"/><rect x="-3" y="-${23 - (i % 2)}" width="6" height="3" rx="1" fill="#7a5236"/><circle cx="-2.5" cy="-10" r="1.8" fill="#fff" opacity=".6"/></g>`).join('');
+  const bubbles = Array.from({length: 7}, (_, i) => `<circle class="bub" style="animation-delay:${(4.4 + i * .23).toFixed(2)}s" cx="${215 + (i * 7) % 40}" cy="182" r="${2 + (i % 3)}" fill="#c9a6ff"/>`).join('');
+  return `<svg class="scene wch" viewBox="0 0 360 280" role="img" aria-label="Cadı süpürgesiyle kulübesine uçuyor">
+  <defs><linearGradient id="wsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#140e2a"/><stop offset=".6" stop-color="#3b2763"/><stop offset="1" stop-color="#6a3f7a"/></linearGradient>
+  <radialGradient id="wmoon"><stop offset="0" stop-color="#fff6d6"/><stop offset=".85" stop-color="#f2e2a8"/><stop offset="1" stop-color="#f2e2a8" stop-opacity="0"/></radialGradient>
+  <radialGradient id="wglow"><stop offset="0" stop-color="#e2bcff" stop-opacity=".95"/><stop offset="1" stop-color="#e2bcff" stop-opacity="0"/></radialGradient>
+  <radialGradient id="wfire"><stop offset="0" stop-color="#ffcf6a" stop-opacity=".6"/><stop offset="1" stop-color="#ff9a4a" stop-opacity="0"/></radialGradient></defs>
+  <g class="w1">
+    <rect width="360" height="280" fill="url(#wsky)"/>${starsField(28, 'w1', 150)}
+    <circle cx="300" cy="52" r="20" fill="url(#wmoon)"/>
+    <path d="M180 230 V150 l18 -18 18 18 V230z M230 230 V165 h40 V230z M280 230 V140 l22 -16 22 16 V230z" fill="#2a1d45"/>
+    <g fill="#ffd98a" opacity=".8"><rect x="192" y="170" width="6" height="8"/><rect x="242" y="180" width="6" height="8"/><rect x="296" y="160" width="6" height="8"/></g>
+    <rect x="18" y="92" width="150" height="138" rx="4" fill="#4b3a6b"/>
+    <rect x="12" y="84" width="162" height="12" rx="4" fill="#3a2c55"/>
+    ${Array.from({length: 7}, (_, i) => `<rect x="${18 + i * 21.5}" y="112" width="21.5" height="16" fill="${i % 2 ? '#e8d6ff' : '#8c6bbf'}"/><circle cx="${28.7 + i * 21.5}" cy="128" r="10.7" fill="${i % 2 ? '#e8d6ff' : '#8c6bbf'}"/>`).join('')}
+    <rect x="48" y="96" width="92" height="16" rx="5" fill="#fff3d6"/><text x="94" y="108" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="11" fill="#4a3a4e">KİTAPÇI</text>
+    <rect x="92" y="146" width="66" height="50" rx="4" fill="#ffd98a" stroke="#3a2c55" stroke-width="3"/>${PAL.slice(0, 6).map((col, i) => `<rect x="${98 + i * 9}" y="${168 - (i % 3) * 3}" width="7" height="${20 + (i % 3) * 3}" fill="${col}"/>`).join('')}
+    <rect x="30" y="148" width="44" height="82" rx="3" fill="#ffe6a8" opacity=".85"/><path d="M30 148 l-9 5 v72 l9 5z" fill="#2c2140"/>
+    <rect y="230" width="360" height="50" fill="#2a2238"/><g fill="#382c4a">${Array.from({length: 14}, (_, i) => `<rect x="${i * 27 + (i % 2) * 8}" y="${240 + (i % 3) * 12}" width="16" height="5" rx="2"/>`).join('')}</g>
+    <g class="wp1"><g class="bob spr">${spr}</g>${BROOM}<g class="trail">${[[-60, -4], [-80, 6], [-100, -2], [-122, 8]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${3 - i * .5}" fill="#f3dd9a" style="animation-delay:${(1.6 + i * .12).toFixed(2)}s"/>`).join('')}</g></g>
+  </g>
+  <g class="w2">
+    <rect width="360" height="280" fill="url(#wsky)"/>${starsField(40, 'w2', 230)}
+    <circle cx="190" cy="118" r="78" fill="url(#wmoon)"/><g fill="#e6d49a" opacity=".5"><circle cx="165" cy="100" r="10"/><circle cx="215" cy="140" r="7"/><circle cx="200" cy="90" r="4"/></g>
+    <path d="M0 280 V214 h30 v-22 l20 -16 20 16 v22 h26 v-34 h12 v-12 h8 v12 h10 v34 h34 v-28 l26 -20 26 20 v28 h30 v-40 h12 v-14 h10 v14 h8 v40 h40 v-22 l18 -14 18 14 v22 h22 V280z" fill="#1a1230"/>
+    <g fill="#ffd98a" opacity=".85"><rect x="44" y="196" width="6" height="7"/><rect x="112" y="200" width="6" height="7"/><rect x="184" y="196" width="6" height="7"/><rect x="262" y="190" width="6" height="7"/><rect x="326" y="206" width="6" height="7"/></g>
+    <g class="wp2"><g class="sway"><g class="spr">${spr}</g>${BROOM}</g></g>
+  </g>
+  <g class="w3">
+    <rect width="360" height="280" fill="#2f2245"/>
+    <g stroke="#3a2a55" stroke-width="2">${Array.from({length: 12}, (_, i) => `<path d="M${i * 32} 26 V230"/>`).join('')}</g>
+    <rect y="14" width="360" height="14" fill="#4a3426"/><rect x="40" y="14" width="10" height="216" fill="#4a3426"/>
+    <rect x="252" y="40" width="80" height="70" rx="6" fill="#1b1840" stroke="#5a3e2c" stroke-width="5"/><path d="M292 40 V110 M252 75 H332" stroke="#5a3e2c" stroke-width="3"/>
+    <circle cx="312" cy="58" r="9" fill="#f6e7b0"/><circle cx="316" cy="55" r="8" fill="#1b1840"/>${[[264, 52], [276, 92], [320, 96], [270, 66]].map(([x, y]) => `<circle cx="${x}" cy="${y}" r="1.2" fill="#fff6dc"/>`).join('')}
+    <g stroke="#7fae8c" stroke-width="2" fill="none"><path d="M120 28 q-4 14 2 22M128 28 q4 12 -2 20M136 28 q-3 10 3 18"/></g>
+    <rect x="18" y="96" width="140" height="7" rx="2" fill="#5a3e2c"/>${shelfBottles}
+    <g transform="translate(150 96)"><rect x="-3" y="-14" width="6" height="14" fill="#efe3c8"/><path class="flame" d="M0 -22 c3 3 3 6 0 8 -3 -2 -3 -5 0 -8z" fill="#ffcf6a"/></g>
+    <rect y="230" width="360" height="50" fill="#3a2a3a"/><g stroke="#2e2030" stroke-width="2">${Array.from({length: 8}, (_, i) => `<path d="M${i * 48} 230 V280"/>`).join('')}</g>
+    <ellipse cx="160" cy="248" rx="100" ry="12" fill="#6a3f5a"/>
+    <g transform="translate(330 230) rotate(12)"><path d="M0 0 L0 -120" stroke="#7a5236" stroke-width="4"/><path d="M0 0 l-10 -26 h20z" fill="#d9b45f"/></g>
+    <g transform="translate(62 230)"><ellipse cx="0" cy="-12" rx="13" ry="12" fill="#1f1a26"/><circle cx="0" cy="-30" r="9" fill="#1f1a26"/><path d="M-8 -35 l2 -9 6 6zM8 -35 l-2 -9 -6 6z" fill="#1f1a26"/><path d="M12 -4 q16 -2 10 -18" stroke="#1f1a26" stroke-width="4" fill="none" stroke-linecap="round"/><g class="cateye"><ellipse cx="-3.5" cy="-31" rx="1.6" ry="2" fill="#e9d36a"/><ellipse cx="3.5" cy="-31" rx="1.6" ry="2" fill="#e9d36a"/></g></g>
+    <ellipse cx="235" cy="232" rx="34" ry="6" fill="url(#wfire)"/>
+    <g><path d="M214 232 l42 -6M216 226 l40 6" stroke="#6b4a2c" stroke-width="5" stroke-linecap="round"/><path class="flame" d="M226 228 c4 -10 10 -12 9 -20 6 6 8 12 4 20z" fill="#ff9a4a"/><path class="flame" d="M238 228 c4 -8 8 -10 8 -16 5 5 6 10 2 16z" fill="#ffcf6a" style="animation-delay:.3s"/></g>
+    <circle class="wglowc" cx="235" cy="180" r="60" fill="url(#wglow)"/>
+    ${raysAt(235, 102, '#e9d2ff')}
+    ${bookG('wbook', c, 235, 186)}
+    <ellipse cx="235" cy="203" rx="38" ry="28" fill="#2a2430"/><ellipse cx="235" cy="181" rx="36" ry="9" fill="#3a3344"/>
+    <ellipse class="brew" cx="235" cy="182" rx="30" ry="6.5" fill="#8f5cc9"/><path d="M215 182 q10 -4 20 0 t20 0" stroke="#c9a6ff" stroke-width="2" fill="none"/>
+    ${bubbles}
+    <rect x="203" y="222" width="8" height="8" rx="2" fill="#2a2430"/><rect x="259" y="222" width="8" height="8" rx="2" fill="#2a2430"/>
+    ${sparksAt(235, 110, 5.65, ['#e9d2ff', '#f3dd9a', '#ffffff'])}
+    <g class="wp3"><g class="bob spr">${spr}</g></g>
+  </g>
+  </svg>`;
+}
+
+function sceneWizard(b, a) {
+  const c = colorOf(b), spr = spriteImgs(a, 2.7, true);
+  const runes = Array.from({length: 16}, (_, i) => { const t = i / 16 * Math.PI * 2; return `<rect x="${(Math.cos(t) * 62 - 2).toFixed(1)}" y="${(Math.sin(t) * 13 - 1.5).toFixed(1)}" width="4" height="3" rx="1"/>`; }).join('');
+  const shelf = Array.from({length: 4}, (_, r) => `<rect x="278" y="${70 + r * 42}" width="70" height="4" fill="#4a3426"/>` + Array.from({length: 7}, (_, i) => { const h = hash('z' + r + i); return `<rect x="${281 + i * 9.5}" y="${70 + r * 42 - 26 - h % 8}" width="8" height="${26 + h % 8}" fill="${PAL[h % PAL.length]}"/>`; }).join('')).join('');
+  return `<svg class="scene wzd" viewBox="0 0 360 280" role="img" aria-label="Büyücü kulesine ışınlanıyor">
+  <defs><linearGradient id="zsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1230"/><stop offset=".7" stop-color="#22336a"/><stop offset="1" stop-color="#3a4f86"/></linearGradient>
+  <linearGradient id="zbeam" x1="0" x2="1"><stop offset="0" stop-color="#9fdcff" stop-opacity="0"/><stop offset=".5" stop-color="#e6f7ff"/><stop offset="1" stop-color="#9fdcff" stop-opacity="0"/></linearGradient>
+  <radialGradient id="zorb" cx=".38" cy=".35"><stop offset="0" stop-color="#e6fbff"/><stop offset=".5" stop-color="#7fd0f0"/><stop offset="1" stop-color="#2a6f9a"/></radialGradient>
+  <radialGradient id="zglow"><stop offset="0" stop-color="#bfe9ff" stop-opacity=".9"/><stop offset="1" stop-color="#bfe9ff" stop-opacity="0"/></radialGradient></defs>
+  <g class="z1">
+    <rect width="360" height="280" fill="url(#zsky)"/>${starsField(30, 'z1', 160)}
+    <path d="M300 40 a18 18 0 1 0 14 30 a14 14 0 1 1 -14 -30z" fill="#f3e7b8"/>
+    <path d="M190 230 V120 l26 -30 26 30 V230z" fill="#16204a"/><rect x="210" y="130" width="12" height="18" rx="6" fill="#ffd98a" opacity=".8"/>
+    <rect x="18" y="96" width="150" height="134" rx="4" fill="#3a4566"/><g stroke="#2e3858" stroke-width="2">${Array.from({length: 6}, (_, i) => `<path d="M18 ${112 + i * 20} H168"/>`).join('')}</g>
+    <rect x="12" y="88" width="162" height="12" rx="4" fill="#2b3452"/>
+    <rect x="48" y="100" width="92" height="16" rx="5" fill="#eaf4ff"/><text x="94" y="112" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-weight="600" font-size="11" fill="#2b3452">KİTAPÇI</text>
+    <path d="M92 196 V152 a33 20 0 0 1 66 0 V196z" fill="#ffe6a8" stroke="#2b3452" stroke-width="3"/>${PAL.slice(0, 6).map((col, i) => `<rect x="${98 + i * 9}" y="${170 - (i % 3) * 3}" width="7" height="${24 + (i % 3) * 3}" fill="${col}"/>`).join('')}
+    <rect x="30" y="148" width="44" height="82" rx="3" fill="#ffe6a8" opacity=".85"/><path d="M30 148 l-9 5 v72 l9 5z" fill="#232c48"/>
+    <rect y="230" width="360" height="50" fill="#1f2944"/>
+    <rect class="zbeam1" x="130" y="0" width="40" height="232" fill="url(#zbeam)"/>
+    <g class="zp1"><g class="zsq"><g class="bob spr">${spr}</g></g></g>
+    ${sparksAt(150, 170, 1.3, ['#bfe9ff', '#ffffff'])}
+  </g>
+  <g class="z2">
+    <rect width="360" height="280" fill="#1b2240"/>
+    <g stroke="#232c50" stroke-width="2" fill="none">${Array.from({length: 9}, (_, r) => `<path d="M0 ${r * 26 + 10} H360"/>` + Array.from({length: 7}, (_, i) => `<path d="M${i * 56 + (r % 2) * 28} ${r * 26 + 10} v26"/>`).join('')).join('')}</g>
+    <path d="M40 176 V70 a45 45 0 0 1 90 0 V176z" fill="#0f1838" stroke="#4a5680" stroke-width="6"/>${starsField(16, 'z2', 100).replace(/cx="(\d+)"/g, (m, x) => `cx="${48 + (+x % 76)}"`).replace(/cy="(\d+)"/g, (m, y) => `cy="${44 + (+y % 120)}"`)}
+    <path d="M104 52 a12 12 0 1 0 9 20 a9 9 0 1 1 -9 -20z" fill="#f3e7b8"/><path d="M85 25 V176 M40 120 H130" stroke="#4a5680" stroke-width="4"/>
+    <rect x="34" y="176" width="102" height="8" rx="2" fill="#4a5680"/>
+    <g transform="translate(158 176)"><path d="M0 54 L-14 0 M0 54 L14 0 M0 54 V0" stroke="#8a6a3f" stroke-width="2.5"/><rect x="-26" y="-20" width="44" height="10" rx="4" fill="#c9a25a" transform="rotate(-28)"/><rect x="12" y="-36" width="8" height="12" rx="2" fill="#a57f3c" transform="rotate(-28)"/></g>
+    ${shelf}<rect x="274" y="30" width="78" height="200" fill="none" stroke="#4a3426" stroke-width="5"/>
+    <g transform="translate(60 230)"><path d="M-14 0 h28 l-4 -22 h-20z" fill="#4a3426"/><circle class="orb" cx="0" cy="-34" r="13" fill="url(#zorb)"/><circle cx="0" cy="-34" r="20" fill="url(#zglow)" opacity=".5"/></g>
+    ${[[190, 70, 0], [226, 48, .5], [258, 82, 1]].map(([x, y, d]) => `<g class="fcandle" style="animation-delay:${d}s"><rect x="${x - 3}" y="${y}" width="6" height="16" rx="1" fill="#efe3c8"/><path class="flame" d="M${x} ${y - 9} c3 3 3 6 0 8 -3 -2 -3 -5 0 -8z" fill="#ffcf6a"/><circle cx="${x}" cy="${y - 4}" r="10" fill="#ffd98a" opacity=".15"/></g>`).join('')}
+    <rect y="232" width="360" height="48" fill="#141a33"/>
+    <g transform="translate(205 246)"><ellipse rx="86" ry="18" fill="#2a2a5a"/><g class="zring" fill="none" stroke="#5f7fc9" stroke-width="2"><ellipse rx="74" ry="15"/><ellipse rx="56" ry="11"/></g><g class="zrunes" fill="#7f9fe0">${runes}</g></g>
+    <circle class="zglowc" cx="205" cy="200" r="70" fill="url(#zglow)"/>
+    ${raysAt(205, 118, '#d6f2ff')}
+    ${bookG('zbook', c, 205, 176)}
+    ${sparksAt(205, 118, 4.75, ['#bfe9ff', '#ffffff', '#f3dd9a'])}
+    <rect class="zbeam2" x="78" y="0" width="40" height="236" fill="url(#zbeam)"/>
+    <g class="zp2"><g class="zsq2"><g class="bob spr">${spr}</g></g></g>
+  </g>
+  </svg>`;
+}
+const STORY = {
+  insan: {say: [['Kitapçıdan yeni bir dostla çıkıyorsun…', 0], ['Eve hoş geldin.', 2.6], ['Ohh… o yeni kitap kokusu.', 4.7], ['Ve işte!', 6.2]], end: 7600},
+  cadi: {say: [['Kitapçıdan yeni bir dostla çıkıyorsun…', 0], ['Süpürgene atla!', 1.2], ['Ay ışığında eve uçuyorsun…', 2.7], ['Kazan kaynıyor…', 4.4], ['Ve işte!', 5.7]], end: 7000},
+  buyucu: {say: [['Kitapçıdan yeni bir dostla çıkıyorsun…', 0], ['Asanı kaldır…', 1.0], ['Kulene ışınlanıyorsun!', 2.0], ['Büyü çemberi parlıyor…', 3.2], ['Ve işte!', 4.7]], end: 6200},
+};
+
 // --- New purchase story ---
 const SPARKS = Array.from({length: 14}, (_, i) => { const a = i / 14 * Math.PI * 2, d = 70 + (i % 3) * 26; return [Math.round(Math.cos(a) * d), Math.round(Math.sin(a) * d), i % 2 ? '#f7e3a3' : '#ffffff']; });
 function person(cls, withBag) {
+  const av = avLoad(); if (av) return spritePerson(cls, av, withBag);
   return `<g class="${cls}"><g transform="scale(1.25)"><g class="bob">
     <rect class="leg l1" x="-7" y="-22" width="5.5" height="22" rx="2.75" fill="#6f5b78"/>
     <rect class="leg l2" x="1.5" y="-22" width="5.5" height="22" rx="2.75" fill="#7d6886"/>
@@ -1324,17 +1532,26 @@ function showWelcome() {
 function playNewBook(b, scanned) {
   storyBook = b; storyScanned = scanned;
   const st = $('story'); st.classList.remove('card'); $('welcome').hidden = true; $('skip').hidden = false;
-  $('stage').innerHTML = sceneSVG(b); st.hidden = false;
+  const av = avLoad(), kind = av && STORY[av.type] ? av.type : 'insan';
+  $('stage').innerHTML = kind === 'cadi' ? sceneWitch(b, av) : kind === 'buyucu' ? sceneWizard(b, av) : sceneSVG(b); st.hidden = false;
   if (calm) { showWelcome(); return; }
   const cap = $('caption'), say = (t, at) => storyTimers.push(setTimeout(() => { cap.textContent = t; }, at * 1000));
-  say('Kitapçıdan yeni bir dostla çıkıyorsun…', 0); say('Eve hoş geldin.', 2.6); say('Ohh… o yeni kitap kokusu.', 4.7); say('Ve işte!', 6.2);
+  for (const [t, s] of STORY[kind].say) say(t, s);
   const at = (fn, s) => storyTimers.push(setTimeout(fn, s * 1000));
   at(sfx.bell, .25);
-  for (let k = 0; k < 6; k++) at(sfx.step, .5 + k * .32);
-  at(sfx.creak, 2.45);
-  for (let k = 0; k < 4; k++) at(sfx.step, 2.8 + k * .3);
-  at(() => sfx.rustle(.6), 4.05); at(sfx.sigh, 4.8); at(() => sfx.rustle(.5), 5.7); at(sfx.sparkle, 6.4);
-  storyTimers.push(setTimeout(showWelcome, 7600));
+  if (kind === 'cadi') {
+    for (let k = 0; k < 3; k++) at(sfx.step, .35 + k * .32);
+    at(sfx.whoosh, 1.35); at(sfx.whoosh, 2.75); at(sfx.bubble, 4.6); at(sfx.bubble, 5.0); at(sfx.sparkle, 5.7);
+  } else if (kind === 'buyucu') {
+    for (let k = 0; k < 2; k++) at(sfx.step, .35 + k * .32);
+    at(sfx.zap, 1.2); at(sfx.zap, 2.1); at(sfx.hum, 3.2); at(sfx.sparkle, 4.75);
+  } else {
+    for (let k = 0; k < 6; k++) at(sfx.step, .5 + k * .32);
+    at(sfx.creak, 2.45);
+    for (let k = 0; k < 4; k++) at(sfx.step, 2.8 + k * .3);
+    at(() => sfx.rustle(.6), 4.05); at(sfx.sigh, 4.8); at(() => sfx.rustle(.5), 5.7); at(sfx.sparkle, 6.4);
+  }
+  storyTimers.push(setTimeout(showWelcome, STORY[kind].end));
 }
 function endStory() {
   clearStory(); $('story').hidden = true; $('stage').innerHTML = '';
