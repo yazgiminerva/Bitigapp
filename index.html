@@ -261,8 +261,15 @@ body.selecting{padding-bottom:170px}
 .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:7;display:grid;grid-template-columns:repeat(3,1fr);height:calc(60px + var(--sb));padding-bottom:var(--sb);background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line)}
 :root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) .tabbar{background:color-mix(in srgb,var(--card) 94%,transparent);border-top-color:var(--cardE)}
 .tabbar button{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--mute);font:800 11px "Nunito",sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.tabbar svg{width:26px;height:26px}.tabbar svg .o{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linejoin:round}
-.tabbar button[aria-current=page]{color:var(--ink)}.tabbar button[aria-current=page] svg .o{fill:currentColor;stroke-width:1.4}
+.tabbar svg{width:30px;height:30px;fill:currentColor}
+.tabbar svg .frame,.tabbar svg .stick{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.tabbar svg .spark{opacity:0}
+.tabbar button[aria-current=page]{color:var(--ink)}
+.tabbar button[aria-current=page] svg{filter:drop-shadow(0 0 5px color-mix(in srgb,var(--rose) 55%,transparent))}
+.tabbar button[aria-current=page] svg .spark{opacity:1;animation:twk 1.6s ease-in-out infinite}
+.tabbar button[data-tab=feed][aria-current=page] svg .rider{animation:ride 2.4s ease-in-out infinite}
+@keyframes ride{50%{transform:translate(1px,-1.2px) rotate(-3deg)}}
+.tabbar svg .rider{transform-box:fill-box;transform-origin:50% 60%}
 .tabbar img{width:20px;height:30px;image-rendering:pixelated;margin-top:-2px;opacity:.75}.tabbar button[aria-current=page] img{opacity:1;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--rose) 70%,transparent))}
 body.selecting .tabbar{display:none}
 .pbody{padding:0 max(4vw,16px)}
@@ -620,7 +627,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 30</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 31</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -654,8 +661,8 @@ a{color:var(--roseD)}
   </div>
 </div>
 <nav class="tabbar" id="tabbar" aria-label="Bölümler">
-  <button type="button" data-tab="feed"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="o" d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Akış</span></button>
-  <button type="button" data-tab="lib" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="o" d="M4 3h4v18H4zM10 3h4v18h-4zM15.5 4.2l3.8-1 4 17.4-3.8 1z"/></svg><span>Kitaplığım</span></button>
+  <button type="button" data-tab="feed"><svg viewBox="0 0 24 24" aria-hidden="true" id="feedIco"></svg><span>Akış</span></button>
+  <button type="button" data-tab="lib" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" class="ico"><path class="frame" d="M3.2 1.8h17.6v20.4H3.2z M3.2 11.6h17.6 M2 22.2h20"/><path d="M5.2 4.2h2.2v7.4H5.2zM8 3.4h2v8.2H8zM10.6 5h2.6v6.6h-2.6zM13.9 5.2l2-.5 1.8 6.6-2 .5z"/><path d="M5.2 14.4h2.4v7.8H5.2zM8.2 13.8h1.9v8.4H8.2zM10.7 15h2.4v7.2h-2.4zM14.4 14.2h2v8h-2zM17 15.6h2v6.6h-2z"/><circle cx="18.6" cy="9.6" r="1.6"/></svg><span>Kitaplığım</span></button>
   <button type="button" data-tab="prof"><img id="tabAv" alt=""><span>Profilim</span></button>
 </nav>
 <nav class="dots" aria-label="Sayfalar"><button type="button" data-p="0" aria-label="Raf" aria-current="true"></button><button type="button" data-p="1" aria-label="Büyük kitaplık"></button></nav>
@@ -1986,8 +1993,15 @@ function drawAvUI() {
   avDraw($('avBig'), a, {});
 }
 function openAv() { avDraft = {...(avLoad() || AV_DEFAULT)}; $('avName').value = avDraft.name || ''; drawAvUI(); $('avOv').hidden = false; }
+// the Akış tab flies on a broom: a witch, a wizard, or a winged book for humans
+const FEED_ICO = {
+  cadi: '<g class="rider"><path class="stick" d="M5.5 18.2L21 14.4"/><path d="M1.2 16.8l5.2-.9.6 2.6-4.6 3.1c-.4-.6-1.6-3.2-1.2-4.8z"/><path d="M8.6 17.2c.2-3.1 1.4-6 3.6-7.6 1.6 1.4 2.8 3.9 3 6.4z"/><circle cx="12.6" cy="7.6" r="1.9"/><path d="M7.8 7.6c1.6-1 4.4-1.6 9.2-1.8.5.1.4.6-.1.7-3 .5-6.2 1.1-8.7 1.6-.5.1-.8-.2-.4-.5z"/><path d="M10 6.9l2.3-5.2c.7-1.5 2.4-1.8 3.6-.8-1 0-1.7.5-2 1.4l-.3 4.1z"/><path d="M10.8 8.6c-1.5.4-2.6 1.6-3.5 3.3 1.3-.6 2.5-1.1 3.6-1.5z"/></g><path class="spark" d="M20 3.2l.5 1.3 1.3.5-1.3.5-.5 1.3-.5-1.3-1.3-.5 1.3-.5z"/>',
+  buyucu: '<g class="rider"><path class="stick" d="M5.5 18.2L21 14.4"/><path d="M1.2 16.8l5.2-.9.6 2.6-4.6 3.1c-.4-.6-1.6-3.2-1.2-4.8z"/><path d="M8.4 17.3c.1-3.3 1.4-6.2 3.8-7.8 1.7 1.4 3 4 3.2 6.6z"/><circle cx="12.7" cy="7.8" r="1.9"/><path d="M13.4 8.6l3.2 2.8-2.8.6-1.2-2.5z"/><path d="M9 7.5c1.6-.8 4-1.2 7.2-1.3.4 0 .4.5 0 .6-2.6.4-4.8.8-6.9 1.2-.4.1-.6-.3-.3-.5z"/><path d="M10.6 6.8L13.2.6l2.4 5.6z"/><path class="spark" style="opacity:1" d="M13.2 2.6l.3.8.8.3-.8.3-.3.8-.3-.8-.8-.3.8-.3z" fill="var(--paper)"/></g><path class="spark" d="M20 3.2l.5 1.3 1.3.5-1.3.5-.5 1.3-.5-1.3-1.3-.5 1.3-.5z"/>',
+  insan: '<g class="rider"><path d="M12 9.6c-2.4-1.5-5.6-1.6-8.4-.6v10c2.8-1 6-.9 8.4.6 2.4-1.5 5.6-1.6 8.4-.6V9c-2.8-1-6-.9-8.4.6z" opacity=".95"/><path class="stick" d="M12 9.8v10" style="stroke:var(--paper);stroke-width:1.2"/><path d="M3.4 9.6C1.4 9 .4 7.4.4 5.6c.9.8 1.8 1.2 2.7 1.3C2.2 5.9 1.8 4.6 2 3.2c1 1.4 2.2 2.3 3.6 2.8-.4-.8-.5-1.7-.3-2.6 1 1.6 2.2 2.8 3.4 3.4z"/><path d="M20.6 9.6c2-.6 3-2.2 3-4-.9.8-1.8 1.2-2.7 1.3.9-1 1.3-2.3 1.1-3.7-1 1.4-2.2 2.3-3.6 2.8.4-.8.5-1.7.3-2.6-1 1.6-2.2 2.8-3.4 3.4z"/></g><path class="spark" d="M12 1.2l.5 1.3 1.3.5-1.3.5-.5 1.3-.5-1.3-1.3-.5 1.3-.5z"/>',
+};
 function renderAvatarHead() {
   const a = avLoad();
+  $('feedIco').innerHTML = FEED_ICO[(a && a.type) || 'cadi'] || FEED_ICO.cadi;
   $('tabAv').src = avURL(a || {...AV_DEFAULT, hood: true, cloak: 4, hairColor: 0}, {});
   $('avPlus').hidden = !!a;
   avDraw($('avMini'), a || {...AV_DEFAULT, hood: true, cloak: 4, hairColor: 0}, {});
