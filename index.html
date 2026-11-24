@@ -187,6 +187,9 @@ summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weig
 .tpick small{font:700 11px "Nunito",sans-serif;color:var(--mute)}
 .amsg{margin:0;color:#e88594;font-weight:700;font-size:14px}
 .amsg:empty{display:none}
+.kvkk h3{font:600 18px var(--serif);font-variation-settings:"SOFT" 100;margin:16px 0 6px}
+.kvkk p,.kvkk li{font-size:15px;line-height:1.55}.kvkk ul,.kvkk ol{display:block;padding-left:20px;margin:6px 0}.kvkk ul{list-style:disc}.kvkk ol{list-style:decimal}.kvkk li{margin-bottom:4px}
+.tbd{background:var(--butter);color:var(--on);border-radius:6px;padding:0 6px;font-weight:700}
 .authbox details{font-size:14px;padding:2px 12px}
 .wadd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.wadd .btn{font-size:14px;padding:8px 6px;min-height:46px}
 .witem{grid-template-columns:46px minmax(0,1fr) auto}
@@ -499,7 +502,7 @@ a{color:var(--roseD)}
         <summary>Hesabım</summary>
         <p style="margin:0 0 4px"><b id="acctMail"></b></p>
         <p class="muted" id="syncInfo" style="margin:0 0 10px"></p>
-        <div class="bk"><button class="btn" id="pwReset" type="button">Şifremi değiştir</button><button class="btn" id="logout" type="button">Çıkış yap</button><button class="btn danger" id="delAcct" type="button">Hesabımı ve kitaplarımı sil</button></div>
+        <div class="bk"><button class="btn" id="pwReset" type="button">Şifremi değiştir</button><button class="btn" id="logout" type="button">Çıkış yap</button><button class="btn" type="button" data-kvkk>Aydınlatma metni</button><button class="btn danger" id="delAcct" type="button">Hesabımı ve kitaplarımı sil</button></div>
         <p class="muted" id="acctMsg"></p>
       </details>
       <details id="bkBox">
@@ -525,7 +528,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 23</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 24</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -633,7 +636,7 @@ a{color:var(--roseD)}
         <label class="f">E-posta<input name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" required></label>
         <label class="f">Şifre<input name="pw" type="password" autocomplete="current-password" required></label>
         <label class="f" id="pw2Box" hidden>Şifre tekrar (en az 8 karakter)<input name="pw2" type="password" autocomplete="new-password"></label>
-        <details id="privacy" hidden><summary>Aydınlatma metni</summary><p style="margin-top:0">Hesabını açmak ve kitaplığını cihazların arasında saklamak için e-posta adresini ve kitap kayıtlarını işliyoruz. Veriler Google Firebase'te (Frankfurt, Almanya) tutulur ve onları yalnızca sen görebilirsin. Barkodla eklediğin kitapların yalnızca künye bilgileri, seninle ilişkilendirilmeden ortak listeye eklenir. Hesabını Ayarlar &gt; Hesabım bölümünden istediğin zaman silebilirsin; silince bütün kitapların da silinir.</p></details>
+        <details id="privacy" hidden><summary>Aydınlatma metni</summary><p style="margin-top:0">Hesabını açmak ve kitaplığını cihazların arasında saklamak için e-posta adresini ve kitap kayıtlarını işliyoruz. Veriler Google Firebase'te (Frankfurt, Almanya) tutulur ve onları yalnızca sen görebilirsin. Barkodla eklediğin kitapların yalnızca künye bilgileri, seninle ilişkilendirilmeden ortak listeye eklenir. Hesabını Ayarlar &gt; Hesabım bölümünden istediğin zaman silebilirsin; silince bütün kitapların da silinir.</p><button class="btn small" type="button" data-kvkk style="margin:0 0 8px">Metnin tamamını oku</button></details>
         <label class="share" id="kvkkBox" hidden><input type="checkbox" id="kvkk"><span>Aydınlatma metnini okudum ve anladım.</span></label>
         <button class="btn primary" id="authGo" type="submit">Giriş yap</button>
         <button class="btn link" id="forgot" type="button">Şifremi unuttum</button>
@@ -646,6 +649,66 @@ a{color:var(--roseD)}
       <div class="bk"><button class="btn primary" id="vDone" type="button">Doğruladım</button><button class="btn" id="vAgain" type="button">Bağlantıyı tekrar gönder</button><button class="btn link" id="vOut" type="button">Başka bir hesapla gir</button></div>
       <p class="amsg" id="vMsg" role="alert"></p>
     </div>
+  </div>
+</div>
+
+<div class="ov" id="kvkkOv" hidden style="z-index:58">
+  <div class="sheet kvkk" role="dialog" aria-modal="true" aria-labelledby="kvTitle">
+    <div class="sh-head"><h2 id="kvTitle">Aydınlatma metni</h2><button class="x" id="kvX" type="button" aria-label="Kapat">×</button></div>
+    <p class="muted" style="margin-top:0">Kitaplığım Kişisel Verilerin İşlenmesine İlişkin Aydınlatma Metni · Sürüm 1 · 24 Kasım 2026</p>
+    <p>Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu'nun ("KVKK") 10. maddesi uyarınca, Kitaplığım uygulamasını kullanırken kişisel verilerinin nasıl işlendiğini anlatmak için hazırlanmıştır.</p>
+    <h3>1. Veri sorumlusu</h3>
+    <p>Kişisel verilerin, veri sorumlusu sıfatıyla Betül Yazgı Güner tarafından işlenir. İletişim: <span class="tbd">iletişim e-postası eklenecek</span>.</p>
+    <h3>2. İşlenen kişisel veriler</h3>
+    <ul>
+      <li><b>Kimlik ve iletişim:</b> e-posta adresin; avatarına verdiğin ad (isteğe bağlı).</li>
+      <li><b>Hesap bilgileri:</b> hesap kimliğin, e-postanın doğrulanıp doğrulanmadığı, hesap açılış ve son giriş tarihleri. Şifren Google tarafından geri döndürülemez biçimde saklanır; veri sorumlusu şifreni göremez.</li>
+      <li><b>Kitaplık içeriğin:</b> eklediğin kitapların bilgileri, okuma durumu, puanların, notların, kitabı ödünç verdiğin kişinin adı (yazarsan), satın alma tarihi ve yeri, hatıra notların, istek listen, kendi çektiğin kapak fotoğrafları, avatar ve tema tercihlerin.</li>
+      <li><b>İşlem güvenliği:</b> uygulamaya ve hizmet sağlayıcılara bağlanırken IP adresin ve tarayıcı bilgilerin.</li>
+    </ul>
+    <p>Uygulama özel nitelikli kişisel veri istemez. Notlarına başkalarına ait ya da özel nitelikli bilgi yazmamanı rica ederiz.</p>
+    <h3>3. İşleme amaçları ve hukuki sebepler</h3>
+    <ul>
+      <li>Hesabını oluşturmak, girişini sağlamak, kitaplığını saklamak ve cihazların arasında eşitlemek; e-postanı doğrulamak ve şifre sıfırlama bağlantısı göndermek: KVKK m.5/2-c, sözleşmenin kurulması veya ifasıyla doğrudan ilgili olması.</li>
+      <li>Hesap ve sistem güvenliğini sağlamak, kötüye kullanımı önlemek: KVKK m.5/2-f, temel hak ve özgürlüklerine zarar vermemek kaydıyla meşru menfaat.</li>
+      <li>Başvurularını yanıtlamak, yasal yükümlülükleri yerine getirmek: KVKK m.5/2-ç, hukuki yükümlülük ve m.5/2-e, bir hakkın tesisi, kullanılması veya korunması.</li>
+    </ul>
+    <p>Barkodla eklediğin kitapların yalnızca künye bilgileri (başlık, yazar, yayınevi, ISBN gibi) herkesin yararlandığı ortak listeye eklenir. Bu bilgiler seninle ilişkilendirilmez; notların, puanların ve hatıraların ortak listeye gönderilmez. Kendi kapak fotoğrafın ortak listeye yalnızca sen kutuyu işaretlersen eklenir.</p>
+    <h3>4. Kişisel verilerin aktarılması</h3>
+    <p>Kişisel verilerin, uygulamanın çalışması için gerekli olan şu hizmet sağlayıcılara (veri işleyenlere) aktarılır:</p>
+    <ul>
+      <li><b>Google (Firebase):</b> hesap, giriş ve kitaplık verilerinin saklanması. Veriler Almanya'daki (Frankfurt) sunucularda tutulur.</li>
+      <li><b>Cloudflare:</b> ortak kitap listesinin sunucusu; bu servise IP adresin ulaşır.</li>
+      <li><b>GitHub:</b> uygulamanın dosyalarının barındırılması; sayfa açılırken IP adresin ulaşır.</li>
+      <li><b>Google Books, Open Library ve Google Fonts:</b> barkodla kitap aranırken ISBN numarası ve IP adresin, yazı tipleri yüklenirken IP adresin bu servislere ulaşır.</li>
+    </ul>
+    <p>Bu sağlayıcıların sunucuları yurt dışındadır. Yurt dışına aktarım, KVKK m.9'da öngörülen usullere uygun olarak yapılır. Kişisel verilerin, kanunen yetkili kamu kurum ve kuruluşlarına yalnızca hukuki yükümlülük gereği aktarılabilir.</p>
+    <p><b>Kapak okuma özelliği (isteğe bağlı):</b> "Kapaktan ekle" özelliğini kendi Google API anahtarınla açarsan, kapak fotoğrafın doğrudan telefonundan Google'ın Gemini servisine gönderilir. Bu aktarım senin anahtarın ve Google ile aranızdaki koşullar üzerinden olur; ücretsiz kullanımda Google gönderilen fotoğrafları kendi ürünlerini geliştirmek için kullanabilir.</p>
+    <h3>5. Toplama yöntemi</h3>
+    <p>Kişisel verilerin, uygulamaya kayıt olurken ve uygulamayı kullanırken senin girdiğin bilgilerden; IP adresi ve tarayıcı bilgileri ise bağlantı sırasında otomatik yollarla, elektronik ortamda toplanır.</p>
+    <h3>6. Saklama süresi</h3>
+    <ul>
+      <li>Hesap ve kitaplık verilerin, hesabını silene kadar saklanır. Ayarlar &gt; Hesabım &gt; "Hesabımı ve kitaplarımı sil" ile hesabını sildiğinde tüm kitap kayıtların, istek listen ve kapak fotoğrafların silinir; Google bu verileri canlı ve yedek sistemlerinden 180 gün içinde kaldırır.</li>
+      <li>Giriş sırasında kaydedilen IP adresleri, Google tarafından birkaç hafta saklanır.</li>
+      <li>Telefonundaki kopyalar, çıkış yaptığında ya da tarayıcı verilerini sildiğinde silinir.</li>
+      <li>Ortak listedeki künye bilgileri kişisel veri içermediği için süresiz tutulur.</li>
+    </ul>
+    <h3>7. Hakların</h3>
+    <p>KVKK m.11 uyarınca veri sorumlusuna başvurarak:</p>
+    <ol>
+      <li>Kişisel verilerinin işlenip işlenmediğini öğrenme,</li>
+      <li>İşlenmişse buna ilişkin bilgi talep etme,</li>
+      <li>İşlenme amacını ve bunların amacına uygun kullanılıp kullanılmadığını öğrenme,</li>
+      <li>Yurt içinde veya yurt dışında aktarıldığı üçüncü kişileri bilme,</li>
+      <li>Eksik veya yanlış işlenmişse düzeltilmesini isteme,</li>
+      <li>KVKK m.7'deki şartlar çerçevesinde silinmesini veya yok edilmesini isteme,</li>
+      <li>5. ve 6. maddeler uyarınca yapılan işlemlerin, verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme,</li>
+      <li>İşlenen verilerin münhasıran otomatik sistemlerle analiz edilmesi suretiyle aleyhine bir sonucun ortaya çıkmasına itiraz etme,</li>
+      <li>Kanuna aykırı işleme nedeniyle zarara uğraman hâlinde zararın giderilmesini talep etme</li>
+    </ol>
+    <p>haklarına sahipsin.</p>
+    <p>Başvurunu, Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ'e uygun olarak, uygulamaya kayıtlı e-posta adresinden <span class="tbd">iletişim e-postası eklenecek</span> adresine iletebilirsin. Başvurun en geç 30 gün içinde ücretsiz olarak yanıtlanır. Bilgilerini düzeltmek ya da hesabını silmek için uygulamadaki ayarları da kullanabilirsin.</p>
+    <button class="btn primary" id="kvOk" type="button" style="width:100%;margin-top:8px">Kapat</button>
   </div>
 </div>
 
@@ -2226,6 +2289,8 @@ async function loadProfile() {
     if (p.theme && THEMES.includes(p.theme) && p.theme !== themeNow()) setTheme(p.theme);
     profileReady = true;
     if (!s.exists() || !p.avatar) profileDirty();
+    const ack = localStorage.getItem('kitapligim.ack');
+    if (ack && !p.aydinlatma) FB.setDoc(FB.doc(fbDb, 'users', me.uid), {aydinlatma: JSON.parse(ack)}, {merge: true}).then(() => localStorage.removeItem('kitapligim.ack')).catch(() => {});
   } catch (e) { profileReady = true; }
   if (!avLoad()) {
     let t = 'cadi'; try { t = localStorage.getItem('kitapligim.pendingType') || 'cadi'; } catch (e) {}
@@ -2253,6 +2318,9 @@ function showVerify(user) {
   $('vEmail').textContent = user.email || ''; $('vMsg').textContent = '';
   $('authSub').textContent = 'Bir adım kaldı.';
 }
+document.addEventListener('click', e => { if (e.target.closest('[data-kvkk]')) { $('kvkkOv').hidden = false; $('kvkkOv').querySelector('.sheet').scrollTop = 0; } });
+$('kvX').onclick = $('kvOk').onclick = () => { $('kvkkOv').hidden = true; };
+$('kvkkOv').addEventListener('click', e => { if (e.target === $('kvkkOv')) $('kvkkOv').hidden = true; });
 $('authTabs').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { authMode = b.dataset.t; drawAuth(); } });
 $('tpick').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { pickType = b.dataset.t; drawAuth(); sfx.unlock(); sfx.tick(); } });
 $('authF').addEventListener('submit', async e => {
@@ -2268,7 +2336,7 @@ $('authF').addEventListener('submit', async e => {
   $('authGo').disabled = true;
   try {
     if (authMode === 'up') {
-      try { localStorage.setItem('kitapligim.pendingType', pickType); } catch (x) {}
+      try { localStorage.setItem('kitapligim.pendingType', pickType); localStorage.setItem('kitapligim.ack', JSON.stringify({surum: 1, tarih: new Date().toISOString()})); } catch (x) {}
       const cred = await FB.createUserWithEmailAndPassword(fbAuth, email, pw);
       await FB.sendEmailVerification(cred.user, {url: location.origin + location.pathname}).catch(() => {});
       showVerify(cred.user);
