@@ -566,33 +566,53 @@ function addTile(t, select) {
   drawTiles();
 }
 $('cvRow').addEventListener('click', e => { const b = e.target.closest('.cvt'); if (b) { cvSel = b.dataset.k; drawTiles(); } });
-async function findCovers(title, author) {
-  const out = [], tq = String(title || '').trim(), aq = String(author || '').trim();
-  if (!tq || !navigator.onLine) return out;
-  try {
-    const r = await fetch('https://www.googleapis.com/books/v1/volumes?maxResults=10&q=' + encodeURIComponent('intitle:' + tq + (aq ? ' inauthor:' + aq : '')));
-    const j = await r.json();
-    for (const it of j.items || []) { const l = (it.volumeInfo || {}).imageLinks; const u = l && (l.thumbnail || l.smallThumbnail); if (u) out.push(u.replace(/^http:/, 'https:').replace('&edge=curl', '')); }
-  } catch (e) {}
-  try {
-    const r = await fetch(`https://openlibrary.org/search.json?limit=10&fields=cover_i&title=${encodeURIComponent(tq)}${aq ? '&author=' + encodeURIComponent(aq) : ''}`);
-    const j = await r.json();
-    for (const d of j.docs || []) if (d.cover_i) out.push(`https://covers.openlibrary.org/b/id/${d.cover_i}-L.jpg`);
-  } catch (e) {}
-  return [...new Set(out)].slice(0, 8);
+async function findCovers(title, author, isbn) {
+  const out = [], tq = String(title || '').trim(), aq = String(author || '').trim(), iq = String(isbn || '').replace(/[^0-9Xx]/g, '');
+  let failed = 0, tried = 0;
+  const gb = async q => {
+    tried++;
+    try {
+      const r = await fetch('https://www.googleapis.com/books/v1/volumes?maxResults=10&q=' + encodeURIComponent(q));
+      if (!r.ok) { failed++; return; }
+      const j = await r.json();
+      for (const it of j.items || []) { const l = (it.volumeInfo || {}).imageLinks; const u = l && (l.thumbnail || l.smallThumbnail); if (u) out.push(u.replace(/^http:/, 'https:').replace('&edge=curl', '')); }
+    } catch (e) { failed++; }
+  };
+  const ol = async qs => {
+    tried++;
+    try {
+      const r = await fetch('https://openlibrary.org/search.json?limit=10&fields=cover_i&' + qs);
+      if (!r.ok) { failed++; return; }
+      const j = await r.json();
+      for (const d of j.docs || []) if (d.cover_i) out.push(`https://covers.openlibrary.org/b/id/${d.cover_i}-L.jpg`);
+    } catch (e) { failed++; }
+  };
+  if (!navigator.onLine) return {urls: [], error: true};
+  if (/^(97[89]\d{10}|\d{9}[\dX])$/i.test(iq)) {
+    await gb('isbn:' + iq);
+    await ol('isbn=' + iq);
+  }
+  if (tq) {
+    await gb('intitle:' + tq + (aq ? ' inauthor:' + aq : ''));
+    await ol(`title=${encodeURIComponent(tq)}${aq ? '&author=' + encodeURIComponent(aq) : ''}`);
+    if (!out.length) { await gb(tq + (aq ? ' ' + aq : '')); await ol('q=' + encodeURIComponent(tq + (aq ? ' ' + aq : ''))); }
+  }
+  return {urls: [...new Set(out)].slice(0, 8), error: !out.length && tried > 0 && failed === tried};
 }
 let finding = false;
 async function searchCovers(manual) {
-  const t = f.elements.title.value.trim();
-  if (!t) { if (manual) $('cvMsg').textContent = 'Önce kitabın adını yaz, sonra kapak arayayım.'; return; }
+  const t = f.elements.title.value.trim(), isbn = f.elements.isbn.value;
+  if (!t && !isbn) { if (manual) $('cvMsg').textContent = 'Önce kitabın adını yaz, sonra kapak arayayım.'; return; }
   if (finding) return; finding = true;
-  const mine = editId, opened = $('ov').hidden;
+  const mine = editId, wasHidden = $('ov').hidden;
   $('cvMsg').textContent = 'İnternette kapak aranıyor…';
-  const urls = await findCovers(t, f.elements.author.value);
+  const {urls, error} = await findCovers(t, f.elements.author.value, isbn);
   finding = false;
-  if ($('ov').hidden !== opened || editId !== mine) return;
-  urls.forEach(u => addTile({key: u, kind: 'web', url: u}, false));
-  $('cvMsg').textContent = urls.length ? 'Beğendiğin kapağa dokun; istemezsen "Kapaksız" kalsın.' : 'İnternette kapak bulunamadı. Fotoğraf çekebilirsin.';
+  if ($('ov').hidden !== wasHidden || editId !== mine) return;
+  urls.forEach((u, i) => addTile({key: u, kind: 'web', url: u}, i === 0 && cvSel === 'none'));
+  $('cvMsg').textContent = error ? 'Kapak servislerine şu an ulaşılamadı (bağlantı ya da Google sınırı). Biraz sonra "İnternette ara"ya tekrar dokun.'
+    : urls.length ? 'Bulunan kapaklardan birini seçtim; başkasına ya da "Kapaksız"a dokunarak değiştirebilirsin.'
+    : 'Bu kitap için internette kapak bulunamadı. Fotoğrafını çekip kapak yapabilirsin.';
 }
 $('cvFind').onclick = () => searchCovers(true);
 async function cropCover(file, box) {
