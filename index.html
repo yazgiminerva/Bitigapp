@@ -324,7 +324,6 @@ body.selecting .tabbar{display:none}
 .socnums button{border:0;background:var(--paper);border-radius:14px;padding:8px 4px;color:var(--ink);cursor:pointer;font:inherit}
 .socnums b{display:block;font:700 24px/1.1 var(--serif)}.socnums span{font-size:12px;font-weight:800;color:var(--mute)}
 .socnums .hot{box-shadow:inset 0 0 0 2px var(--rose)}
-.radios{display:grid;gap:8px;margin:10px 0}.radios label{display:grid!important;grid-template-columns:22px 1fr;gap:0 8px;align-items:start;font-size:14px;margin:0;padding:10px 12px;border-radius:14px;background:var(--field)}.radios input{appearance:auto!important;-webkit-appearance:radio!important;accent-color:var(--rose);width:20px!important;height:20px;min-height:0;padding:0;margin:1px 0 0;border:0;grid-row:span 2}.radios label:has(input:checked){box-shadow:inset 0 0 0 2px var(--rose)}.radios b,.radios span{grid-column:2}
 .switch{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:center;margin-top:12px;font-weight:800}.switch input{appearance:auto!important;-webkit-appearance:checkbox!important;accent-color:var(--rose);width:22px!important;height:22px;min-height:0;padding:0;margin:0;border:0;grid-row:span 2}.switch small{grid-column:2;font-weight:600}
 .owl.new{background:color-mix(in srgb,var(--butter) 10%,transparent);border-radius:14px}
 .note.toast{position:fixed;left:12px;right:12px;bottom:calc(72px + var(--sb));z-index:30;margin:0 auto;max-width:620px;box-shadow:0 10px 30px #0007;padding-right:44px;animation:up .25s ease-out}
@@ -694,7 +693,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 40</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 41</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -3425,7 +3424,7 @@ function profileDirty() {
   if (!me || !profileReady) return;
   socProfileDirty();
   clearTimeout(profTimer);
-  profTimer = setTimeout(() => { FB.setDoc(FB.doc(fbDb, 'users', me.uid), {avatar: avLoad() || null, theme: themeNow(), prof: profLoad(), email: me.email || '', updatedAt: Date.now()}, {merge: true}).catch(() => {}); }, 800);
+  profTimer = setTimeout(() => { if (!me) return; FB.setDoc(FB.doc(fbDb, 'users', me.uid), {avatar: avLoad() || null, theme: themeNow(), prof: profLoad(), email: me.email || '', updatedAt: Date.now()}, {merge: true}).catch(() => {}); }, 800);
 }
 async function loadProfile() {
   try {
@@ -3531,7 +3530,7 @@ function enterApp(user) {
   unsubs = [watch('b', 'books'), watch('w', 'wishes')];
 }
 function leaveApp() {
-  socStop();
+  socStop(); clearTimeout(profTimer); clearTimeout(syncTimer);
   for (const u of unsubs) try { u(); } catch (e) {}
   unsubs = []; me = null; remote = {b: null, w: null}; profileReady = false;
   books = []; wishes = []; render();
