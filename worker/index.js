@@ -36,6 +36,7 @@ export default {
 async function handle(req) {
     if (req.method === 'OPTIONS') return new Response(null, {headers: cors(req)});
     const url = new URL(req.url);
+    if (url.searchParams.get('ping')) return json(req, {ok: true, version: 5});
     const isbn = (url.searchParams.get('isbn') || '').replace(/[^0-9Xx]/g, '').toUpperCase();
     if (!/^(\d{9}[\dX]|97[89]\d{10})$/.test(isbn)) return json(req, {ok: false, error: 'Geçersiz ISBN'});
     const mode = url.searchParams.get('mode') || 'text';
