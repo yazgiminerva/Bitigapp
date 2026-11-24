@@ -27,19 +27,23 @@ function toText(html) {
 }
 
 export default {
-  async fetch(req) {
-    try { return await handle(req); }
+  async fetch(req, env, ctx) {
+    try { return await handle(req, env, ctx); }
     catch (e) { return json(req, {ok: false, error: 'Aracıda hata', detail: String(e && e.stack || e)}); }
   },
 };
 
-async function handle(req) {
+async function handle(req, env, ctx) {
     if (req.method === 'OPTIONS') return new Response(null, {headers: cors(req)});
     const url = new URL(req.url);
     if (url.searchParams.get('ping')) return json(req, {ok: true, version: 5});
     const isbn = (url.searchParams.get('isbn') || '').replace(/[^0-9Xx]/g, '').toUpperCase();
     if (!/^(\d{9}[\dX]|97[89]\d{10})$/.test(isbn)) return json(req, {ok: false, error: 'Geçersiz ISBN'});
     const mode = url.searchParams.get('mode') || 'text';
+    if (url.searchParams.get('debug') && env.DB) {
+      ctx.waitUntil(probe(env, isbn));
+      return json(req, {ok: true, queued: isbn});
+    }
 
     let r;
     try {
@@ -57,4 +61,17 @@ async function handle(req) {
     const at = text.indexOf(isbn);
     const snippet = at >= 0 ? text.slice(Math.max(0, at - 1500), at + 1500) : text.slice(0, 3000);
     return json(req, {ok: r.ok, isbn, status: r.status, found: at >= 0, length: html.length, text: snippet, source: 'Milli Kütüphane'}, 200, r.ok ? {'Cache-Control': 'public, max-age=86400'} : {});
+}
+
+async function probe(env, isbn) {
+  const t0 = Date.now(); let status = 0, body = '', err = '';
+  try {
+    const r = await fetch(MK(isbn), {headers: {
+      'User-Agent': 'Mozilla/5.0 (compatible; Kitapligim/1.0; kisisel kitaplik uygulamasi)',
+      'Accept': 'text/html', 'Accept-Language': 'tr-TR,tr;q=0.9',
+    }, signal: AbortSignal.timeout(25000), redirect: 'follow'});
+    status = r.status; body = await r.text();
+  } catch (e) { err = String(e && e.stack || e); }
+  await env.DB.prepare('INSERT INTO debug (at, isbn, status, ms, len, err, body) VALUES (?,?,?,?,?,?,?)')
+    .bind(new Date().toISOString(), isbn, status, Date.now() - t0, body.length, err, body.slice(0, 200000)).run();
 }
