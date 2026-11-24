@@ -176,7 +176,8 @@ summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weig
 .seg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
 #f.wishing .nw{display:none}
 .findbtn{grid-column:1/-1;background:color-mix(in srgb,var(--sage) 30%,var(--paper))}.findbtn svg{color:var(--sageD,var(--ink))}
-.fitem{grid-template-columns:46px minmax(0,1fr) auto;cursor:pointer}.fitem .st{margin-top:4px;display:inline-block;font-size:11px;padding:1px 8px}.fadd{width:34px;height:34px;border-radius:50%;background:var(--rose);color:var(--on);display:grid;place-items:center;font:900 22px/1 "Nunito",sans-serif}
+.fitem{grid-template-columns:46px minmax(0,1fr) auto;cursor:pointer}.fitem .st{margin-top:4px;display:inline-block;font-size:11px;padding:1px 8px}.fpager{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 4px}.fpager span{font-weight:800}.fpager .btn{min-height:40px;padding:6px 14px}.fpager .btn:disabled{opacity:.35}.fcount{font-size:13px;margin:4px 0 8px}.fitem .st.flang{--c:var(--line);margin-left:4px;opacity:.8}
+.fadd{width:34px;height:34px;border-radius:50%;background:var(--rose);color:var(--on);display:grid;place-items:center;font:900 22px/1 "Nunito",sans-serif}
 .havebtn{background:color-mix(in srgb,var(--sky) 30%,var(--paper))}
 .havebtn svg{color:var(--lavD)}
 .wishbtn{background:color-mix(in srgb,var(--butter) 28%,var(--paper))}
@@ -696,7 +697,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 43</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 44</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -1843,24 +1844,25 @@ function openFind(wish) {
   setTimeout(() => $('fQ').focus(), 80);
 }
 const isbnOf = v => { const ids = v.industryIdentifiers || []; const a = ids.find(x => x.type === 'ISBN_13') || ids.find(x => x.type === 'ISBN_10'); return a ? isbn13(a.identifier) || '' : ''; };
+const TR_CH = /[ğşıİĞŞçÇöÖüÜ]/;
 async function findBooks(q) {
   const out = [], seen = new Set();
-  const add = b => { const k = b.isbn || fold(b.title) + '|' + fold(b.author).split(' ')[0]; if (!b.title || seen.has(k)) return; seen.add(k); out.push(b); };
-  const g = fetch('https://www.googleapis.com/books/v1/volumes?printType=books&maxResults=20&q=' + encodeURIComponent(q)).then(r => r.json()).then(j => {
-    for (const it of j.items || []) {
-      const v = it.volumeInfo || {}, cat = (v.categories || [])[0] || '', img = (v.imageLinks && (v.imageLinks.thumbnail || v.imageLinks.smallThumbnail)) || '';
-      add({title: v.title + (v.subtitle ? ': ' + v.subtitle : ''), author: (v.authors || []).join(', '), publisher: v.publisher || '', year: parseInt(v.publishedDate, 10) || '', pages: v.pageCount || '', genre: GENRE[cat.toLowerCase()] || '', isbn: isbnOf(v), cover: img.replace(/^http:/, 'https:').replace('&edge=curl', ''), src: 'Google Books'});
-    }
-  }).catch(() => {});
-  const o = fetch('https://openlibrary.org/search.json?limit=12&fields=title,author_name,first_publish_year,isbn,cover_i,number_of_pages_median,publisher&q=' + encodeURIComponent(q)).then(r => r.json()).then(j => j.docs || []).catch(() => []);
-  await g; const docs = await o;
-  for (const d of docs) add({title: d.title, author: (d.author_name || []).slice(0, 3).join(', '), publisher: (d.publisher || [])[0] || '', year: d.first_publish_year || '', pages: d.number_of_pages_median || '', genre: '', isbn: (d.isbn || []).map(isbn13).find(Boolean) || '', cover: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg` : '', src: 'Open Library'});
-  return out.slice(0, 24);
+  const add = b => { const k = b.isbn || fold(b.title) + '|' + fold(b.author).split(' ')[0]; if (!b.title || seen.has(k)) return; seen.add(k); b.tr = b.tr || TR_CH.test(b.title + ' ' + b.publisher); out.push(b); };
+  const gb = extra => fetch('https://www.googleapis.com/books/v1/volumes?printType=books&maxResults=40' + extra + '&q=' + encodeURIComponent(q)).then(r => r.json()).then(j => (j.items || []).map(it => {
+    const v = it.volumeInfo || {}, cat = (v.categories || [])[0] || '', img = (v.imageLinks && (v.imageLinks.thumbnail || v.imageLinks.smallThumbnail)) || '';
+    return {title: v.title + (v.subtitle ? ': ' + v.subtitle : ''), author: (v.authors || []).join(', '), publisher: v.publisher || '', year: parseInt(v.publishedDate, 10) || '', pages: v.pageCount || '', genre: GENRE[cat.toLowerCase()] || '', isbn: isbnOf(v), cover: img.replace(/^http:/, 'https:').replace('&edge=curl', ''), src: 'Google Books', tr: v.language === 'tr'};
+  })).catch(() => []);
+  const ol = fetch('https://openlibrary.org/search.json?limit=30&fields=title,author_name,first_publish_year,isbn,cover_i,number_of_pages_median,publisher,language&q=' + encodeURIComponent(q)).then(r => r.json()).then(j => (j.docs || []).map(d => ({title: d.title, author: (d.author_name || []).slice(0, 3).join(', '), publisher: (d.publisher || [])[0] || '', year: d.first_publish_year || '', pages: d.number_of_pages_median || '', genre: '', isbn: (d.isbn || []).map(isbn13).find(Boolean) || '', cover: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg` : '', src: 'Open Library', tr: (d.language || []).includes('tur')}))).catch(() => []);
+  const [trG, allG, olR] = await Promise.all([gb('&langRestrict=tr'), gb(''), ol]);
+  for (const b of [...trG.map(x => ({...x, tr: true})), ...allG, ...olR]) add(b);
+  return [...out.filter(b => b.tr), ...out.filter(b => !b.tr)];
 }
 function haveIt(b) {
   const t = fold(b.title);
   return [...books, ...wishes].find(x => (b.isbn && x.isbn && isbn13(x.isbn) === b.isbn) || (fold(x.title) === t && (!b.author || fold(x.author).split(' ')[0] === fold(b.author).split(' ')[0])));
 }
+const FIND_PER = 10;
+let findPage = 0;
 async function runFind() {
   const q = $('fQ').value.trim(), seq = ++findSeq, box = $('fRes');
   if (q.length < 2) { box.innerHTML = ''; $('fHint').hidden = false; return; }
@@ -1869,11 +1871,15 @@ async function runFind() {
   box.innerHTML = '<p class="muted">Aranıyor…</p>';
   const list = await findBooks(q);
   if (seq !== findSeq) return;
-  findRes = list;
-  box.innerHTML = (list.length ? `<ul class="hlist">${list.map((b, i) => {
-    const h = haveIt(b), c = colorOf(b);
-    return `<li class="item fitem" data-i="${i}">${okUrl(b.cover) ? `<img class="cv" style="--c:${c}" src="${esc(b.cover)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'cv',textContent:'${esc(initial(b.title))}'}))">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || 'Yazar bilinmiyor')}</div><div class="a muted">${esc([b.publisher, b.year].filter(Boolean).join(' · '))}</div>${h ? `<span class="st" style="--c:var(--sage)">${wishes.includes(h) ? 'İstek listende' : 'Kitaplığında var'}</span>` : ''}</div><span class="fadd" aria-hidden="true">+</span></li>`;
-  }).join('')}</ul>` : '<p class="muted">Bu adla bir kitap bulunamadı. Yazarın adını da ekleyerek dene.</p>')
+  findRes = list; findPage = 0; drawFind();
+}
+function drawFind() {
+  const box = $('fRes'), list = findRes, pages = Math.ceil(list.length / FIND_PER), from = findPage * FIND_PER;
+  const nav = pages > 1 ? `<div class="fpager"><button class="btn" type="button" data-pg="-1"${findPage ? '' : ' disabled'}>‹ Önceki</button><span>${findPage + 1} / ${pages}</span><button class="btn" type="button" data-pg="1"${findPage < pages - 1 ? '' : ' disabled'}>Sonraki ›</button></div>` : '';
+  box.innerHTML = (list.length ? `<p class="muted fcount">${list.length} sonuç${list.some(b => b.tr) ? ' · Türkçe baskılar önce' : ''}</p><ul class="hlist">${list.slice(from, from + FIND_PER).map((b, k) => {
+    const i = from + k, h = haveIt(b), c = colorOf(b);
+    return `<li class="item fitem" data-i="${i}">${okUrl(b.cover) ? `<img class="cv" style="--c:${c}" src="${esc(b.cover)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'cv',textContent:'${esc(initial(b.title))}'}))">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || 'Yazar bilinmiyor')}</div><div class="a muted">${esc([b.publisher, b.year].filter(Boolean).join(' · '))}</div>${h ? `<span class="st" style="--c:var(--sage)">${wishes.includes(h) ? 'İstek listende' : 'Kitaplığında var'}</span>` : ''}${b.tr ? '' : '<span class="st flang">Yabancı baskı</span>'}</div><span class="fadd" aria-hidden="true">+</span></li>`;
+  }).join('')}</ul>${nav}` : '<p class="muted">Bu adla bir kitap bulunamadı. Yazarın adını da ekleyerek dene.</p>')
     + '<button class="btn link" type="button" id="fManual" style="width:100%;margin-top:6px">Bulamadın mı? Elle ekle</button>';
 }
 function pickFound(b) {
@@ -1895,6 +1901,7 @@ $('fQ').addEventListener('input', () => { clearTimeout(findT); findT = setTimeou
 $('fQ').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); clearTimeout(findT); runFind(); $('fQ').blur(); } });
 $('fRes').addEventListener('click', e => {
   if (e.target.closest('#fManual')) { $('findOv').hidden = true; wishNext = findWish; openSheet(null, false); f.elements.title.value = $('fQ').value.trim(); setTimeout(() => f.elements.author.focus(), 60); return; }
+  const pg = e.target.closest('[data-pg]'); if (pg) { findPage = Math.max(0, findPage + +pg.dataset.pg); drawFind(); $('findOv').querySelector('.sheet').scrollTop = 0; return; }
   const li = e.target.closest('[data-i]'); if (li) pickFound(findRes[+li.dataset.i]);
 });
 $('manual').onclick = () => { wishNext = false; openSheet(null, false); setTimeout(() => f.elements.title.focus(), 60); };
