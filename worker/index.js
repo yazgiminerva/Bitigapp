@@ -6,6 +6,8 @@
 //
 // GET  /book?isbn=978...   -> {ok, found, book}
 // POST /book  {isbn, title, ...} -> {ok, created}
+// GET  /cover?isbn=978...  -> the shared cover image (404 if none); &check=1 -> {ok, exists}
+// POST /cover {isbn, mime, data(base64)} -> a cover a user chose to share; the first one stays
 // Var olan bir kaydın dolu alanları değiştirilmez, yalnızca boş alanları doldurulur.
 
 const ALLOWED = ['https://yazgiminerva.github.io'];
@@ -57,14 +59,20 @@ export default {
 async function handle(req, env) {
   if (req.method === 'OPTIONS') return new Response(null, {headers: cors(req)});
   const url = new URL(req.url);
-  if (url.searchParams.get('ping')) return json(req, {ok: true, version: 10});
+  if (url.searchParams.get('ping')) return json(req, {ok: true, version: 11});
+  // writes only from the app's own page
+  if (req.method === 'POST' && !ALLOWED.includes(req.headers.get('Origin') || '')) return json(req, {ok: false, error: 'İzin yok'});
+  if (url.pathname === '/cover') return cover(req, env, url);
   if (url.pathname !== '/book') return json(req, {ok: false, error: 'Bilinmeyen adres'});
 
   if (req.method === 'GET') {
     const isbn = normIsbn(url.searchParams.get('isbn'));
     if (!isbn) return json(req, {ok: false, error: 'Geçersiz ISBN'});
     const row = await env.DB.prepare('SELECT isbn, title, author, translator, publisher, year, pages, genre, cover FROM books WHERE isbn = ?').bind(isbn).first();
-    return json(req, {ok: true, found: !!row, book: row || null});
+    const pc = await env.DB.prepare('SELECT 1 AS x FROM covers WHERE isbn = ?').bind(isbn).first();
+    const poolUrl = pc ? `${url.origin}/cover?isbn=${isbn}` : '';
+    if (row && poolUrl && !row.cover) row.cover = poolUrl;
+    return json(req, {ok: true, found: !!row, book: row || null, poolCover: poolUrl});
   }
 
   if (req.method === 'POST') {
@@ -96,6 +104,42 @@ async function handle(req, env) {
         updated_at = ?10`)
       .bind(isbn, rec.title, rec.author, rec.translator, rec.publisher, rec.year, rec.pages, rec.genre, rec.cover, now).run();
     return json(req, {ok: true, isbn, changes: r.meta && r.meta.changes});
+  }
+  return json(req, {ok: false, error: 'Desteklenmeyen istek'});
+}
+
+async function cover(req, env, url) {
+  if (req.method === 'GET') {
+    const isbn = normIsbn(url.searchParams.get('isbn'));
+    if (!isbn) return json(req, {ok: false, error: 'Geçersiz ISBN'});
+    if (url.searchParams.get('check')) {
+      const r = await env.DB.prepare('SELECT 1 AS x FROM covers WHERE isbn = ?').bind(isbn).first();
+      return json(req, {ok: true, exists: !!r, url: r ? `${url.origin}/cover?isbn=${isbn}` : ''});
+    }
+    const row = await env.DB.prepare('SELECT mime, data FROM covers WHERE isbn = ?').bind(isbn).first();
+    if (!row) return new Response('Kapak yok', {status: 404, headers: cors(req)});
+    const bin = atob(row.data), bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new Response(bytes, {headers: {...cors(req), 'Content-Type': row.mime, 'Cache-Control': 'public, max-age=604800'}});
+  }
+  if (req.method === 'POST') {
+    const raw = await req.text();
+    if (raw.length > 420000) return json(req, {ok: false, error: 'Fotoğraf çok büyük'});
+    let b; try { b = JSON.parse(raw); } catch (e) { return json(req, {ok: false, error: 'Geçersiz veri'}); }
+    const isbn = normIsbn(b && b.isbn);
+    const mime = b && b.mime === 'image/png' ? 'image/png' : 'image/jpeg';
+    const data = typeof (b && b.data) === 'string' ? b.data : '';
+    if (!isbn) return json(req, {ok: false, error: 'Geçersiz ISBN'});
+    if (data.length < 2000 || !/^[A-Za-z0-9+/]+={0,2}$/.test(data)) return json(req, {ok: false, error: 'Geçersiz fotoğraf'});
+    // check the file really is a JPEG or PNG
+    const head = atob(data.slice(0, 16));
+    const isJpg = head.charCodeAt(0) === 0xFF && head.charCodeAt(1) === 0xD8 && head.charCodeAt(2) === 0xFF;
+    const isPng = head.slice(1, 4) === 'PNG';
+    if (!isJpg && !isPng) return json(req, {ok: false, error: 'Geçersiz fotoğraf'});
+    const r = await env.DB.prepare('INSERT OR IGNORE INTO covers (isbn, mime, data, size, created_at) VALUES (?, ?, ?, ?, ?)')
+      .bind(isbn, isPng ? 'image/png' : 'image/jpeg', data, Math.round(data.length * 3 / 4), new Date().toISOString()).run();
+    const created = !!(r.meta && r.meta.changes);
+    return json(req, {ok: true, created, url: `${url.origin}/cover?isbn=${isbn}`});
   }
   return json(req, {ok: false, error: 'Desteklenmeyen istek'});
 }
