@@ -77,5 +77,34 @@ service cloud.firestore {
         && !blocked(to, me())
         && request.resource.data.note.size() <= 200;
     }
+    // community numbers: totals only; each account's own vote stays private
+    function n01(x) { return x ? 1 : 0; }
+    function zeroV() { return {'own': false, 'read': false, 'r': 0}; }
+    function zeroS() { return {'owners': 0, 'readers': 0, 'rSum': 0, 'rCount': 0}; }
+    function stepOk(a, o, n, p) {
+      return a.owners == o.owners + n01(n.own) - n01(p.own)
+        && a.readers == o.readers + n01(n.read) - n01(p.read)
+        && a.rSum == o.rSum + n.r - p.r
+        && a.rCount == o.rCount + n01(n.r > 0) - n01(p.r > 0);
+    }
+    match /stats/{key} {
+      function vPath() { return /databases/$(database)/documents/stats/$(key)/v/$(request.auth.uid); }
+      allow read: if signedIn();
+      allow create, update: if signedIn()
+        && request.resource.data.keys().hasOnly(['owners', 'readers', 'rSum', 'rCount'])
+        && stepOk(request.resource.data, resource == null ? zeroS() : resource.data,
+                  existsAfter(vPath()) ? getAfter(vPath()).data : zeroV(),
+                  exists(vPath()) ? get(vPath()).data : zeroV());
+      match /v/{uid} {
+        function sPath() { return /databases/$(database)/documents/stats/$(key); }
+        allow read: if signedIn() && me() == uid;
+        allow create, update: if signedIn() && me() == uid
+          && request.resource.data.keys().hasOnly(['own', 'read', 'r'])
+          && request.resource.data.own is bool && request.resource.data.read is bool
+          && request.resource.data.r is int && request.resource.data.r >= 0 && request.resource.data.r <= 5
+          && stepOk(getAfter(sPath()).data, exists(sPath()) ? get(sPath()).data : zeroS(),
+                    request.resource.data, resource == null ? zeroV() : resource.data);
+      }
+    }
   }
 }

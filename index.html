@@ -176,7 +176,13 @@ summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weig
 .seg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
 #f.wishing .nw{display:none}
 .findbtn{grid-column:1/-1;background:color-mix(in srgb,var(--sage) 30%,var(--paper))}.findbtn svg{color:var(--sageD,var(--ink))}
-.fitem{grid-template-columns:46px minmax(0,1fr) auto;cursor:pointer}.fitem .st{margin-top:4px;display:inline-block;font-size:11px;padding:1px 8px}.fpager{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 4px}.fpager span{font-weight:800}.fpager .btn{min-height:40px;padding:6px 14px}.fpager .btn:disabled{opacity:.35}.fcount{font-size:13px;margin:4px 0 8px}.fitem .st.flang{--c:var(--line);margin-left:4px;opacity:.8}
+.fitem{grid-template-columns:46px minmax(0,1fr) auto;cursor:pointer}.fitem .st{margin-top:4px;display:inline-block;font-size:11px;padding:1px 8px}.bhead{display:grid;grid-template-columns:110px minmax(0,1fr);gap:14px;align-items:start}
+.bcv{width:110px;height:165px;object-fit:cover;border-radius:4px 8px 8px 4px;background:var(--c,var(--line));box-shadow:0 10px 20px -6px #000a;display:grid;place-items:center;font:700 40px var(--serif);color:var(--on)}
+.bt{font:600 24px/1.15 var(--serif);font-variation-settings:"SOFT" 100;margin:0 0 4px}.ba{font-weight:800;margin:0 0 4px}.bm{margin:0 0 6px;font-size:14px}.bstars{color:var(--butter);letter-spacing:1px}
+.bstat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0}.bstat span{background:var(--field);border-radius:14px;padding:8px 6px;text-align:center;font-size:12px;font-weight:800;color:var(--mute)}.bstat b{display:block;font:700 24px/1.1 var(--serif);color:var(--ink)}
+p.bstat{display:block}
+.bdesc{white-space:pre-line;line-height:1.5;margin:0;max-height:12.5em;overflow:hidden;-webkit-mask:linear-gradient(#000 70%,#0000);mask:linear-gradient(#000 70%,#0000)}.bdesc.open{max-height:none;-webkit-mask:none;mask:none}
+.fpager{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:12px 0 4px}.fpager span{font-weight:800}.fpager .btn{min-height:40px;padding:6px 14px}.fpager .btn:disabled{opacity:.35}.fcount{font-size:13px;margin:4px 0 8px}.fitem .st.flang{--c:var(--line);margin-left:4px;opacity:.8}
 .fadd{width:34px;height:34px;border-radius:50%;background:var(--rose);color:var(--on);display:grid;place-items:center;font:900 22px/1 "Nunito",sans-serif}
 .havebtn{background:color-mix(in srgb,var(--sky) 30%,var(--paper))}
 .havebtn svg{color:var(--lavD)}
@@ -672,6 +678,7 @@ a{color:var(--roseD)}
           <div class="bk"><button class="btn primary" id="pwSave" type="submit">Şifreyi kaydet</button><button class="btn" id="pwCancel" type="button">Vazgeç</button></div>
           <button class="btn link" id="pwMail" type="button" style="margin-top:4px">Mevcut şifreni hatırlamıyor musun? E-postana bağlantı gönder</button>
         </form>
+        <label class="switch"><input type="checkbox" id="statsOn" checked><span>Bitigapp okur sayılarına katıl</span><small class="muted">Kitaplığındaki kitaplar, okuduğun kitaplar ve puanların, adın görünmeden yalnızca toplam sayılara eklenir (kaç kişi okudu, ortalama puan).</small></label>
         <p class="muted" id="acctMsg"></p>
       </details>
       <details id="bkBox">
@@ -697,7 +704,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 44</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 46</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -857,7 +864,7 @@ a{color:var(--roseD)}
     <p>Kendi çektiğin kapak fotoğrafı ortak listeye yalnızca ilgili kutuyu her seferinde kendin işaretlersen eklenir; kutu varsayılan olarak işaretli değildir. Uygulama, fotoğrafı göndermeden önce yeniden boyutlandırır ve EXIF ile GPS konum bilgileri dahil fotoğraftaki tüm üst verileri siler. Fotoğrafta kitap sahibinin adı, imza, ithaf yazısı ya da arka planda kişisel bir görüntü olmadığından emin olmalısın. Ortak listeye eklenen fotoğraflar seninle ilişkilendirilmeden saklandığı için hesabını sildiğinde kendiliğinden silinmez; kaldırılmasını istediğin bir fotoğraf için başvurabilirsin.</p>
     <h3>6. Arkadaş profili, takip ve baykuş postası</h3>
     <p>Hesabını oluşturduğunda sana, kayıtta seçtiğin kullanıcı adıyla bir arkadaş profili açılır. Profilin <b>gizli hesap</b> olarak başlar: kitaplık özetini yalnızca senin onayladığın takipçiler görür. İstersen Profilim &gt; Arkadaşlar bölümünden hesabını herkese açık yapabilirsin.</p>
-    <ul><li><b>Herkese görünenler:</b> kullanıcı adın, avatarındaki ad, avatarın, "hakkımda" yazın ve hesabının gizli ya da açık olduğu. Bunlar, gizli hesapta da oturum açmış kullanıcılar tarafından aranabilir ve görülebilir.</li><li><b>Kitaplık özetin:</b> kitapların ve istek listendeki kitapların künyesi (başlık, yazar, tür, sayfa sayısı, ISBN, kapak bağlantısı), okuma durumları, ekleme ve bitirme tarihleri ve sayıların. Gizli hesapta yalnızca onayladığın takipçilerin, açık hesapta oturum açmış tüm kullanıcılar görür.</li><li><b>Hiçbir durumda paylaşılmayanlar:</b> notların, puanların, hatıraların, kitabı nereden aldığın ve ödünç kayıtların. Hedeflerin, rozetlerin ve başucu kitapların da yalnızca sana görünür.</li><li><b>Arkadaşlık kayıtları:</b> kimi takip ettiğin, seni kimin takip ettiği, takip istekleri ve engellediğin kişiler; baykuşla gönderdiğin ve aldığın kitap önerileri (kitabın künyesi ve en fazla 200 karakterlik not); arkadaşlarının etkinliklerine verdiğin ve aldığın tepkiler (tepki verenin adı ve kullanıcı adıyla birlikte).</li><li><b>Okuma uyumu:</b> senin cihazında, ekranı açtığında hesaplanır; sonucu saklanmaz.</li></ul>
+    <ul><li><b>Herkese görünenler:</b> kullanıcı adın, avatarındaki ad, avatarın, "hakkımda" yazın ve hesabının gizli ya da açık olduğu. Bunlar, gizli hesapta da oturum açmış kullanıcılar tarafından aranabilir ve görülebilir.</li><li><b>Kitaplık özetin:</b> kitapların ve istek listendeki kitapların künyesi (başlık, yazar, tür, sayfa sayısı, ISBN, kapak bağlantısı), okuma durumları, ekleme ve bitirme tarihleri ve sayıların. Gizli hesapta yalnızca onayladığın takipçilerin, açık hesapta oturum açmış tüm kullanıcılar görür.</li><li><b>Hiçbir durumda paylaşılmayanlar:</b> notların, hatıraların, kitabı nereden aldığın ve ödünç kayıtların. Puanların kimseye tek tek gösterilmez; yalnızca aşağıda anlatılan isimsiz toplamlara katılır. Hedeflerin, rozetlerin ve başucu kitapların da yalnızca sana görünür.</li><li><b>Arkadaşlık kayıtları:</b> kimi takip ettiğin, seni kimin takip ettiği, takip istekleri ve engellediğin kişiler; baykuşla gönderdiğin ve aldığın kitap önerileri (kitabın künyesi ve en fazla 200 karakterlik not); arkadaşlarının etkinliklerine verdiğin ve aldığın tepkiler (tepki verenin adı ve kullanıcı adıyla birlikte).</li><li><b>Okuma uyumu:</b> senin cihazında, ekranı açtığında hesaplanır; sonucu saklanmaz.</li><li><b>Bitigapp okur sayıları:</b> bir kitabın sayfasında o kitabın kaç Bitigapp kullanıcısının kitaplığında olduğu, kaç kişinin okuduğu ve ortalama puanı gösterilir. Bunun için her kitap için kitaplığında olup olmadığı, okuyup okumadığın ve verdiğin puan, hesabına bağlı ve yalnızca senin okuyabildiğin bir kayıt olarak tutulur; diğer kullanıcılar yalnızca toplamları görür, kimin eklediğini, okuduğunu ya da puan verdiğini göremez. Ortalama puan, en az 3 kişi puan vermeden gösterilmez. Ayarlar &gt; Hesabım &gt; "Bitigapp okur sayılarına katıl" seçeneğini kapatırsan ya da hesabını silersen katkın toplamlardan hemen çıkarılır.</li></ul>
     <p><b>Hukuki sebep:</b> uygulamanın bir parçası olan bu hizmetin sunulması (KVKK m. 5/2-c, sözleşmenin kurulması veya ifası). Bu veriler 7. bölümde anlatılan Firebase altyapısında saklanır.</p>
     <p><b>Silme:</b> hesabını sildiğinde profilin, kullanıcı adın, kitaplık özetin, takip kayıtların, kutundaki baykuşlar, verdiğin ve aldığın tepkiler hemen silinir. Daha önce arkadaşlarına gönderdiğin baykuşlar, onlar silene kadar onların kutusunda kalır. Engellediğin kişilerin listesi de hesabınla birlikte silinir.</p>
     <p>Başkalarına görünen bilgilerinin onlar tarafından ekran görüntüsü alınarak paylaşılmasını teknik olarak engelleyemeyiz; seni rahatsız eden kişiyi engelleyebilirsin.</p>
@@ -993,6 +1000,12 @@ a{color:var(--roseD)}
   </div>
 </div>
 
+<div class="ov" id="bookOv" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-label="Kitap">
+    <div class="sh-head"><h2>Kitap</h2><button class="x" id="bkX" type="button" aria-label="Kapat">×</button></div>
+    <div id="bkBody"></div>
+  </div>
+</div>
 <div class="ov" id="findOv" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="fTitle">
     <div class="sh-head"><h2 id="fTitle">Adıyla ekle</h2><button class="x" id="fX" type="button" aria-label="Kapat">×</button></div>
@@ -1170,7 +1183,7 @@ function persistWish() {
   catch (e) { note('Kaydedilemedi: telefonda yer kalmamış olabilir.', true); return false; }
 }
 function persist() {
-  try { localStorage.setItem(KEY, JSON.stringify(books)); scheduleSync(); socShelfDirty(); return true; }
+  try { localStorage.setItem(KEY, JSON.stringify(books)); scheduleSync(); socShelfDirty(); votesDirty(); return true; }
   catch (e) { note('Kaydedilemedi: telefonda yer kalmamış olabilir. Hemen yedek al.', true); return false; }
 }
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
@@ -1836,6 +1849,105 @@ f.elements.isbn.addEventListener('change', () => {
 
 $('scanBtn').onclick = () => { wishNext = false; checkNext = false; startScan(); };
 $('camClose').onclick = () => { wishNext = false; if (checkNext) { checkNext = false; stopScan(); openHave(); return; } stopScan(); };
+// --- Community numbers: how many Bitigapp readers own / finished a book, and its average rating.
+// Each account keeps one private vote per book (stats/{key}/v/{uid}, readable only by its owner);
+// the shared stats/{key} doc holds only totals, and the security rules keep the two in step.
+const workKey = b => { const t = fold(String(b.title || '').split(':')[0]).replace(/ /g, '-').slice(0, 80), a = fold(String(b.author || '').split(',')[0]).split(' ').pop() || ''; return t ? 'w_' + t + '__' + a.slice(0, 40) : ''; };
+const VZERO = {own: false, read: false, r: 0};
+let VKEY = '', voteTimer = 0, voteBusy = false;
+const votesOn = () => !profLoad().statsOff;
+function wantedVotes() {
+  const m = {};
+  if (votesOn()) for (const b of books) { const k = workKey(b); if (!k) continue; const v = m[k] || {...VZERO}; v.own = true; if (b.status === 'okundu') v.read = true; if (b.rating > 0 && b.rating <= 5) v.r = Math.max(v.r, Math.round(b.rating)); m[k] = v; }
+  return m;
+}
+function votesSent() { try { return JSON.parse(localStorage.getItem(VKEY) || '{}'); } catch (e) { return {}; } }
+function votesDirty() { if (!me) return; VKEY = 'kitapligim.votes:' + me.uid; clearTimeout(voteTimer); voteTimer = setTimeout(pushVotes, 2500); }
+async function pushVotes(all) {
+  if (!me || voteBusy || !navigator.onLine) return;
+  voteBusy = true;
+  try {
+    const want = all || wantedVotes(), sent = votesSent(), keys = new Set([...Object.keys(want), ...Object.keys(sent)]);
+    for (const k of keys) {
+      const n = want[k] || VZERO, p = sent[k] || VZERO;
+      if (n.own === p.own && n.read === p.read && n.r === p.r) continue;
+      const bt = FB.writeBatch(fbDb), d = (x, y) => (x ? 1 : 0) - (y ? 1 : 0);
+      bt.set(FB.doc(fbDb, 'stats', k, 'v', me.uid), {own: n.own, read: n.read, r: n.r});
+      bt.set(FB.doc(fbDb, 'stats', k), {owners: FB.increment(d(n.own, p.own)), readers: FB.increment(d(n.read, p.read)), rSum: FB.increment(n.r - p.r), rCount: FB.increment(d(n.r > 0, p.r > 0))}, {merge: true});
+      try { await bt.commit(); } catch (e) {
+        // our record of what was sent may be stale (another device): read the real vote and retry once
+        try { const s = await FB.getDoc(FB.doc(fbDb, 'stats', k, 'v', me.uid)); sent[k] = s.exists() ? {...VZERO, ...s.data()} : {...VZERO}; } catch (x) { continue; }
+        try { localStorage.setItem(VKEY, JSON.stringify(sent)); } catch (x) {}
+        continue;
+      }
+      if (n.own || n.read || n.r) sent[k] = n; else delete sent[k];
+      try { localStorage.setItem(VKEY, JSON.stringify(sent)); } catch (e) {}
+    }
+  } finally { voteBusy = false; }
+}
+async function clearVotes() { if (!me) return; VKEY = 'kitapligim.votes:' + me.uid; const z = {}; await pushVotes(z); }
+
+// --- Back-cover text: fetched once from Google Books, then kept with the book ---
+const plainText = h => { const d = document.createElement('div'); d.innerHTML = String(h || '').replace(/<br\s*\/?>/gi, '\n').replace(/<\/p>/gi, '\n\n'); return (d.textContent || '').replace(/\n{3,}/g, '\n\n').trim(); };
+async function fetchDesc(b) {
+  const tries = [];
+  if (b.isbn) tries.push('isbn:' + String(b.isbn).replace(/[^0-9Xx]/g, ''));
+  if (b.title) tries.push('intitle:"' + String(b.title).split(':')[0] + '"' + (b.author ? ' inauthor:"' + String(b.author).split(',')[0] + '"' : ''));
+  for (const q of tries) {
+    try {
+      const j = await (await fetch('https://www.googleapis.com/books/v1/volumes?maxResults=5&q=' + encodeURIComponent(q))).json();
+      const items = (j.items || []).map(i => i.volumeInfo || {}).filter(v => v.description);
+      const v = items.find(x => x.language === 'tr') || items[0];
+      if (v) return plainText(v.description).slice(0, 4000);
+    } catch (e) {}
+  }
+  return '';
+}
+
+// --- Book page: what you see when you tap a book ---
+let bookNow = null;
+function bookStatsHTML(s) {
+  if (!s) return '<p class="muted bstat">Bitigapp okurlarının sayıları yükleniyor…</p>';
+  const own = s.owners || 0, rd = s.readers || 0, rc = s.rCount || 0;
+  if (!own && !rd) return '<p class="muted bstat">Bu kitabı Bitigapp\'te henüz başka kimse eklememiş.</p>';
+  return `<div class="bstat"><span><b>${own}</b>kişinin kitaplığında</span><span><b>${rd}</b>kişi okudu</span><span><b>${rc >= 3 ? (s.rSum / rc).toLocaleString('tr', {maximumFractionDigits: 1}) : '–'}</b>${rc >= 3 ? `ortalama puan (${rc})` : 'puan için en az 3 oy'}</span></div>`;
+}
+async function openBook(id) {
+  const b = books.find(x => x.id === id); if (!b) return openSheet(id);
+  bookNow = id;
+  const c = colorOf(b), cu = okUrl(b.cover);
+  $('bkBody').innerHTML = `<div class="bhead">${b.coverLocal ? `<img class="bcv" data-local="${esc(b.id)}" alt="">` : cu ? `<img class="bcv" src="${esc(cu)}" alt="">` : `<div class="bcv" style="--c:${c}">${esc(initial(b.title))}</div>`}
+    <div><h2 class="bt">${esc(b.title)}</h2><p class="ba">${esc(b.author || 'Yazar bilinmiyor')}</p><p class="muted bm">${esc([b.publisher, b.year, b.pages ? b.pages + ' sayfa' : ''].filter(Boolean).join(' · '))}</p>
+    <p class="bm"><span class="st ${esc(b.status || 'okunacak')}">${esc(STAT[b.status] || 'Okunacak')}</span>${b.rating ? ` <span class="bstars">${'★'.repeat(b.rating)}</span>` : ''}</p></div></div>
+    <h3 class="psec">Bitigapp okurları</h3><div id="bkStats">${bookStatsHTML(null)}</div>
+    <h3 class="psec">Arka kapak</h3><div id="bkDesc">${b.desc ? `<p class="bdesc">${esc(b.desc)}</p>` : '<p class="muted">Açıklama aranıyor…</p>'}</div>
+    ${b.notes ? `<h3 class="psec">Notlarım</h3><p class="bdesc">${esc(b.notes)}</p>` : ''}
+    ${b.lentTo ? `<p class="muted">Ödünç: ${esc(b.lentTo)}</p>` : ''}
+    <div class="bk" style="margin-top:14px">${b.status !== 'okundu' ? '<button class="btn primary" type="button" id="bkDone">Bitirdim</button>' : ''}<button class="btn" type="button" id="bkEdit">Düzenle</button></div>`;
+  $('bookOv').hidden = false; $('bookOv').querySelector('.sheet').scrollTop = 0;
+  hydrate($('bkBody'));
+  clampDesc();
+  const k = workKey(b);
+  if (k && me) FB.getDoc(FB.doc(fbDb, 'stats', k)).then(s => { if (bookNow === id) $('bkStats').innerHTML = bookStatsHTML(s.exists() ? s.data() : {}); }).catch(() => { if (bookNow === id) $('bkStats').innerHTML = '<p class="muted bstat">Sayılara şu an ulaşılamadı.</p>'; });
+  else $('bkStats').innerHTML = bookStatsHTML({});
+  if (!b.desc) {
+    const d = navigator.onLine ? await fetchDesc(b) : '';
+    if (bookNow !== id) return;
+    if (d) { const x = books.find(y => y.id === id); if (x && !x.desc) { x.desc = d; x.updatedAt = new Date().toISOString(); persist(); } $('bkDesc').innerHTML = `<p class="bdesc">${esc(d)}</p><p class="muted" style="font-size:12px">Kaynak: Google Books</p>`; clampDesc(); }
+    else $('bkDesc').innerHTML = '<p class="muted">Bu kitap için çevrimiçi bir açıklama bulunamadı. İstersen "Düzenle"den kendin ekleyebilirsin.</p>';
+  }
+}
+function clampDesc() {
+  const p = $('bkDesc').querySelector('.bdesc'); if (!p || p.scrollHeight <= p.clientHeight + 4) return;
+  p.insertAdjacentHTML('afterend', '<button class="btn link" type="button" id="bkMore">Devamını oku</button>');
+}
+$('bookOv').addEventListener('click', e => {
+  if (e.target === $('bookOv') || e.target.closest('#bkX')) { $('bookOv').hidden = true; bookNow = null; return; }
+  if (e.target.closest('#bkMore')) { $('bkDesc').querySelector('.bdesc').classList.add('open'); e.target.remove(); return; }
+  if (e.target.closest('#bkEdit')) { const id = bookNow; $('bookOv').hidden = true; bookNow = null; return openSheet(id); }
+  if (e.target.closest('#bkDone')) { const b = books.find(x => x.id === bookNow); if (!b) return; b.status = 'okundu'; b.finishedAt = b.finishedAt || today(); b.updatedAt = new Date().toISOString(); persist(); render(); sfx.unlock(); sfx.sparkle(); openBook(b.id); }
+});
+
 // --- Find a book by its name (Google Books + Open Library) and add it ---
 let findSeq = 0, findT = 0, findWish = false, findRes = [];
 function openFind(wish) {
@@ -1909,8 +2021,8 @@ $('x').onclick = closeSheet;
 $('ov').addEventListener('click', e => { if (e.target === $('ov')) closeSheet(); });
 $('rate').addEventListener('click', e => { const v = +e.target.dataset.v; if (v) { rating = rating === v ? 0 : v; drawRate(); } });
 $('seg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setAcq(b.dataset.acq); });
-$('shelf').addEventListener('click', e => { if (e.target.closest('.seeall')) return goPage(1); const b = e.target.closest('.sp,.fc'); if (b) openSheet(b.dataset.id); });
-$('bigcase').addEventListener('click', e => { const b = e.target.closest('.sp'); if (b) openSheet(b.dataset.id); });
+$('shelf').addEventListener('click', e => { if (e.target.closest('.seeall')) return goPage(1); const b = e.target.closest('.sp,.fc'); if (b) openBook(b.dataset.id); });
+$('bigcase').addEventListener('click', e => { const b = e.target.closest('.sp'); if (b) openBook(b.dataset.id); });
 // --- the big library page ---
 function renderLib() {
   const groups = new Map();
@@ -1938,7 +2050,7 @@ addEventListener('resize', () => { const i = Math.round(pager.scrollLeft / pager
 $('list').addEventListener('click', e => {
   const li = e.target.closest('.item'); if (!li) return;
   if (lpFired) { lpFired = false; return; }
-  if (!selMode) return openSheet(li.dataset.id);
+  if (!selMode) return openBook(li.dataset.id);
   const id = li.dataset.id;
   if (selected.has(id)) selected.delete(id); else selected.add(id);
   li.classList.toggle('on', selected.has(id)); li.setAttribute('aria-checked', String(selected.has(id)));
@@ -3600,7 +3712,7 @@ function enterApp(user) {
   setUserKeys(user.uid); load(); render();
   $('auth').hidden = true; $('acctMail').textContent = user.email || '';
   syncState(navigator.onLine ? 'wait' : 'off');
-  loadProfile().then(socStart);
+  loadProfile().then(() => { $('statsOn').checked = votesOn(); votesDirty(); socStart(); });
   const watch = (kind, name) => FB.onSnapshot(FB.collection(fbDb, 'users', user.uid, name), snap => {
     if (snap.metadata && snap.metadata.fromCache) return;
     remote[kind] = new Map(snap.docs.map(d => [d.id, d.data()]));
@@ -3610,7 +3722,7 @@ function enterApp(user) {
   unsubs = [watch('b', 'books'), watch('w', 'wishes')];
 }
 function leaveApp() {
-  socStop(); clearTimeout(profTimer); clearTimeout(syncTimer);
+  socStop(); clearTimeout(profTimer); clearTimeout(syncTimer); clearTimeout(voteTimer);
   for (const u of unsubs) try { u(); } catch (e) {}
   unsubs = []; me = null; remote = {b: null, w: null}; profileReady = false;
   books = []; wishes = []; render();
@@ -3628,6 +3740,8 @@ $('logout').onclick = async () => {
 };
 const confirmed = new Set();
 function confirmOnce(k, text) { if (confirmed.has(k)) return true; confirmed.add(k); $('acctMsg').textContent = text; setTimeout(() => confirmed.delete(k), 8000); return false; }
+$('statsOn').checked = votesOn();
+$('statsOn').addEventListener('change', async e => { const pr = profLoad(); if (e.target.checked) delete pr.statsOff; else pr.statsOff = true; profSave(pr); if (e.target.checked) votesDirty(); else await clearVotes().catch(() => {}); $('acctMsg').textContent = e.target.checked ? 'Okur sayılarına katılıyorsun.' : 'Okur sayılarından çıkarıldın.'; });
 const pwForm = $('pwForm');
 $('pwReset').onclick = () => { pwForm.reset(); $('pwUser').value = me.email || ''; pwForm.hidden = false; $('pwReset').hidden = true; $('acctMsg').textContent = ''; setTimeout(() => pwForm.elements.cur.focus(), 60); };
 const pwClose = () => { pwForm.reset(); pwForm.hidden = true; $('pwReset').hidden = false; };
@@ -3656,6 +3770,7 @@ $('delAcct').onclick = async () => {
   $('acctMsg').textContent = 'Siliniyor…';
   try {
     const uid = me.uid;
+    await clearVotes().catch(() => {});
     await socDisable(true).catch(() => {});
     for (const name of ['books', 'wishes', 'covers']) {
       const s = await FB.getDocs(FB.collection(fbDb, 'users', uid, name));
