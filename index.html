@@ -4,10 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Kitaplığım</title>
-<meta name="theme-color" content="#fbf5ef">
+<meta name="theme-color" content="#211b22">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Kitaplığım">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -15,6 +15,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,400..700,0..100&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script>try{document.documentElement.dataset.theme=localStorage.getItem("kitapligim.theme")||"dark"}catch(e){document.documentElement.dataset.theme="dark"}</script>
 <style>
 /* VOICE: warm, soft and a little magical; a cosy reading room in pastel
    IDEA: a secret bookcase that swings open onto your own sunny library
@@ -23,12 +24,16 @@
    LAYOUT: title and counts, the bookcase, add buttons, search, book cards */
 :root{color-scheme:light;--bg:#fbf5ef;--paper:#fffdf9;--ink:#40353f;--mute:#857884;--line:#eee1d8;
 --rose:#f3b9c0;--roseD:#d4838f;--sage:#cfe3cf;--sageD:#7fae8c;--lav:#dcd3f3;--lavD:#9a8ad0;--butter:#f7e3a3;--butterD:#d7b04c;--sky:#cfe2f3;--peach:#f8d2bd;
---wood:#ecd3b2;--woodD:#d5b086;--wall:#f6e7dc;--st:env(safe-area-inset-top);--sb:env(safe-area-inset-bottom);--serif:"Fraunces",Georgia,serif}
+--wood:#ecd3b2;--woodD:#d5b086;--wall:#f6e7dc;--st:env(safe-area-inset-top);--sb:env(safe-area-inset-bottom);--serif:"Fraunces",Georgia,serif;
+--on:#40353f;--field:#fff;--dot:#f3e3d8;--gilt:color-mix(in srgb,var(--c) 62%,#6b4f5f);--noteBg:var(--sage);--segOn:#fdebed;--storyBg:#fff8f1;--shadow:#e6d3c41f;--chipOn:#fff}
+:root[data-theme=dark]{color-scheme:dark;--bg:#211b22;--paper:#2b232c;--ink:#f0e6dc;--mute:#b3a3ad;--line:#3b3140;
+--rose:#c98f99;--roseD:#9c6470;--sage:#94ad96;--sageD:#68826d;--lav:#a698ca;--lavD:#77699d;--butter:#d2b56e;--butterD:#d7b45a;--sky:#8ea8c0;--peach:#c99a84;
+--wood:#6e4c37;--woodD:#4a3224;--wall:#2a2129;--on:#231b22;--field:#261f27;--dot:#2c2430;--gilt:#d8bb76;--noteBg:#33423a;--segOn:#3a2b33;--storyBg:#1d181e;--shadow:#00000040;--chipOn:#211b22}
 *{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none!important}
 html{background:var(--bg)}
 body{margin:0;color:var(--ink);font:16px/1.55 "Nunito",system-ui,sans-serif;overflow-x:clip;padding:var(--st) env(safe-area-inset-right) var(--sb) env(safe-area-inset-left);
-background:radial-gradient(circle at 12px 12px,#f3e3d8 1.5px,transparent 2px) 0 0/24px 24px,var(--bg)}
+background:radial-gradient(circle at 12px 12px,var(--dot) 1.5px,transparent 2px) 0 0/24px 24px,var(--bg)}
 .wrap{max-width:780px;margin:0 auto}
 .band{padding:14px max(4vw,16px)}
 h1,h2,h3{font-family:var(--serif);font-variation-settings:"SOFT" 100;font-weight:600;line-height:1.08;margin:0;letter-spacing:-.01em}
@@ -37,39 +42,39 @@ h2{font-size:27px}
 .top{padding-top:22px;padding-bottom:4px}
 .swash{display:block;width:150px;height:12px;margin:2px 0 10px}
 .pills{display:flex;flex-wrap:wrap;gap:6px}
-.pill{border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px;background:var(--c);color:var(--ink);white-space:nowrap}
+.pill{border-radius:99px;padding:4px 12px;font-weight:700;font-size:14px;background:var(--c);color:var(--on);white-space:nowrap}
 .pill b{font-family:var(--serif);font-size:16px;margin-right:3px}
 /* bookcase */
-.case{margin:0 max(4vw,16px);background:var(--woodD);padding:10px 10px 0;border-radius:20px 20px 10px 10px;box-shadow:0 14px 30px #c9a78a40}
-.back{background:linear-gradient(90deg,#0000 0 49%,#e9d5c733 49% 51%,#0000 51%) 0 0/60px 100%,var(--wall);border-radius:12px 12px 0 0;padding:16px 10px 0;overflow:hidden}
+.case{margin:0 max(4vw,16px);background:var(--woodD);padding:10px 10px 0;border-radius:20px 20px 10px 10px;box-shadow:0 14px 30px var(--shadow)}
+.back{background:linear-gradient(90deg,#0000 0 49%,#ffffff0d 49% 51%,#0000 51%) 0 0/60px 100%,var(--wall);border-radius:12px 12px 0 0;padding:16px 10px 0;overflow:hidden}
 .shelf{display:flex;align-items:flex-end;gap:3px;min-height:184px;overflow-x:auto;scrollbar-width:none;padding-bottom:0}
 .shelf::-webkit-scrollbar{display:none}
-.board{height:16px;background:linear-gradient(var(--wood),#e2c29c);border-radius:0 0 6px 6px;box-shadow:0 6px 0 var(--woodD)}
-.sp{flex:none;border:0;padding:10px 0 14px;border-radius:5px 5px 2px 2px;background:linear-gradient(90deg,#0000000f,#ffffff40 35%,#0000 60%,#00000014),var(--c);color:var(--ink);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:space-between;position:relative;transition:transform .2s ease}
-.sp::before,.sp::after{content:"";position:absolute;left:0;right:0;height:4px;background:color-mix(in srgb,var(--c) 62%,#6b4f5f)}
+.board{height:16px;background:linear-gradient(var(--wood),color-mix(in srgb,var(--wood) 85%,#000));border-radius:0 0 6px 6px;box-shadow:0 6px 0 var(--woodD)}
+.sp{flex:none;border:0;padding:10px 0 14px;border-radius:5px 5px 2px 2px;background:linear-gradient(90deg,#0000000f,#ffffff40 35%,#0000 60%,#00000014),var(--c);color:var(--on);cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:space-between;position:relative;transition:transform .2s ease}
+.sp::before,.sp::after{content:"";position:absolute;left:0;right:0;height:4px;background:var(--gilt)}
 .sp::before{top:7px}.sp::after{bottom:9px}
 .sp span{writing-mode:vertical-rl;transform:rotate(180deg);font:600 13px/1.05 var(--serif);font-variation-settings:"SOFT" 100;max-height:calc(100% - 22px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sp i{font:800 10px "Nunito",sans-serif;font-style:normal;opacity:.7}
 .sp:active,.sp:hover{transform:translateY(-8px) rotate(-1deg)}
 .sp:focus-visible{outline:3px solid var(--roseD);outline-offset:2px}
 .deco{flex:none;display:block}
-.ghost{flex:none;width:30px;border:2px dashed #d9c0b1;border-radius:5px}
+.ghost{flex:none;width:30px;border:2px dashed var(--mute);opacity:.5;border-radius:5px}
 .empty{flex:none;width:150px;align-self:center;color:var(--mute);padding:0 12px 40px;font:600 16px/1.3 var(--serif);font-variation-settings:"SOFT" 100;max-width:150px}
 /* actions */
 .actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-top:22px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:50px;padding:10px 16px;border-radius:16px;border:0;background:var(--paper);color:var(--ink);font:800 16px "Nunito",sans-serif;cursor:pointer;text-align:center;text-decoration:none;box-shadow:0 2px 0 var(--line)}
-.btn.primary{background:var(--rose);box-shadow:0 3px 0 var(--roseD)}
-.btn.lav{background:var(--lav);box-shadow:0 3px 0 var(--lavD)}
-.btn.danger{color:#b4505e}
+.btn.primary{background:var(--rose);color:var(--on);box-shadow:0 3px 0 var(--roseD)}
+.btn.lav{background:var(--lav);color:var(--on);box-shadow:0 3px 0 var(--lavD)}
+.btn.danger{color:#d36b7a}
 .btn:active{transform:translateY(2px);box-shadow:none}
 .btn:disabled{opacity:.5}
 .btn.link{grid-column:1/-1;background:none;box-shadow:none;color:var(--mute);min-height:44px;padding:4px;text-decoration:underline;text-underline-offset:4px;font-weight:700}
 .btn.small{min-height:40px;padding:6px 12px;font-size:15px;margin-top:8px}
 .btn:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.chip:focus-visible,.seg button:focus-visible{outline:3px solid var(--roseD);outline-offset:2px}
-.note{margin:4px max(4vw,16px) 0;padding:12px 14px;border-radius:16px;background:var(--sage);display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;font-weight:600}
+.note{margin:4px max(4vw,16px) 0;padding:12px 14px;border-radius:16px;background:var(--noteBg);display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;font-weight:600}
 .note .btn{min-height:40px;padding:6px 12px;font-size:15px}
 /* list */
-input,select,textarea{width:100%;font:16px "Nunito",sans-serif;color:var(--ink);background:#fff;border:2px solid var(--line);border-radius:14px;padding:10px 12px;min-height:48px;-webkit-appearance:none;appearance:none}
+input,select,textarea{width:100%;font:16px "Nunito",sans-serif;color:var(--ink);background:var(--field);border:2px solid var(--line);border-radius:14px;padding:10px 12px;min-height:48px;-webkit-appearance:none;appearance:none}
 select{background-image:linear-gradient(45deg,transparent 50%,var(--mute) 50%),linear-gradient(135deg,var(--mute) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
 textarea{min-height:80px;resize:vertical}
 .listhead{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin:14px 0 10px}
@@ -77,15 +82,15 @@ textarea{min-height:80px;resize:vertical}
 .tools select{width:auto}
 .chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.chip{flex:none;border:2px solid var(--line);background:#fff;color:var(--mute);border-radius:99px;padding:6px 14px;min-height:40px;font:700 14px "Nunito",sans-serif}
-.chip[aria-pressed=true]{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip{flex:none;border:2px solid var(--line);background:var(--field);color:var(--mute);border-radius:99px;padding:6px 14px;min-height:40px;font:700 14px "Nunito",sans-serif}
+.chip[aria-pressed=true]{background:var(--ink);color:var(--chipOn);border-color:var(--ink)}
 ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
-.item{display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 12px 10px 10px;background:var(--paper);border-radius:18px;box-shadow:0 2px 0 var(--line),0 8px 18px #e6d3c41f;cursor:pointer}
+.item{display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 12px 10px 10px;background:var(--paper);border-radius:18px;box-shadow:0 2px 0 var(--line),0 8px 18px var(--shadow);cursor:pointer}
 .cv{width:46px;height:64px;border-radius:4px 8px 8px 4px;background:linear-gradient(90deg,#00000018 0 4px,#0000 4px),var(--c);display:grid;place-items:center;font:600 22px var(--serif);font-variation-settings:"SOFT" 100;color:color-mix(in srgb,var(--c) 45%,#3b2b38);object-fit:cover;box-shadow:inset 0 0 0 1px #0000000a}
 .item .t{font:600 18px/1.2 var(--serif);font-variation-settings:"SOFT" 100;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .item .a{color:var(--mute);font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .item .r{text-align:end;font-size:13px;white-space:nowrap}
-.st{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:800;background:var(--sky)}
+.st{display:inline-block;padding:2px 10px;border-radius:99px;font-size:12px;font-weight:800;background:var(--sky);color:var(--on)}
 .st.okunuyor{background:var(--butter)}.st.okundu{background:var(--sage)}.st.yarim{background:var(--peach)}
 .stars{color:var(--butterD);letter-spacing:1px;margin-top:3px}
 .muted{color:var(--mute);font-size:14px}
@@ -104,21 +109,22 @@ summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weig
 .scan img:not([src]){visibility:hidden}
 .scan p{margin:0;font-size:15px;font-weight:600}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
-.seg button{border:2px solid var(--line);background:#fff;border-radius:16px;padding:10px 8px;min-height:64px;font:800 14px/1.2 "Nunito",sans-serif;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
-.seg button[aria-pressed=true]{border-color:var(--roseD);background:#fdebed}
+.seg button{border:2px solid var(--line);background:var(--field);border-radius:16px;padding:10px 8px;min-height:64px;font:800 14px/1.2 "Nunito",sans-serif;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.seg button[aria-pressed=true]{border-color:var(--rose);background:var(--segOn)}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px}
 .grid .full{grid-column:1/-1}
 .sect{grid-column:1/-1;font:600 18px var(--serif);font-variation-settings:"SOFT" 100;margin-top:8px}
 label.f{display:block;font-size:13px;font-weight:700;color:var(--mute)}
 label.f>input,label.f>select,label.f>textarea{margin-top:4px}
 .rate{display:flex;gap:2px;margin-top:4px}
-.rate button{width:44px;height:44px;border:0;background:none;color:#e9dccf;font-size:30px;cursor:pointer;border-radius:10px}
+.rate button{width:44px;height:44px;border:0;background:none;color:var(--line);font-size:30px;cursor:pointer;border-radius:10px}
 .rate button.on{color:var(--butterD)}
 .row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
 .row .btn{flex:1 1 140px}
-.warn{background:var(--peach);border-radius:14px;padding:10px 12px;font-size:14px;margin-bottom:12px;font-weight:600}
+.warn{background:var(--peach);color:var(--on);border-radius:14px;padding:10px 12px;font-size:14px;margin-bottom:12px;font-weight:600}
 .steps{padding-left:20px;margin:8px 0 14px}.steps li{margin-bottom:6px}
-a{color:#a4566a}
+a{color:var(--roseD)}
+:root[data-theme=dark] a{color:var(--rose)}
 /* camera */
 .cam{position:fixed;inset:0;background:#000;z-index:20;display:flex;flex-direction:column}
 .cam video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -151,12 +157,12 @@ a{color:#a4566a}
 @keyframes knock{50%{translate:2px 0}}
 
 /* stories */
-.story{position:fixed;inset:0;z-index:40;background:#fff8f1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(var(--st) + 12px) 16px calc(var(--sb) + 12px);overflow-y:auto}
-.stage{width:min(560px,100%);aspect-ratio:36/28;border-radius:26px;clip-path:inset(0 round 26px);background:#fdf1e6;box-shadow:0 12px 30px #d9b9a744;transition:opacity .5s,transform .5s;flex:none}
+.story{position:fixed;inset:0;z-index:40;background:var(--storyBg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:calc(var(--st) + 12px) 16px calc(var(--sb) + 12px);overflow-y:auto}
+.stage{width:min(560px,100%);aspect-ratio:36/28;border-radius:26px;clip-path:inset(0 round 26px);background:#fdf1e6;box-shadow:0 12px 30px var(--shadow);transition:opacity .5s,transform .5s;flex:none}
 .stage svg{display:block;width:100%;height:100%}
 .caption{min-height:52px;margin:14px 0 0;text-align:center;font:600 21px/1.25 var(--serif);font-variation-settings:"SOFT" 100;max-width:520px;transition:opacity .3s}
-.skip{position:fixed;top:calc(var(--st) + 12px);right:14px;z-index:41;border:0;border-radius:99px;background:#ffffffd9;padding:8px 16px;min-height:40px;font:800 14px "Nunito",sans-serif;color:var(--mute);box-shadow:0 2px 0 var(--line)}
-.welcome{width:min(460px,100%);background:var(--paper);border-radius:26px;padding:22px 18px 20px;text-align:center;box-shadow:0 14px 34px #d9b9a755;position:relative;animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
+.skip{position:fixed;top:calc(var(--st) + 12px);right:14px;z-index:41;border:0;border-radius:99px;background:var(--paper);padding:8px 16px;min-height:40px;font:800 14px "Nunito",sans-serif;color:var(--mute);box-shadow:0 2px 0 var(--line)}
+.welcome{width:min(460px,100%);background:var(--paper);border-radius:26px;padding:22px 18px 20px;text-align:center;box-shadow:0 14px 34px var(--shadow);position:relative;animation:pop .5s cubic-bezier(.2,1.4,.4,1)}
 .welcome .bigcv{width:110px;height:154px;margin:-70px auto 12px;font-size:44px;border-radius:6px 12px 12px 6px;box-shadow:0 12px 24px #b88f7a55;animation:float 3s ease-in-out infinite}
 .welcome h2{font-size:28px;margin-bottom:4px}
 .welcome .bt{font:600 18px var(--serif);font-variation-settings:"SOFT" 100;margin:0}
@@ -217,6 +223,12 @@ a{color:#a4566a}
 @keyframes dust{0%{opacity:.8;transform:translate(0,0) scale(.4)}100%{opacity:0;transform:translate(var(--dx),-10px) scale(1.4)}}
 @keyframes nudge{40%{transform:rotate(var(--r))}}
 @media(max-width:600px){.grid{grid-template-columns:minmax(0,1fr)}}
+:root[data-theme=dark] .stage svg,:root[data-theme=dark] .settle svg{filter:saturate(.85) brightness(.9)}
+:root[data-theme=dark] .cv{color:color-mix(in srgb,var(--c) 30%,#1d161c)}
+.themes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.themes button{min-height:72px;border-radius:16px;border:3px solid transparent;font:800 14px "Nunito",sans-serif;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.themes button[aria-pressed=true]{border-color:var(--rose)}
+.themes i{display:flex;gap:3px}.themes i b{width:10px;height:22px;border-radius:2px}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-delay:0s!important;transition-duration:.01s!important}}
 </style>
 </head>
@@ -263,6 +275,13 @@ a{color:#a4566a}
           <textarea id="imp" placeholder="Ya da yedek metnini buraya yapıştır"></textarea>
           <button class="btn" id="impBtn" type="button">Yapıştırılanı içe aktar</button>
           <p class="muted" id="impMsg"></p>
+        </div>
+      </details>
+      <details>
+        <summary>Görünüm</summary>
+        <div class="themes" id="themes">
+          <button type="button" data-theme="dark" style="background:#211b22;color:#f0e6dc"><i><b style="background:#c98f99"></b><b style="background:#94ad96"></b><b style="background:#a698ca"></b><b style="background:#d2b56e"></b></i>Koyu kütüphane</button>
+          <button type="button" data-theme="light" style="background:#fbf5ef;color:#40353f"><i><b style="background:#f3b9c0"></b><b style="background:#cfe3cf"></b><b style="background:#dcd3f3"></b><b style="background:#f7e3a3"></b></i>Açık pastel</button>
         </div>
       </details>
       <details>
@@ -379,7 +398,9 @@ a{color:#a4566a}
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const KEY = 'kitapligim.books.v1', BKEY = 'kitapligim.lastBackup';
-const PAL = ['#f3b9c0','#cfe3cf','#dcd3f3','#f7e3a3','#cfe2f3','#f8d2bd','#e9c6dc','#c6e3df','#f1d1a6'];
+const PALS = {light: ['#f3b9c0','#cfe3cf','#dcd3f3','#f7e3a3','#cfe2f3','#f8d2bd','#e9c6dc','#c6e3df','#f1d1a6'], dark: ['#b9858e','#8fa891','#9a8fbf','#c7aa64','#859fb8','#c08f78','#a7869f','#83a6a1','#b99566']};
+const isDark = () => document.documentElement.dataset.theme !== 'light';
+let PAL = PALS[isDark() ? 'dark' : 'light'];
 const hash = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.codePointAt(0)) | 0; return Math.abs(h); };
 const colorOf = b => PAL[hash((b.title || '') + (b.author || '')) % PAL.length];
 const initial = t => (String(t || '?').trim()[0] || '?').toLocaleUpperCase('tr');
@@ -423,7 +444,7 @@ function render() {
   const n = s => books.filter(b => b.status === s).length;
   const yr = String(new Date().getFullYear());
   const thisYear = books.filter(b => b.status === 'okundu' && String(b.finishedAt || '').startsWith(yr)).length;
-  $('stats').innerHTML = books.length ? [[books.length, 'kitap', '#f3b9c0'], [n('okunuyor'), 'okunuyor', '#f7e3a3'], [n('okundu'), 'okundu', '#cfe3cf'], [thisYear, 'bu yıl biten', '#dcd3f3']].map(([v, l, c]) => `<span class="pill" style="--c:${c}"><b>${v}</b>${esc(l)}</span>`).join('') : '<span class="pill" style="--c:#f3b9c0">Hoş geldin! İlk kitabını ekleyerek başla.</span>';
+  $('stats').innerHTML = books.length ? [[books.length, 'kitap', 'var(--rose)'], [n('okunuyor'), 'okunuyor', 'var(--butter)'], [n('okundu'), 'okundu', 'var(--sage)'], [thisYear, 'bu yıl biten', 'var(--lav)']].map(([v, l, c]) => `<span class="pill" style="--c:${c}"><b>${v}</b>${esc(l)}</span>`).join('') : '<span class="pill" style="--c:var(--rose)">Hoş geldin! İlk kitabını ekleyerek başla.</span>';
   $('chips').innerHTML = FILTERS.map(([k, l]) => `<button class="chip" type="button" data-k="${k}" aria-pressed="${filter === k}">${l}</button>`).join('');
   const q = $('q').value.trim().toLocaleLowerCase('tr');
   let list = books.filter(b => filter === 'all' || (filter === 'lent' ? !!b.lentTo : b.status === filter));
@@ -442,6 +463,14 @@ function render() {
   if (books.length >= 5 && (days === null || days > 30) && !sessionStorage.getItem('bkNag')) { sessionStorage.setItem('bkNag', 1); note('<span>Uzun zamandır yedek almadın.</span><button class="btn" type="button" id="goBk">Yedekle</button>', true); $('goBk').onclick = () => { $('bkBox').open = true; $('bkBox').scrollIntoView({behavior: 'smooth'}); $('note').hidden = true; }; }
 }
 
+function setTheme(t) {
+  document.documentElement.dataset.theme = t; try { localStorage.setItem('kitapligim.theme', t); } catch (e) {}
+  PAL = PALS[t === 'light' ? 'light' : 'dark'];
+  document.querySelector('meta[name=theme-color]').content = t === 'light' ? '#fbf5ef' : '#211b22';
+  for (const b of $('themes').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.theme === t));
+  render();
+}
+$('themes').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setTheme(b.dataset.theme); });
 function drawRate() { $('rate').innerHTML = [1,2,3,4,5].map(i => `<button type="button" data-v="${i}" class="${i <= rating ? 'on' : ''}" aria-label="${i} yıldız">★</button>`).join(''); }
 function setAcq(v) { acq = v; for (const b of $('seg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.acq === v)); }
 
@@ -944,7 +973,7 @@ async function syncShared() {
 }
 window.addEventListener('online', syncShared);
 
-load(); render(); setTimeout(syncShared, 1500);
+load(); setTheme(isDark() ? 'dark' : 'light'); setTimeout(syncShared, 1500);
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
