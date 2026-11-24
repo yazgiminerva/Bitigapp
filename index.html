@@ -161,7 +161,17 @@ summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weig
 .scan img{width:64px;height:92px;object-fit:cover;border-radius:4px 8px 8px 4px;background:var(--lav)}
 .scan img:not([src]){visibility:hidden}
 .scan p{margin:0;font-size:15px;font-weight:600}
-.seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.seg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+#f.wishing .nw{display:none}
+.wishbtn{grid-column:1/-1;background:color-mix(in srgb,var(--butter) 28%,var(--paper))}
+.wishbtn svg{color:var(--butterD)}
+.wishbtn b{min-width:24px;height:24px;padding:0 7px;border-radius:99px;background:var(--butter);color:var(--on);font:900 13px/24px "Nunito",sans-serif}
+.wishbtn b:empty{display:none}
+.wadd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.wadd .btn{font-size:14px;padding:8px 6px;min-height:46px}
+.witem{grid-template-columns:46px minmax(0,1fr) auto}
+.witem .n{color:var(--mute);font-size:13px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.witem .btn{min-height:40px;padding:6px 12px;font-size:14px}
+.wempty{padding:22px 6px;text-align:center;color:var(--mute);font:600 16px/1.35 var(--serif);font-variation-settings:"SOFT" 100}
 .cvpick{grid-column:1/-1}
 .cvpick>span{font-size:13px;font-weight:700;color:var(--mute)}
 .cvrow{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 8px;scrollbar-width:none}
@@ -449,6 +459,7 @@ a{color:var(--roseD)}
       <svg width="18" height="20" viewBox="0 0 18 20" aria-hidden="true"><path d="M2 1h12a2 2 0 0 1 2 2v16H4a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 6h6M6 10h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       Kapaktan ekle
     </button>
+    <button class="btn wishbtn" id="wishBtn" type="button"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5l2.5 5.2 5.7.8-4.1 4 1 5.7L10 14.5l-5.1 2.7 1-5.7-4.1-4 5.7-.8z" fill="currentColor"/></svg>İstek listem<b id="wishN"></b></button>
     <button class="btn link" id="manual" type="button">Elle ekle</button>
   </div>
   <input type="file" id="coverIn" accept="image/*" capture="environment" hidden>
@@ -486,7 +497,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 18</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 19</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -537,6 +548,10 @@ a{color:var(--roseD)}
         <svg width="28" height="22" viewBox="0 0 28 22" aria-hidden="true"><rect x="2" y="4" width="5" height="15" rx="1" fill="#cfe3cf"/><rect x="8" y="2" width="5" height="17" rx="1" fill="#dcd3f3"/><rect x="14" y="5" width="5" height="14" rx="1" fill="#f7e3a3"/><rect x="20" y="3" width="5" height="16" rx="1" fill="#f3b9c0"/><rect x="0" y="19" width="28" height="3" rx="1" fill="#d5b086"/></svg>
         Kitaplığımda vardı
       </button>
+      <button type="button" data-acq="wish" aria-pressed="false">
+        <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.3l-5.8 3.1 1.1-6.5L2.6 9.3l6.5-.9z" fill="#f7e3a3" stroke="#d7b04c" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        İstiyorum
+      </button>
       <button type="button" data-acq="new" aria-pressed="false">
         <svg width="24" height="24" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 7a4 4 0 0 1 8 0" fill="none" stroke="#a07a55" stroke-width="2"/><path d="M3 8h18l-1.5 14h-15z" fill="#e3c08f"/><path d="M3 8h18v3H3z" fill="#d5ad78"/></svg>
         Yeni aldım
@@ -559,15 +574,15 @@ a{color:var(--roseD)}
         <label class="f">Tür<select name="genre"></select></label>
         <label class="f">Basım yılı<input name="year" inputmode="numeric"></label>
         <label class="f">Sayfa<input name="pages" inputmode="numeric"></label>
-        <label class="f">Durum<select name="status"><option value="okunacak">Okunacak</option><option value="okunuyor">Okunuyor</option><option value="okundu">Okundu</option><option value="yarim">Yarım kaldı</option></select></label>
-        <label class="f">Bitirdiğim tarih<input name="finishedAt" type="date"></label>
-        <div class="f full"><span>Puanım</span><div class="rate" id="rate"></div></div>
-        <label class="f">Rafı / yeri<input name="location" placeholder="Örn. salon, 2. raf"></label>
-        <label class="f">Ödünç verdiğim kişi<input name="lentTo"></label>
-        <label class="f full">Notlarım<textarea name="notes"></textarea></label>
-        <div class="sect" id="memHead">Hatıra</div>
-        <label class="f">Aldığım tarih<input name="purchasedAt" type="date"></label>
-        <label class="f">Nereden aldım<input name="purchasePlace" placeholder="Şehir, kitapçı…"></label>
+        <label class="nw f">Durum<select name="status"><option value="okunacak">Okunacak</option><option value="okunuyor">Okunuyor</option><option value="okundu">Okundu</option><option value="yarim">Yarım kaldı</option></select></label>
+        <label class="nw f">Bitirdiğim tarih<input name="finishedAt" type="date"></label>
+        <div class="nw f full"><span>Puanım</span><div class="rate" id="rate"></div></div>
+        <label class="nw f">Rafı / yeri<input name="location" placeholder="Örn. salon, 2. raf"></label>
+        <label class="nw f">Ödünç verdiğim kişi<input name="lentTo"></label>
+        <label class="f full"><span id="notesLbl">Notlarım</span><textarea name="notes"></textarea></label>
+        <div class="nw sect" id="memHead">Hatıra</div>
+        <label class="nw f">Aldığım tarih<input name="purchasedAt" type="date"></label>
+        <label class="nw f">Nereden aldım<input name="purchasePlace" placeholder="Şehir, kitapçı…"></label>
       </div>
       <div class="row"><button class="btn primary" type="submit" id="saveBtn">Kaydet</button><button class="btn danger" type="button" id="del">Sil</button></div>
       <div class="row" id="delAsk" hidden>
@@ -575,6 +590,17 @@ a{color:var(--roseD)}
         <button class="btn danger" type="button" id="delYes">Evet, sil</button><button class="btn" type="button" id="delNo">Vazgeç</button>
       </div>
     </form>
+  </div>
+</div>
+
+<div class="ov" id="wishOv" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="wTitle">
+    <div class="sh-head"><h2 id="wTitle">İstek listem</h2><button class="x" id="wX" type="button" aria-label="Kapat">×</button></div>
+    <p class="muted" style="margin-top:0">Kitapçıda gözüne kestirdiklerin, almak istediklerin. Aldığında "Aldım"a dokun; kitap yeni üye sahnesiyle kitaplığına geçer.</p>
+    <div class="wadd"><button class="btn primary" id="wScan" type="button">Barkod okut</button><button class="btn lav" id="wCover" type="button">Kapaktan</button><button class="btn" id="wManual" type="button">Elle ekle</button></div>
+    <ul id="wishList"></ul>
+    <button class="btn" id="wShare" type="button" style="width:100%;margin-top:14px" hidden>Listeyi paylaş</button>
+    <p class="muted" id="wMsg" style="margin:8px 0 0"></p>
   </div>
 </div>
 
@@ -684,8 +710,18 @@ const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOff
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let gfilter = null;
 let books = [], filter = 'all', editId = null, rating = 0, fromScan = false, acq = 'existing';
+// wish list: books you want, kept apart from the ones you own
+const WKEY = 'kitapligim.wish.v1';
+let wishes = [], wishNext = false, convertId = null;
 
-function load() { try { books = JSON.parse(localStorage.getItem(KEY) || '[]'); if (!Array.isArray(books)) books = []; } catch (e) { books = []; } }
+function load() {
+  try { books = JSON.parse(localStorage.getItem(KEY) || '[]'); if (!Array.isArray(books)) books = []; } catch (e) { books = []; }
+  try { wishes = JSON.parse(localStorage.getItem(WKEY) || '[]'); if (!Array.isArray(wishes)) wishes = []; } catch (e) { wishes = []; }
+}
+function persistWish() {
+  try { localStorage.setItem(WKEY, JSON.stringify(wishes)); return true; }
+  catch (e) { note('Kaydedilemedi: telefonda yer kalmamış olabilir.', true); return false; }
+}
 function persist() {
   try { localStorage.setItem(KEY, JSON.stringify(books)); return true; }
   catch (e) { note('Kaydedilemedi: telefonda yer kalmamış olabilir. Hemen yedek al.', true); return false; }
@@ -752,7 +788,51 @@ function shelfHTML(list) {
   return (th === 'cadi' ? BLACKCAT : CAT) + spines.join('') + (books.length > list.length ? `<button class="seeall" type="button" data-go="lib">Tüm kitaplık ›<br><small>${books.length}</small></button>` : '');
 }
 
+function coverEl(b) {
+  const c = colorOf(b), cu = okUrl(b.cover);
+  return b.coverLocal ? `<img class="cv" style="--c:${c}" data-local="${esc(b.id)}" alt="">` : cu ? `<img class="cv" style="--c:${c}" src="${esc(cu)}" alt="" loading="lazy">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`;
+}
+function renderWish() {
+  $('wishN').textContent = wishes.length || '';
+  if ($('wishOv').hidden) return;
+  const list = [...wishes].sort((a, b) => String(b.wishedAt || '').localeCompare(String(a.wishedAt || '')));
+  $('wishList').innerHTML = list.length ? list.map(b => `<li class="item witem" data-id="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || 'Yazar yok')}</div>${b.notes ? `<div class="n">${esc(b.notes)}</div>` : ''}</div><button class="btn primary" type="button" data-buy="${esc(b.id)}">Aldım</button></li>`).join('')
+    : '<li class="wempty">Listen boş. Kitapçıda beğendiğin bir kitabın barkodunu okut, buraya eklensin.</li>';
+  $('wShare').hidden = !list.length;
+  hydrate($('wishList'));
+}
+function openWish() { $('wMsg').textContent = ''; $('wishOv').hidden = false; renderWish(); }
+function buyWish(id, scanned) {
+  const w = wishes.find(x => x.id === id); if (!w) return;
+  $('wishOv').hidden = true;
+  openSheet(null, false); fromScan = !!scanned;
+  for (const k of ['title', 'author', 'translator', 'publisher', 'isbn', 'year', 'pages', 'notes']) f.elements[k].value = w[k] ?? '';
+  f.elements.genre.value = normGenre(w.genre);
+  f.elements.purchasedAt.value = today();
+  convertId = w.id; setAcq('new'); $('seg').hidden = true; $('dup').hidden = true;
+  $('shTitle').textContent = 'Sonunda aldın!';
+  if (w.coverLocal) localCoverUrl(w.id).then(u => { if (u && convertId === w.id) addTile({key: 'own:cur', kind: 'own', url: u}, true); });
+  else if (okUrl(w.cover)) addTile({key: w.cover, kind: 'web', url: okUrl(w.cover)}, true);
+}
+$('wishBtn').onclick = openWish;
+$('wX').onclick = () => { $('wishOv').hidden = true; };
+$('wishOv').addEventListener('click', e => { if (e.target === $('wishOv')) $('wishOv').hidden = true; });
+$('wishList').addEventListener('click', e => {
+  const buy = e.target.closest('[data-buy]'); if (buy) return buyWish(buy.dataset.buy);
+  const li = e.target.closest('li[data-id]'); if (li) { $('wishOv').hidden = true; openSheet(li.dataset.id); }
+});
+$('wScan').onclick = () => { $('wishOv').hidden = true; wishNext = true; startScan(); };
+$('wCover').onclick = () => { $('wishOv').hidden = true; wishNext = true; askCover('new'); };
+$('wManual').onclick = () => { $('wishOv').hidden = true; wishNext = true; openSheet(null, false); setTimeout(() => f.elements.title.focus(), 60); };
+$('wShare').onclick = async () => {
+  const text = 'Okumak istediğim kitaplar:\n' + wishes.map(b => `• ${b.title}${b.author ? ' (' + b.author + ')' : ''}${b.isbn ? ' ISBN ' + b.isbn : ''}`).join('\n');
+  try {
+    if (navigator.share) await navigator.share({title: 'İstek listem', text});
+    else { await navigator.clipboard.writeText(text); $('wMsg').textContent = 'Liste kopyalandı.'; }
+  } catch (e) { if (e && e.name !== 'AbortError') $('wMsg').textContent = 'Paylaşılamadı.'; }
+};
 function render() {
+  renderWish();
   const byNew = [...books].sort((a, b) => String(b.addedAt || '').localeCompare(String(a.addedAt || '')));
   const shelfList = byNew.slice(0, 18).sort((a, b) => genreIdx(a.genre) - genreIdx(b.genre));
   $('shelf').innerHTML = shelfHTML(shelfList);
@@ -799,24 +879,33 @@ $('themes').addEventListener('click', e => { const b = e.target.closest('button'
 function drawSound() { let on = true; try { on = localStorage.getItem(SKEY) !== 'off'; } catch (e) {} $('soundBtn').textContent = on ? 'Sesler açık' : 'Sesler kapalı'; $('soundBtn').setAttribute('aria-pressed', String(on)); }
 $('soundBtn').onclick = () => { let on = true; try { on = localStorage.getItem(SKEY) !== 'off'; localStorage.setItem(SKEY, on ? 'off' : 'on'); } catch (e) {} drawSound(); if (!on) { sfx.unlock(); sfx.bell(); } };
 function drawRate() { $('rate').innerHTML = [1,2,3,4,5].map(i => `<button type="button" data-v="${i}" class="${i <= rating ? 'on' : ''}" aria-label="${i} yıldız">★</button>`).join(''); }
-function setAcq(v) { acq = v; for (const b of $('seg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.acq === v)); }
+function setAcq(v) {
+  acq = v; for (const b of $('seg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.acq === v));
+  f.classList.toggle('wishing', v === 'wish');
+  $('notesLbl').textContent = v === 'wish' ? 'Not (nerede gördüm, fiyatı, kim önerdi…)' : 'Notlarım';
+  if (!editId && $('scanBox').hidden && !convertId) $('shTitle').textContent = v === 'wish' ? 'İstek listesine ekle' : 'Yeni kitap';
+  if (isbnNow()) checkDup(isbnNow());
+}
+const isbnNow = () => (f.elements.isbn.value || '').replace(/[^0-9Xx]/g, '');
 
 const FORM_KEYS = ['title','author','translator','publisher','isbn','genre','year','pages','finishedAt','location','lentTo','notes','purchasedAt','purchasePlace'];
 function openSheet(id, scan) {
-  editId = id; fromScan = !!scan;
-  const b = books.find(x => x.id === id) || {};
+  editId = id; fromScan = !!scan; convertId = null;
+  const inWish = id ? wishes.find(x => x.id === id) : null;
+  const b = books.find(x => x.id === id) || inWish || {};
   f.reset();
   for (const k of FORM_KEYS) f.elements[k].value = b[k] ?? '';
   f.elements.genre.value = normGenre(b.genre);
   f.elements.status.value = b.status || 'okunacak';
   rating = b.rating || 0; drawRate();
-  setAcq('existing'); $('seg').hidden = !!id;
+  f.elements.isbn.value = ''; setAcq(inWish || (!id && wishNext) ? 'wish' : 'existing'); wishNext = false; $('seg').hidden = !!id;
+  f.elements.isbn.value = b.isbn ?? '';
   cvTiles = [{key: 'none', kind: 'none'}]; cvSel = 'none'; $('cvMsg').textContent = '';
   try { $('cvShare').checked = localStorage.getItem('kitapligim.shareCover') === '1'; } catch (e) {}
   if (b.coverLocal) localCoverUrl(b.id).then(u => { if (u && editId === b.id) addTile({key: 'own:cur', kind: 'own', url: u}, true); });
   else if (okUrl(b.cover)) addTile({key: b.cover, kind: 'web', url: okUrl(b.cover)}, true);
   drawTiles();
-  $('shTitle').textContent = id ? 'Kitabı düzenle' : scan ? 'Barkoddan ekle' : 'Yeni kitap';
+  $('shTitle').textContent = inWish ? 'İstek listesi' : id ? 'Kitabı düzenle' : scan ? 'Barkoddan ekle' : acq === 'wish' ? 'İstek listesine ekle' : 'Yeni kitap';
   $('del').hidden = !id; $('delAsk').hidden = true; $('dup').hidden = true;
   $('scanBox').hidden = !scan; $('scanMsg').textContent = ''; $('coverFill').hidden = true;
   $('ov').hidden = false;
@@ -927,6 +1016,13 @@ const closeSheet = () => { $('ov').hidden = true; };
 function checkDup(isbn) {
   const d = isbn && books.find(b => b.isbn === isbn && b.id !== editId);
   const box = $('dup');
+  const w = !d && isbn && wishes.find(b => b.isbn === isbn && b.id !== editId && b.id !== convertId);
+  if (w) {
+    box.innerHTML = acq === 'wish' ? `Bu kitap zaten istek listende: <b>${esc(w.title)}</b>.` : `Bu kitap istek listendeydi: <b>${esc(w.title)}</b>. <button class="btn" type="button" id="buyDup" style="min-height:40px;margin-top:6px">Aldım, listeden kitaplığa geçir</button>`;
+    box.hidden = false;
+    if ($('buyDup')) $('buyDup').onclick = () => buyWish(w.id, fromScan);
+    return;
+  }
   if (!d) { box.hidden = true; return; }
   box.innerHTML = `Bu kitap zaten kitaplığında: <b>${esc(d.title)}</b>. <button class="btn" type="button" id="openDup" style="min-height:40px;margin-top:6px">O kaydı aç</button>`;
   box.hidden = false;
@@ -1038,9 +1134,9 @@ f.elements.isbn.addEventListener('change', () => {
   if (!editId && fromScan && /^97[89]\d{10}$/.test(v) && !f.elements.title.value) { f.elements.isbn.value = v; fillFrom(v); }
 });
 
-$('scanBtn').onclick = startScan;
-$('camClose').onclick = stopScan;
-$('manual').onclick = () => { openSheet(null, false); setTimeout(() => f.elements.title.focus(), 60); };
+$('scanBtn').onclick = () => { wishNext = false; startScan(); };
+$('camClose').onclick = () => { wishNext = false; stopScan(); };
+$('manual').onclick = () => { wishNext = false; openSheet(null, false); setTimeout(() => f.elements.title.focus(), 60); };
 $('x').onclick = closeSheet;
 $('ov').addEventListener('click', e => { if (e.target === $('ov')) closeSheet(); });
 $('rate').addEventListener('click', e => { const v = +e.target.dataset.v; if (v) { rating = rating === v ? 0 : v; drawRate(); } });
@@ -1340,20 +1436,38 @@ f.addEventListener('submit', e => {
   e.preventDefault();
   const v = k => f.elements[k].value.trim();
   const num = k => { const n = parseInt(v(k), 10); return Number.isFinite(n) ? n : null; };
-  const old = books.find(b => b.id === editId);
+  const wishing = acq === 'wish';
+  const old = (wishing ? wishes : books).find(b => b.id === editId);
   const isNewBuy = !old && acq === 'new';
-  const data = {...(old || {}), id: editId || uid(), title: v('title'), author: v('author'), translator: v('translator'), publisher: v('publisher'), isbn: v('isbn').replace(/[^0-9Xx]/g, ''), genre: v('genre'), year: num('year'), pages: num('pages'), status: v('status'), finishedAt: v('finishedAt'), rating, location: v('location'), lentTo: v('lentTo'), notes: v('notes'), purchasedAt: v('purchasedAt') || (isNewBuy ? today() : ''), purchasePlace: v('purchasePlace'), acquisition: old ? (old.acquisition || 'existing') : acq, cover: '', coverLocal: false, sharedAt: '', addedAt: (old && old.addedAt) || new Date().toISOString(), updatedAt: new Date().toISOString()};
+  const data = {...(old || {}), id: editId || convertId || uid(), title: v('title'), author: v('author'), translator: v('translator'), publisher: v('publisher'), isbn: v('isbn').replace(/[^0-9Xx]/g, ''), genre: v('genre'), year: num('year'), pages: num('pages'), status: v('status'), finishedAt: v('finishedAt'), rating, location: v('location'), lentTo: v('lentTo'), notes: v('notes'), purchasedAt: v('purchasedAt') || (isNewBuy ? today() : ''), purchasePlace: v('purchasePlace'), acquisition: old ? (old.acquisition || 'existing') : acq, cover: '', coverLocal: false, sharedAt: '', addedAt: (old && old.addedAt) || new Date().toISOString(), updatedAt: new Date().toISOString()};
   if (!data.title) return;
   const sel = cvTiles.find(t => t.key === cvSel) || {kind: 'none'};
   if (sel.kind === 'web') data.cover = sel.url;
   if (sel.kind === 'own') data.coverLocal = true;
-  const prev = books;
-  books = old ? books.map(b => b.id === editId ? data : b) : [...books, data];
-  if (!persist()) { books = prev; return; }
+  if (wishing) {
+    for (const k of ['status', 'finishedAt', 'location', 'lentTo', 'purchasedAt', 'purchasePlace', 'rating']) delete data[k];
+    data.wishedAt = (old && old.wishedAt) || today();
+    const prevW = wishes;
+    wishes = old ? wishes.map(b => b.id === editId ? data : b) : [...wishes, data];
+    if (!persistWish()) { wishes = prevW; return; }
+  } else {
+    const prev = books;
+    books = old ? books.map(b => b.id === editId ? data : b) : [...books, data];
+    if (!persist()) { books = prev; return; }
+    if (convertId) { wishes = wishes.filter(w => w.id !== convertId); persistWish(); }
+  }
   const scanned = fromScan && !old;
   if (sel.kind === 'own' && $('cvShare').checked && validIsbn(data.isbn)) shareCover(data, sel.blob);
   if (sel.kind === 'own' && sel.blob) idb.put(data.id, sel.blob).then(() => { forgetLocal(data.id); render(); }).catch(() => note('Kapak fotoğrafı kaydedilemedi.'));
   else if (sel.kind !== 'own') { idb.del(data.id).catch(() => {}); forgetLocal(data.id); }
+  if (wishing) {
+    closeSheet(); render();
+    note(`<span><b>${esc(data.title)}</b> ${old ? 'güncellendi' : 'istek listene eklendi'}.</span><button class="btn" type="button" id="seeWish">Listeyi aç</button>${scanned && !old ? '<button class="btn primary" type="button" id="nextWish">Sıradaki</button>' : ''}`);
+    $('seeWish').onclick = () => { $('note').hidden = true; openWish(); };
+    if ($('nextWish')) $('nextWish').onclick = () => { $('note').hidden = true; wishNext = true; startScan(); };
+    if (!old) { sfx.unlock(); sfx.sparkle(); }
+    return;
+  }
   closeSheet(); render(); syncShared();
   if (old) { nextPrompt(data, false); return; }
   if (isNewBuy) playNewBook({...data, _coverUrl: sel.kind === 'own' ? sel.url : ''}, scanned); else playSettle(data, scanned);
@@ -1361,8 +1475,9 @@ f.addEventListener('submit', e => {
 $('del').onclick = () => { $('delAsk').hidden = false; };
 $('delNo').onclick = () => { $('delAsk').hidden = true; };
 $('delYes').onclick = () => {
-  const t = (books.find(b => b.id === editId) || {}).title;
-  const gone = editId; books = books.filter(b => b.id !== gone); persist(); idb.del(gone).catch(() => {}); forgetLocal(gone); closeSheet(); render();
+  const t = (books.find(b => b.id === editId) || wishes.find(b => b.id === editId) || {}).title;
+  const gone = editId; books = books.filter(b => b.id !== gone); persist();
+  if (wishes.some(b => b.id === gone)) { wishes = wishes.filter(b => b.id !== gone); persistWish(); } idb.del(gone).catch(() => {}); forgetLocal(gone); closeSheet(); render();
   note(`<span>${esc(t)} silindi.</span>`);
 };
 
@@ -1679,7 +1794,7 @@ function playSettle(b, scanned) {
 $('exp').onclick = async () => {
   const d = new Date().toISOString().slice(0, 10);
   const out = [];
-  for (const {id, ...b} of books) {
+  for (const {id, ...b} of [...books, ...wishes.map(w => ({...w, wish: true}))]) {
     const o = {...b};
     if (b.coverLocal) { try { const blob = await idb.get(id); if (blob) o.coverData = await new Promise(ok => { const r = new FileReader(); r.onload = () => ok(r.result); r.readAsDataURL(blob); }); } catch (e) {} }
     out.push(o);
@@ -1689,15 +1804,26 @@ $('exp').onclick = async () => {
   try {
     if (navigator.canShare && navigator.canShare({files: [file]})) await navigator.share({files: [file], title: 'Kitaplığım yedeği'});
     else { const a = document.createElement('a'); a.href = URL.createObjectURL(file); a.download = file.name; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 4000); }
-    localStorage.setItem(BKEY, Date.now()); $('impMsg').textContent = `${books.length} kitap yedeklendi. iPhone'da "Dosyalar'a Kaydet"i seçebilirsin.`; render();
+    localStorage.setItem(BKEY, Date.now()); $('impMsg').textContent = `${books.length} kitap${wishes.length ? ' ve ' + wishes.length + ' istek' : ''} yedeklendi. iPhone'da "Dosyalar'a Kaydet"i seçebilirsin.`; render();
   } catch (e) { if (e && e.name !== 'AbortError') $('impMsg').textContent = 'Yedek oluşturulamadı.'; }
 };
 function importArr(arr) {
   if (!Array.isArray(arr)) { $('impMsg').textContent = 'Bu bir kitaplık yedeği değil.'; return; }
   const have = new Set(books.map(b => (b.isbn || '') + '|' + String(b.title || '').toLocaleLowerCase('tr')));
-  let added = 0;
+  const haveW = new Set(wishes.map(b => (b.isbn || '') + '|' + String(b.title || '').toLocaleLowerCase('tr')));
+  let added = 0, addedW = 0;
   for (const r of arr.slice(0, 5000)) {
     if (!r || typeof r !== 'object' || !r.title) continue;
+    if (r.wish) {
+      const key = (r.isbn || '') + '|' + String(r.title).toLocaleLowerCase('tr');
+      if (haveW.has(key) || have.has(key)) continue;
+      const s = k => typeof r[k] === 'string' ? r[k].slice(0, 2000) : '';
+      const n = k => r[k] !== '' && r[k] != null && Number.isFinite(+r[k]) ? +r[k] : null;
+      const nid = uid(), cd = typeof r.coverData === 'string' && /^data:image\/(jpeg|png|webp);base64,/.test(r.coverData) ? r.coverData : '';
+      if (cd) fetch(cd).then(x => x.blob()).then(bl => idb.put(nid, bl)).then(() => render()).catch(() => {});
+      wishes.push({id: nid, coverLocal: !!cd, cover: okUrl(r.cover), title: s('title'), author: s('author'), translator: s('translator'), publisher: s('publisher'), isbn: s('isbn'), genre: normGenre(s('genre')), year: n('year'), pages: n('pages'), notes: s('notes'), wishedAt: s('wishedAt') || today()});
+      haveW.add(key); addedW++; continue;
+    }
     const key = (r.isbn || '') + '|' + String(r.title).toLocaleLowerCase('tr');
     if (have.has(key)) continue;
     const s = k => typeof r[k] === 'string' ? r[k].slice(0, 2000) : '';
@@ -1707,8 +1833,8 @@ function importArr(arr) {
     books.push({id: nid, coverLocal: !!cd, title: s('title'), author: s('author'), translator: s('translator'), publisher: s('publisher'), isbn: s('isbn'), genre: normGenre(s('genre')), year: n('year'), pages: n('pages'), status: STAT[r.status] ? r.status : 'okunacak', finishedAt: s('finishedAt'), rating: Math.max(0, Math.min(5, n('rating') || 0)), location: s('location'), lentTo: s('lentTo'), notes: s('notes'), purchasedAt: s('purchasedAt'), purchasePlace: s('purchasePlace'), acquisition: r.acquisition === 'new' ? 'new' : 'existing', cover: okUrl(r.cover), addedAt: s('addedAt') || new Date().toISOString(), updatedAt: new Date().toISOString()});
     have.add(key); added++;
   }
-  persist(); render(); syncShared();
-  $('impMsg').textContent = added ? `${added} kitap eklendi.` : 'Eklenecek yeni kitap yoktu.';
+  persist(); persistWish(); render(); syncShared();
+  $('impMsg').textContent = added || addedW ? `${added} kitap${addedW ? ', ' + addedW + ' istek' : ''} eklendi.` : 'Eklenecek yeni kitap yoktu.';
 }
 $('impBtn').onclick = () => { try { importArr(JSON.parse($('imp').value)); $('imp').value = ''; } catch (e) { $('impMsg').textContent = 'Bu metin okunamadı.'; } };
 $('impFile').addEventListener('change', async e => { const file = e.target.files && e.target.files[0]; e.target.value = ''; if (!file) return; try { importArr(JSON.parse(await file.text())); } catch (er) { $('impMsg').textContent = 'Dosya okunamadı.'; } });
@@ -1784,10 +1910,10 @@ async function readCover(file) {
 }
 let coverMode = 'new';
 function askCover(mode) { coverMode = mode; if (!getKey()) openKey(); else $('coverIn').click(); }
-$('coverBtn').onclick = () => askCover('new');
+$('coverBtn').onclick = () => { wishNext = false; askCover('new'); };
 $('coverFill').onclick = () => askCover('fill');
 async function coverPhoto(file, newSheet) {
-  if (newSheet) { openSheet(null, true); $('shTitle').textContent = 'Kapaktan ekle'; }
+  if (newSheet) { openSheet(null, true); $('shTitle').textContent = acq === 'wish' ? 'İstek listesine ekle' : 'Kapaktan ekle'; }
   const msg = $('scanMsg'), mine = editId;
   $('scanBox').hidden = false; $('coverFill').hidden = true;
   if (!getKey()) {
