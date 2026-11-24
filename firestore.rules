@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null && request.auth.token.email_verified == true; }
+    function me() { return request.auth.uid; }
+    function isPublic(uid) { return exists(/databases/$(database)/documents/profiles/$(uid)) && get(/databases/$(database)/documents/profiles/$(uid)).data.private == false; }
+    function follows(a, b) { return exists(/databases/$(database)/documents/follows/$(a + '_' + b)) && get(/databases/$(database)/documents/follows/$(a + '_' + b)).data.status == 'accepted'; }
+    function blocked(owner, other) { return exists(/databases/$(database)/documents/blocks/$(owner)/items/$(other)); }
+    function canSee(uid) { return signedIn() && (me() == uid || ((isPublic(uid) || follows(me(), uid)) && !blocked(uid, me()))); }
+
+    // private library: only the owner
+    match /users/{uid}/{document=**} {
+      allow read, write: if signedIn() && me() == uid;
+    }
+
+    // profile card (name, @username, avatar, bio, private flag): visible to signed-in users unless they are blocked
+    match /profiles/{uid} {
+      allow get: if signedIn() && !blocked(uid, me());
+      allow list: if signedIn();
+      allow create, update: if signedIn() && me() == uid
+        && request.resource.data.uid == uid
+        && request.resource.data.private is bool
+        && request.resource.data.bio.size() <= 140
+        && getAfter(/databases/$(database)/documents/usernames/$(request.resource.data.usernameLower)).data.uid == uid;
+      allow delete: if signedIn() && me() == uid;
+    }
+
+    // one owner per username
+    match /usernames/{name} {
+      allow read: if signedIn();
+      allow create: if signedIn() && request.resource.data.uid == me() && name.matches('^[a-z0-9._]{3,24}$');
+      allow delete: if signedIn() && resource.data.uid == me();
+    }
+
+    // shared shelf (no notes, ratings, places or lending): owner, approved followers, or everyone if the profile is public
+    match /shelves/{uid} {
+      allow read: if canSee(uid);
+      allow write: if signedIn() && me() == uid;
+    }
+
+    // follow / follow request: id is "<from>_<to>"
+    match /follows/{id} {
+      allow read: if signedIn() && (resource.data.from == me() || resource.data.to == me());
+      allow create: if signedIn()
+        && request.resource.data.from == me()
+        && request.resource.data.to != me()
+        && id == me() + '_' + request.resource.data.to
+        && !blocked(request.resource.data.to, me())
+        && (request.resource.data.status == 'pending'
+            || (request.resource.data.status == 'accepted' && isPublic(request.resource.data.to)));
+      allow update: if signedIn() && resource.data.to == me()
+        && request.resource.data.status == 'accepted'
+        && request.resource.data.from == resource.data.from
+        && request.resource.data.to == resource.data.to;
+      allow delete: if signedIn() && (resource.data.from == me() || resource.data.to == me());
+    }
+
+    match /blocks/{uid}/items/{other} {
+      allow read, write: if signedIn() && me() == uid;
+    }
+
+    // reactions on someone's feed posts
+    match /reactions/{owner}/items/{rid} {
+      allow read: if canSee(owner);
+      allow create: if canSee(owner) && me() != owner
+        && request.resource.data.by == me()
+        && rid.matches('.*_' + me());
+      allow delete: if signedIn() && (resource.data.by == me() || owner == me());
+    }
+
+    // owl post: book recommendations, only from approved followers
+    match /mail/{to}/items/{mid} {
+      allow read, update, delete: if signedIn() && me() == to;
+      allow create: if signedIn()
+        && request.resource.data.from == me()
+        && follows(me(), to)
+        && !blocked(to, me())
+        && request.resource.data.note.size() <= 200;
+    }
+  }
+}

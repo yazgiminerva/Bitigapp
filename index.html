@@ -288,6 +288,37 @@ body.selecting .tabbar{display:none}
 .nowc .btn{min-height:36px;padding:4px 10px;font-size:13px;width:100%}
 .fgoal{display:flex;align-items:center;gap:12px;background:var(--field);border-radius:18px;padding:12px 14px;margin-top:6px}
 .fgoal .gbar{flex:1;margin:0}.fgoal b{white-space:nowrap}
+/* friends */
+.fhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.ficons{display:flex;gap:8px;margin-top:8px}
+.ficon{position:relative;width:44px;height:44px;border-radius:50%;border:0;background:var(--field);color:var(--ink);display:grid;place-items:center;cursor:pointer}
+.ficon svg{width:24px;height:24px}
+.ficon b{position:absolute;top:-4px;right:-4px;min-width:20px;height:20px;border-radius:10px;background:var(--rose);color:var(--on);font:900 12px/20px "Nunito",sans-serif;padding:0 5px}
+.tabbar button{position:relative}.tabbar button.dot::after{content:"";position:absolute;top:8px;left:calc(50% + 12px);width:9px;height:9px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 2px var(--paper)}
+.fchips{display:flex;gap:6px;margin:6px 0 2px}
+.pfoot{display:flex;align-items:center;gap:6px;margin-top:8px}
+.react{border:0;background:none;padding:4px 6px;margin-left:-6px;border-radius:12px;cursor:pointer;color:var(--mute)}
+.rico{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
+.react.on,.rico.on{color:var(--rose)}.rico.on{fill:currentColor}
+.react.on .rico{animation:pop .35s ease-out}@keyframes pop{50%{transform:scale(1.3)}}
+.rsum{font-size:13px;color:var(--mute);font-weight:700}.rsum .rico{width:18px;height:18px;margin-right:-4px}
+.post .pa[data-user],.post .ph[data-user]{cursor:pointer}
+.uitem{grid-template-columns:40px minmax(0,1fr) auto}.uav{width:36px;height:54px;image-rendering:pixelated}
+.reqb{display:flex;gap:6px}.reqb .btn{min-height:36px;padding:4px 10px;font-size:13px}
+.umenu{text-align:center;margin-top:-6px}.umenu .btn{min-height:30px;font-size:13px}
+.umore{display:grid;gap:8px;margin:0 0 12px}
+.lock{width:16px;height:16px;fill:var(--mute);vertical-align:-1px}
+.match .mscore{display:flex;align-items:baseline;gap:10px}.match .mscore b{font:700 44px/1 var(--serif);color:var(--roseD)}:root:not([data-theme=light]) .match .mscore b{color:var(--rose)}
+.match .mscore span{font-weight:800}
+.socnums{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.socnums button{border:0;background:var(--paper);border-radius:14px;padding:8px 4px;color:var(--ink);cursor:pointer;font:inherit}
+.socnums b{display:block;font:700 24px/1.1 var(--serif)}.socnums span{font-size:12px;font-weight:800;color:var(--mute)}
+.socnums .hot{box-shadow:inset 0 0 0 2px var(--rose)}
+.radios{display:grid;gap:8px;margin:10px 0}.radios label{display:grid!important;grid-template-columns:22px 1fr;gap:0 8px;align-items:start;font-size:14px;margin:0;padding:10px 12px;border-radius:14px;background:var(--field)}.radios input{appearance:auto!important;-webkit-appearance:radio!important;accent-color:var(--rose);width:20px!important;height:20px;min-height:0;padding:0;margin:1px 0 0;border:0;grid-row:span 2}.radios label:has(input:checked){box-shadow:inset 0 0 0 2px var(--rose)}.radios b,.radios span{grid-column:2}
+.switch{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:center;margin-top:12px;font-weight:800}.switch input{appearance:auto!important;-webkit-appearance:checkbox!important;accent-color:var(--rose);width:22px!important;height:22px;min-height:0;padding:0;margin:0;border:0;grid-row:span 2}.switch small{grid-column:2;font-weight:600}
+.owl.new{background:color-mix(in srgb,var(--butter) 10%,transparent);border-radius:14px}
+.note.toast{position:fixed;left:12px;right:12px;bottom:calc(72px + var(--sb));z-index:30;margin:0 auto;max-width:620px;box-shadow:0 10px 30px #0007;padding-right:44px;animation:up .25s ease-out}
+.note .nx{position:absolute;top:6px;right:6px;width:32px;height:32px;border:0;border-radius:50%;background:none;color:var(--mute);font-size:22px;line-height:1;cursor:pointer}
 .wadd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.wadd .btn{font-size:14px;padding:8px 6px;min-height:46px}
 .witem{grid-template-columns:46px minmax(0,1fr) auto}
 .witem .n{color:var(--mute);font-size:13px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -627,7 +658,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 31</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 32</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -655,7 +686,9 @@ a{color:var(--roseD)}
 </main>
 <div class="tabpage" id="tabFeed" hidden>
   <div class="wrap">
-    <header class="band top"><h1>Akış</h1><p class="muted" style="margin:0">Kitaplığında olan biten her şey</p></header>
+    <header class="band top fhead"><div><h1>Akış</h1><p class="muted" style="margin:0">Kitaplığında ve arkadaşlarında olan biten</p></div>
+      <div class="ficons"><button class="ficon" id="fSearch" type="button" aria-label="Kişi ara"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5l5 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+      <button class="ficon" id="fInbox" type="button" aria-label="Baykuş postası"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4l3 2.4A8 8 0 0 1 12 5.4a8 8 0 0 1 4 1L19 4v7.5c0 5-3.2 9-7 9s-7-4-7-9z" fill="currentColor" opacity=".9"/><circle cx="9.2" cy="11" r="2.3" fill="var(--paper)"/><circle cx="14.8" cy="11" r="2.3" fill="var(--paper)"/><circle cx="9.2" cy="11" r="1" fill="currentColor"/><circle cx="14.8" cy="11" r="1" fill="currentColor"/><path d="M11 13.6h2l-1 1.6z" fill="var(--butter)"/></svg><b id="inboxN" hidden></b></button></div></header>
     <div class="band" id="feedNow"></div>
     <div class="band" id="feed"></div>
   </div>
@@ -767,7 +800,7 @@ a{color:var(--roseD)}
   <div class="sheet kvkk" role="dialog" aria-modal="true" aria-labelledby="kvTitle">
     <div class="sh-head"><h2 id="kvTitle">Aydınlatma metni</h2><button class="x" id="kvX" type="button" aria-label="Kapat">×</button></div>
     <div id="docA">
-    <p class="muted" style="margin-top:0">Kitaplığım Kişisel Verilerin İşlenmesine İlişkin Aydınlatma Metni · Sürüm 1.1 (taslak) · 24 Kasım 2026</p>
+    <p class="muted" style="margin-top:0">Kitaplığım Kişisel Verilerin İşlenmesine İlişkin Aydınlatma Metni · Sürüm 1.2 (taslak) · 24 Kasım 2026</p>
     <p>Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu'nun ("KVKK") 10. maddesi uyarınca, Kitaplığım uygulamasını kullanırken kişisel verilerinin nasıl işlendiğini anlatmak için hazırlanmıştır.</p>
     <h3>1. Veri sorumlusu</h3>
     <p>Kişisel verilerin, Kitaplığım uygulaması için veri sorumlusu sıfatıyla Betül Yazgı Güner tarafından işlenir. KVKK başvuru e-posta adresi: <span class="tbd">eklenecek</span>. Yazılı başvuru adresi: <span class="tbd">eklenecek</span>.</p>
@@ -782,27 +815,33 @@ a{color:var(--roseD)}
     <h3>5. Ortak kitap listesi</h3>
     <p>Barkodla eklediğin kitapların yalnızca künye bilgileri (başlık, yazar, çevirmen, yayınevi, basım yılı, sayfa sayısı, tür, ISBN) herkesin yararlandığı ortak listeye eklenir. Ortak listeye hesap kimliğin, e-postan ya da başka bir tanımlayıcı gönderilmez; notların, puanların, hatıraların ve ödünç kayıtların gönderilmez.</p>
     <p>Kendi çektiğin kapak fotoğrafı ortak listeye yalnızca ilgili kutuyu her seferinde kendin işaretlersen eklenir; kutu varsayılan olarak işaretli değildir. Uygulama, fotoğrafı göndermeden önce yeniden boyutlandırır ve EXIF ile GPS konum bilgileri dahil fotoğraftaki tüm üst verileri siler. Fotoğrafta kitap sahibinin adı, imza, ithaf yazısı ya da arka planda kişisel bir görüntü olmadığından emin olmalısın. Ortak listeye eklenen fotoğraflar seninle ilişkilendirilmeden saklandığı için hesabını sildiğinde kendiliğinden silinmez; kaldırılmasını istediğin bir fotoğraf için başvurabilirsin.</p>
-    <h3>6. Kişisel verilerin aktarılması ve yurt dışına aktarım</h3>
+    <h3>6. Arkadaş profili, takip ve baykuş postası (isteğe bağlı)</h3>
+    <p>Bu özellik kapalı gelir. Profilim &gt; Arkadaşlar bölümünde bir kullanıcı adı seçip "Arkadaş profili oluştur"a dokunmadıkça hiçbir bilgin başka kullanıcılara görünmez ve kimse seni arayamaz.</p>
+    <ul><li><b>Herkese görünenler:</b> kullanıcı adın, avatarındaki ad, avatarın, "hakkımda" yazın ve hesabının gizli ya da açık olduğu. Bunlar, gizli hesapta da oturum açmış kullanıcılar tarafından aranabilir ve görülebilir.</li><li><b>Kitaplık özetin:</b> kitapların ve istek listendeki kitapların künyesi (başlık, yazar, tür, sayfa sayısı, ISBN, kapak bağlantısı), okuma durumları, ekleme ve bitirme tarihleri ve sayıların. Gizli hesapta yalnızca onayladığın takipçilerin, açık hesapta oturum açmış tüm kullanıcılar görür.</li><li><b>Hiçbir durumda paylaşılmayanlar:</b> notların, puanların, hatıraların, kitabı nereden aldığın ve ödünç kayıtların. Hedeflerin, rozetlerin ve başucu kitapların da yalnızca sana görünür.</li><li><b>Arkadaşlık kayıtları:</b> kimi takip ettiğin, seni kimin takip ettiği, takip istekleri ve engellediğin kişiler; baykuşla gönderdiğin ve aldığın kitap önerileri (kitabın künyesi ve en fazla 200 karakterlik not); arkadaşlarının etkinliklerine verdiğin ve aldığın tepkiler (tepki verenin adı ve kullanıcı adıyla birlikte).</li><li><b>Okuma uyumu:</b> senin cihazında, ekranı açtığında hesaplanır; sonucu saklanmaz.</li></ul>
+    <p><b>Hukuki sebep:</b> profil oluşturarak kendi isteğinle talep ettiğin bu hizmetin sunulması (KVKK m. 5/2-c, sözleşmenin kurulması veya ifası). Bu veriler 7. bölümde anlatılan Firebase altyapısında saklanır.</p>
+    <p><b>Silme:</b> "Arkadaş profilini kapat" dediğinde ya da hesabını sildiğinde profilin, kullanıcı adın, kitaplık özetin, takip kayıtların, kutundaki baykuşlar, verdiğin ve aldığın tepkiler hemen silinir. Daha önce arkadaşlarına gönderdiğin baykuşlar, onlar silene kadar onların kutusunda kalır. Engellediğin kişilerin listesi, seni yeniden bulamamaları için profilini kapattığında korunur, hesabını sildiğinde silinir.</p>
+    <p>Başkalarına görünen bilgilerinin onlar tarafından ekran görüntüsü alınarak paylaşılmasını teknik olarak engelleyemeyiz; seni rahatsız eden kişiyi engelleyebilirsin.</p>
+    <h3>7. Kişisel verilerin aktarılması ve yurt dışına aktarım</h3>
     <p>Kişisel verilerin, uygulamanın çalışması için gerekli olan şu hizmet sağlayıcılara (veri işleyenlere) aktarılır:</p>
     <ul><li><b>Google (Firebase Authentication):</b> e-posta, hesap bilgileri ve giriş sırasında IP adresin. Bu hizmet Google'ın küresel altyapısında çalışır; veriler ABD dahil farklı ülkelerdeki sunucularda işlenebilir.</li><li><b>Google (Cloud Firestore):</b> kitaplık içeriğin, avatarın ve kendi kapak fotoğrafların. Veriler Almanya'daki (Frankfurt, europe-west3) veri merkezinde saklanır.</li><li><b>Cloudflare:</b> ortak kitap listesinin sunucusu; bu servise IP adresin ve bağlantı bilgilerin ulaşır.</li><li><b>GitHub:</b> uygulamanın dosyalarının barındırılması; sayfa açılırken IP adresin ve bağlantı bilgilerin ulaşır.</li><li><b>Google Books ve Open Library:</b> barkodla kitap aranırken ISBN numarası ve IP adresin bu servislere ulaşır.</li></ul>
     <p>Bu sağlayıcıların sunucuları yurt dışındadır; Frankfurt'ta saklanan veriler için de yurt dışına aktarım söz konusudur. Yurt dışına aktarım, KVKK m.9 kapsamında <span class="tbd">aktarım dayanağı belirlenecek</span> çerçevesinde yapılır. Kişisel verilerin, kanunen yetkili kamu kurum ve kuruluşlarına yalnızca hukuki yükümlülük gereği aktarılabilir.</p>
-    <h3>7. Kapak okuma özelliği (Google Gemini)</h3>
+    <h3>8. Kapak okuma özelliği (Google Gemini)</h3>
     <p>Kapak okuma özelliği varsayılan olarak kapalıdır. Yalnızca sen Ayarlar &gt; Kapak okuma ayarı ekranındaki bilgilendirmeyi okuyup kendi Google API anahtarını girersen açılır.</p>
     <ul><li><b>Anahtarın:</b> yalnızca bu cihazın tarayıcı depolamasında (localStorage) saklanır; veri sorumlusuna, Firebase'e ya da ortak listeye gönderilmez. Anahtarı sildiğinde özellik kapanır.</li><li><b>Gönderilen veri:</b> "Kapaktan ekle" ile çektiğin fotoğraf, telefonunda en fazla 1280 piksele küçültülüp EXIF ve GPS bilgileri silindikten sonra doğrudan telefonundan Google'ın Gemini API hizmetine (generativelanguage.googleapis.com) gönderilir. Fotoğraf veri sorumlusunun sunucularından geçmez.</li><li><b>Google'ın koşulları:</b> Bu aktarım senin anahtarın ve Google ile aranızdaki Gemini API koşulları üzerinden olur. Ücretsiz kullanımda Google gönderilen içerikleri ürünlerini geliştirmek için kullanabilir ve bu içerikler insan değerlendiriciler tarafından görülebilir; ücretli kullanımda koşullar farklıdır. Ayrıntılar için Google'ın Gemini API koşullarını incelemelisin.</li><li><b>Hukuki sebep:</b> <span class="tbd">danışman belirleyecek</span></li></ul>
-    <h3>8. Toplama yöntemi</h3>
+    <h3>9. Toplama yöntemi</h3>
     <p>Kişisel verilerin, uygulamaya kayıt olurken ve uygulamayı kullanırken senin girdiğin bilgilerden; IP adresi ve tarayıcı bilgileri ise bağlantı sırasında otomatik yollarla, elektronik ortamda toplanır.</p>
-    <h3>9. Çerezler ve cihazındaki yerel depolama</h3>
+    <h3>10. Çerezler ve cihazındaki yerel depolama</h3>
     <p>Uygulama reklam, analiz ya da takip çerezi kullanmaz. Uygulamanın çalışması için zorunlu olan bilgiler (oturumun, kitaplığının çevrimdışı kopyası, kendi kapak fotoğrafların, tema, ses ve kapak okuma anahtarı gibi ayarların) cihazındaki tarayıcı depolamasında (localStorage ve IndexedDB) tutulur. Çıkış yaptığında kitaplığının ve kapak fotoğraflarının bu cihazdaki kopyaları silinir.</p>
-    <h3>10. Saklama ve imha süreleri</h3>
-    <ul><li><b>Kitaplık verilerin</b> (kitaplar, istek listesi, notlar, kendi kapak fotoğrafların, avatar): hesabını silene kadar saklanır. Ayarlar &gt; Hesabım &gt; "Hesabımı ve kitaplarımı sil" ile hesabını sildiğinde bu kayıtlar uygulama tarafından Firestore'dan hemen silinir.</li><li><b>Hesap bilgilerin</b> (e-posta, hesap kimliği): hesabın silindiğinde Firebase Authentication'dan silinir; Google'ın belgelerine göre silme işleminden sonra canlı ve yedek sistemlerden 180 gün içinde kaldırılır.</li><li><b>Giriş sırasında kaydedilen IP adresleri:</b> Google tarafından birkaç hafta saklanır.</li><li><b>Cihazındaki kopyalar:</b> çıkış yaptığında ya da tarayıcı verilerini sildiğinde silinir.</li><li><b>Ortak listedeki künye bilgileri:</b> kişisel veri içermediği için süresiz tutulur. Paylaştığın kapak fotoğrafları için 5. bölüme bak.</li></ul>
-    <h3>11. Hakların</h3>
+    <h3>11. Saklama ve imha süreleri</h3>
+    <ul><li><b>Kitaplık verilerin</b> (kitaplar, istek listesi, notlar, kendi kapak fotoğrafların, avatar): hesabını silene kadar saklanır. Ayarlar &gt; Hesabım &gt; "Hesabımı ve kitaplarımı sil" ile hesabını sildiğinde bu kayıtlar uygulama tarafından Firestore'dan hemen silinir.</li><li><b>Hesap bilgilerin</b> (e-posta, hesap kimliği): hesabın silindiğinde Firebase Authentication'dan silinir; Google'ın belgelerine göre silme işleminden sonra canlı ve yedek sistemlerden 180 gün içinde kaldırılır.</li><li><b>Giriş sırasında kaydedilen IP adresleri:</b> Google tarafından birkaç hafta saklanır.</li><li><b>Arkadaş profili ve arkadaşlık kayıtları:</b> 6. bölüme bak.</li><li><b>Cihazındaki kopyalar:</b> çıkış yaptığında ya da tarayıcı verilerini sildiğinde silinir.</li><li><b>Ortak listedeki künye bilgileri:</b> kişisel veri içermediği için süresiz tutulur. Paylaştığın kapak fotoğrafları için 5. bölüme bak.</li></ul>
+    <h3>12. Hakların</h3>
     <p>KVKK m.11 uyarınca veri sorumlusuna başvurarak:</p>
     <ol><li>Kişisel verilerinin işlenip işlenmediğini öğrenme,</li><li>İşlenmişse buna ilişkin bilgi talep etme,</li><li>İşlenme amacını ve bunların amacına uygun kullanılıp kullanılmadığını öğrenme,</li><li>Yurt içinde veya yurt dışında aktarıldığı üçüncü kişileri bilme,</li><li>Eksik veya yanlış işlenmişse düzeltilmesini isteme,</li><li>KVKK m.7'deki şartlar çerçevesinde silinmesini veya yok edilmesini isteme,</li><li>Kişisel verilerin düzeltilmesi, silinmesi veya yok edilmesi kapsamında gerçekleştirilen işlemlerin, kişisel verilerin aktarıldığı üçüncü kişilere bildirilmesini isteme,</li><li>İşlenen verilerin münhasıran otomatik sistemlerle analiz edilmesi suretiyle aleyhine bir sonucun ortaya çıkmasına itiraz etme,</li><li>Kanuna aykırı işleme nedeniyle zarara uğraman hâlinde zararın giderilmesini talep etme</li></ol>
     <p>haklarına sahipsin.</p>
     <p>KVKK kapsamındaki taleplerini, Veri Sorumlusuna Başvuru Usul ve Esasları Hakkında Tebliğ'de belirtilen yöntemlerle veya uygulamaya kayıtlı e-posta adresini kullanarak 1. bölümde belirtilen iletişim adresine iletebilirsin. Başvuruların en kısa sürede ve en geç 30 gün içerisinde ücretsiz olarak sonuçlandırılır. İşlemin ayrıca bir maliyet gerektirmesi durumunda Kurul tarafından belirlenen tarifeye göre ücret alınabilir. Bilgilerini düzeltmek ya da hesabını silmek için uygulamadaki ayarları da kullanabilirsin.</p>
     </div>
     <div id="docK" hidden>
-    <p class="muted" style="margin-top:0">Kitaplığım Kullanım Koşulları · Sürüm 1.0 (taslak) · 24 Kasım 2026</p>
+    <p class="muted" style="margin-top:0">Kitaplığım Kullanım Koşulları · Sürüm 1.1 (taslak) · 24 Kasım 2026</p>
     <p>Bu koşullar, Kitaplığım uygulamasını kullanırken senin ve uygulamayı sunan Betül Yazgı Güner'in ("geliştirici") hak ve sorumluluklarını anlatır. Hesap oluşturarak bu koşulları kabul etmiş olursun.</p>
     <h3>1. Hizmet</h3>
     <p>Kitaplığım, kendi kitaplarını dijital ortamda kaydetmen, düzenlemen ve cihazların arasında eşitlemen için sunulan ücretsiz bir uygulamadır. Uygulamanın özellikleri zamanla değişebilir, eklenebilir ya da kaldırılabilir.</p>
@@ -812,15 +851,17 @@ a{color:var(--roseD)}
     <ul><li>Eklediğin kitaplar, notlar, hatıralar ve fotoğraflar sana aittir ve yalnızca senin hesabında saklanır.</li><li>Başkalarına ait kişisel verileri, T.C. kimlik numarası, sağlık bilgisi gibi hassas bilgileri, hukuka aykırı ya da başkalarının haklarını ihlal eden içerikleri uygulamaya eklememelisin. Ödünç verme kayıtlarında takma ad ya da baş harf kullanmanı öneririz.</li></ul>
     <h3>4. Ortak kitap listesi</h3>
     <p>Barkodla eklediğin kitapların künye bilgileri (başlık, yazar, yayınevi, ISBN gibi) ve kendi isteğinle paylaştığın kapak fotoğrafları, diğer kullanıcıların kitap eklemesini kolaylaştırmak için ortak listeye eklenir ve tüm kullanıcıların ücretsiz kullanımına açılır. Bu katkılar seninle ilişkilendirilmez. Yalnızca kendi çektiğin ve paylaşmaya hakkın olan kapak fotoğraflarını paylaşmalısın.</p>
-    <h3>5. Üçüncü taraf hizmetler</h3>
+    <h3>5. Arkadaşlar ve baykuş postası</h3>
+    <ul><li>Arkadaş profili isteğe bağlıdır; açtığında aydınlatma metninin 6. bölümündeki bilgiler diğer kullanıcılara görünür.</li><li>Kullanıcı adında, "hakkımda" yazında ve baykuş notlarında başkasını taklit eden, hakaret, taciz ya da reklam içeren ifadeler kullanmamalısın; başkalarının kişisel bilgilerini paylaşmamalısın.</li><li>Seni rahatsız eden kişiyi engelleyebilirsin; engellenen kişi profilini ve kitaplığını göremez, sana baykuş gönderemez. Kurallara aykırı profilleri bildirebilirsin; geliştirici bu profilleri kaldırabilir.</li></ul>
+    <h3>6. Üçüncü taraf hizmetler</h3>
     <p>Uygulama; Google (Firebase), Cloudflare, GitHub, Google Books ve Open Library gibi üçüncü taraf hizmetlerle çalışır. İsteğe bağlı kapak okuma özelliği, senin kendi Google API anahtarın ve Google ile aranızdaki koşullar üzerinden çalışır. Bu hizmetlerdeki kesinti ya da değişiklikler uygulamanın çalışmasını etkileyebilir.</p>
-    <h3>6. Sorumluluğun sınırı</h3>
+    <h3>7. Sorumluluğun sınırı</h3>
     <p>Uygulama "olduğu gibi" ve ücretsiz sunulur. Kesintisiz ya da hatasız çalışacağı garanti edilmez. Kitap bilgileri çevrimiçi kaynaklardan ya da yapay zekâ ile otomatik doldurulduğu için hatalı olabilir; kaydetmeden önce kontrol etmelisin. Verilerinin bir kopyasını Ayarlar &gt; Yedekleme bölümünden ara ara almanı öneririz.</p>
-    <h3>7. Hizmetin sonlandırılması</h3>
+    <h3>8. Hizmetin sonlandırılması</h3>
     <p>Bu koşulları ciddi biçimde ihlal eden hesaplar kapatılabilir. Geliştirici, uygulamayı tamamen kapatmaya karar verirse bunu makul bir süre önce uygulama içinde duyurur ve verilerini yedeklemen için imkân tanır.</p>
-    <h3>8. Değişiklikler</h3>
+    <h3>9. Değişiklikler</h3>
     <p>Bu koşullar güncellenebilir. Önemli değişikliklerde yeni sürüm, uygulamayı bir sonraki açışında sana gösterilir.</p>
-    <h3>9. Uygulanacak hukuk ve iletişim</h3>
+    <h3>10. Uygulanacak hukuk ve iletişim</h3>
     <p>Bu koşullara Türkiye Cumhuriyeti hukuku uygulanır. Soruların için: <span class="tbd">iletişim e-postası eklenecek</span>.</p>
     </div>
     <button class="btn primary" id="kvOk" type="button" style="width:100%;margin-top:8px">Kapat</button>
@@ -845,11 +886,13 @@ a{color:var(--roseD)}
       <div class="pfavs" id="pFavs"></div>
       <h3 class="psec">Okuma zevkin</h3>
       <div class="pcard" id="pTaste"></div>
+      <h3 class="psec">Arkadaşlar</h3>
+      <div id="socBox"></div>
       <h3 class="psec">Rozetler <span class="muted" id="pBadgeN"></span></h3>
       <div class="pbadges" id="pBadges"></div>
       <button class="btn primary" id="pShare" type="button" style="width:100%;margin-top:18px">Profil kartını paylaş</button>
       <p class="muted" id="pShareMsg" style="text-align:center;margin:8px 0 0"></p>
-      <p class="muted" style="font-size:13px;text-align:center;margin:6px 0 0">Profilin yalnızca sana görünür.</p>
+      <p class="muted" style="font-size:13px;text-align:center;margin:6px 0 0">Hedeflerin, rozetlerin ve başucu kitapların yalnızca sana görünür.</p>
       <h3 class="psec">Ayarlar</h3>
       <div id="profMore"></div>
     </div>
@@ -870,6 +913,43 @@ a{color:var(--roseD)}
     <div class="sh-head"><h2 id="fpTitle">Başucu kitabı seç</h2><button class="x" id="fpX" type="button" aria-label="Kapat">×</button></div>
     <input type="search" id="fpQ" placeholder="Başlık ya da yazar ara" autocomplete="off">
     <ul class="hlist" id="fpList"></ul>
+  </div>
+</div>
+
+<div class="ov" id="searchOv" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle">
+    <div class="sh-head"><h2 id="sTitle">Arkadaş ara</h2><button class="x" id="sX" type="button" aria-label="Kapat">×</button></div>
+    <input type="search" id="sQ" placeholder="Kullanıcı adı ya da isim" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <div id="sRes"></div>
+  </div>
+</div>
+<div class="ov" id="userOv" hidden style="z-index:10">
+  <div class="sheet" role="dialog" aria-modal="true" aria-label="Profil">
+    <div class="sh-head"><h2>Profil</h2><button class="x" id="uX" type="button" aria-label="Kapat">×</button></div>
+    <div id="uBody"></div>
+  </div>
+</div>
+<div class="ov" id="listOv" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="lTitle">
+    <div class="sh-head"><h2 id="lTitle"></h2><button class="x" id="lX" type="button" aria-label="Kapat">×</button></div>
+    <div id="lBody"></div>
+  </div>
+</div>
+<div class="ov" id="inboxOv" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="iTitle">
+    <div class="sh-head"><h2 id="iTitle">Baykuş postası</h2><button class="x" id="iX" type="button" aria-label="Kapat">×</button></div>
+    <div id="iBody"></div>
+  </div>
+</div>
+<div class="ov" id="owlOv" hidden style="z-index:11">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="oTitle">
+    <div class="sh-head"><h2 id="oTitle">Baykuşla kitap öner</h2><button class="x" id="oX" type="button" aria-label="Kapat">×</button></div>
+    <p class="muted" style="margin-top:0">Kitaplığından bir kitap seç, istersen kısa bir not yaz.</p>
+    <input type="search" id="oQ" placeholder="Kitaplığında ara" autocomplete="off">
+    <ul class="hlist" id="oList" style="max-height:38vh;overflow:auto"></ul>
+    <label class="f" style="margin-top:10px">Notun (isteğe bağlı)<textarea id="oNote" maxlength="200" placeholder="Bunu çok seveceğini düşündüm…"></textarea></label>
+    <p class="amsg" id="oMsg"></p>
+    <button class="btn primary" id="oSend" type="button" style="width:100%" disabled>Baykuşu gönder</button>
   </div>
 </div>
 
@@ -916,7 +996,7 @@ a{color:var(--roseD)}
         <li>Anahtarın yalnızca bu cihazda saklanır; hesabına ya da başka bir yere gönderilmez.</li>
         <li>Bu aktarım senin anahtarın ve Google'ın Gemini API koşulları üzerinden olur. Ücretsiz kullanımda Google gönderilen fotoğrafları ürünlerini geliştirmek için kullanabilir ve bunlar insan değerlendiriciler tarafından görülebilir.</li>
       </ul>
-      <p style="margin:6px 0 0">Ayrıntılar: <button type="button" class="lnk" data-kvkk>Aydınlatma metni, 7. bölüm</button></p>
+      <p style="margin:6px 0 0">Ayrıntılar: <button type="button" class="lnk" data-kvkk>Aydınlatma metni, 8. bölüm</button></p>
     </div>
     <p>Açmak istersen ücretsiz bir anahtar alman gerekiyor; bir kez yapman yeterli.</p>
     <ol class="steps">
@@ -1034,17 +1114,20 @@ function load() {
   try { wishes = JSON.parse(localStorage.getItem(WKEY) || '[]'); if (!Array.isArray(wishes)) wishes = []; } catch (e) { wishes = []; }
 }
 function persistWish() {
-  try { localStorage.setItem(WKEY, JSON.stringify(wishes)); scheduleSync(); return true; }
+  try { localStorage.setItem(WKEY, JSON.stringify(wishes)); scheduleSync(); socShelfDirty(); return true; }
   catch (e) { note('Kaydedilemedi: telefonda yer kalmamış olabilir.', true); return false; }
 }
 function persist() {
-  try { localStorage.setItem(KEY, JSON.stringify(books)); scheduleSync(); return true; }
+  try { localStorage.setItem(KEY, JSON.stringify(books)); scheduleSync(); socShelfDirty(); return true; }
   catch (e) { note('Kaydedilemedi: telefonda yer kalmamış olabilir. Hemen yedek al.', true); return false; }
 }
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
 
 const f = $('f');
-function note(html, keep) { const n = $('note'); n.innerHTML = html; n.hidden = !html; if (html && !keep) setTimeout(() => { if (n.innerHTML === html) n.hidden = true; }, 7000); }
+let noteTok = 0;
+function note(html, keep) { const n = $('note'), tok = ++noteTok; n.innerHTML = html ? html + '<button class="nx" type="button" aria-label="Kapat">×</button>' : ''; n.hidden = !html; if (html && !keep) setTimeout(() => { if (tok === noteTok) n.hidden = true; }, 7000); }
+document.body.append($('note')); $('note').classList.add('toast');
+$('note').addEventListener('click', e => { if (e.target.closest('.nx')) $('note').hidden = true; });
 
 // --- the bookcase ---
 const PLANT = '<svg class="deco" width="44" height="70" viewBox="0 0 44 70" aria-hidden="true"><path d="M22 40C10 34 6 20 10 10c8 4 12 16 12 30zM22 40c10-8 16-20 12-32-9 5-12 18-12 32zM22 42c-8-2-16 0-20 6 8 3 15 1 20-6z" fill="#9cc7a4"/><path d="M22 42c6-4 14-4 20 2-8 4-15 2-20-2z" fill="#86b893"/><path d="M8 46h28l-4 24H12z" fill="#f3b9c0"/><path d="M6 44h32v6H6z" fill="#e9a3ac"/></svg>';
@@ -1231,8 +1314,8 @@ function showTab(t) {
   $('pager').hidden = t !== 'lib'; document.querySelector('.dots').hidden = t !== 'lib';
   $('tabFeed').hidden = t !== 'feed'; $('tabProf').hidden = t !== 'prof';
   for (const b of $('tabbar').children) if (b.dataset.tab === t) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
-  if (t === 'prof') { $('pEdit').hidden = true; $('pView').hidden = false; drawProfile(); }
-  if (t === 'feed') renderFeed();
+  if (t === 'prof') { $('pEdit').hidden = true; $('pView').hidden = false; drawProfile(); drawSocial(); }
+  if (t === 'feed') { renderFeed(); if (SOC.on) loadFriends().then(renderFeed); }
 }
 $('tabbar').addEventListener('click', e => {
   const b = e.target.closest('[data-tab]'); if (!b) return;
@@ -1254,49 +1337,89 @@ function dayLabel(v) {
   const days = Math.round((new Date(now.toDateString()) - new Date(d.toDateString())) / 864e5);
   return days === 0 ? 'Bugün' : days === 1 ? 'Dün' : days < 7 ? d.toLocaleDateString('tr-TR', {weekday: 'long'}) : d.toLocaleDateString('tr-TR', {day: 'numeric', month: 'long', ...(d.getFullYear() !== now.getFullYear() ? {year: 'numeric'} : {})});
 }
-let feedMax = 40;
-function feedEvents() {
+let feedMax = 40, feedFilter = 'all';
+const evKey = v => /^\d{4}-\d{2}-\d{2}$/.test(v) ? v + 'T12:00' : String(v);
+function eventsOf(bks, wsh, who) {
   const ev = [];
-  for (const b of books) {
-    if (b.addedAt) ev.push({at: b.addedAt, b, kind: b.fromWish ? 'wishbuy' : b.acquisition === 'new' ? 'buy' : 'add'});
+  for (const b of bks) {
+    if (b.addedAt) ev.push({at: b.addedAt, b, kind: b.fromWish ? 'wishbuy' : b.acquisition === 'new' ? 'buy' : 'add', who});
     if (b.status === 'okundu' && b.finishedAt) {
       const u = b.updatedAt ? new Date(typeof b.updatedAt === 'number' ? b.updatedAt : Date.parse(b.updatedAt)) : null;
       const local = u && !isNaN(u) ? new Date(u - u.getTimezoneOffset() * 6e4).toISOString().slice(0, 10) : '';
-      ev.push({at: local === b.finishedAt ? u.toISOString() : b.finishedAt, b, kind: 'done'});
+      ev.push({at: local === b.finishedAt ? u.toISOString() : b.finishedAt, b, kind: 'done', who});
     }
   }
-  for (const w of wishes) if (w.wishedAt) ev.push({at: w.wishedAt, b: w, kind: 'wish'});
-  const key = v => /^\d{4}-\d{2}-\d{2}$/.test(v) ? v + 'T12:00' : v;
-  return ev.sort((x, y) => String(key(y.at)).localeCompare(String(key(x.at))));
+  for (const w of wsh) if (w.wishedAt) ev.push({at: w.wishedAt, b: w, kind: 'wish', who});
+  return ev;
+}
+function feedEvents() {
+  let ev = [];
+  if (feedFilter !== 'friends') ev = ev.concat(eventsOf(books, wishes, null));
+  if (feedFilter !== 'me' && typeof SOC !== 'undefined') for (const [id, f] of SOC.friends) ev = ev.concat(eventsOf(f.shelf.books || [], f.shelf.wishes || [], id));
+  return ev.sort((x, y) => evKey(y.at).localeCompare(evKey(x.at)));
 }
 function renderFeed() {
   if ($('tabFeed').hidden) return;
-  const a = avLoad() || {...AV_DEFAULT}, p = profLoad(), av = avURL(a, {}), name = esc(a.name || 'Sen'), user = p.username ? '@' + esc(p.username) : '';
+  const a = avLoad() || {...AV_DEFAULT}, p = profLoad(), social = typeof SOC !== 'undefined' && SOC.on;
   const now = books.filter(b => b.status === 'okunuyor');
   const goal = +(p.goals || {})[YEAR()] || 0, s = profStats();
-  $('feedNow').innerHTML = (now.length ? `<p class="fday">Şu an okuduğun</p><div class="nowrow">${now.map(b => `<div class="nowc">${coverEl(b)}<b>${esc(b.title)}</b><button class="btn primary" type="button" data-done="${esc(b.id)}">Bitirdim</button></div>`).join('')}</div>` : '')
-    + (goal ? `<div class="fgoal"><b>${YEAR()} hedefi</b><div class="gbar"><i style="width:${Math.min(100, Math.round(s.thisYear / goal * 100))}%"></i></div><b>${s.thisYear}/${goal}</b></div>` : '');
+  $('feedNow').innerHTML = (social ? `<div class="fchips">${[['all', 'Herkes'], ['friends', 'Arkadaşlar'], ['me', 'Ben']].map(([k, l]) => `<button class="chip" type="button" data-ff="${k}" aria-pressed="${feedFilter === k}">${l}</button>`).join('')}</div>` : '')
+    + (feedFilter !== 'friends' && now.length ? `<p class="fday">Şu an okuduğun</p><div class="nowrow">${now.map(b => `<div class="nowc">${coverEl(b)}<b>${esc(b.title)}</b><button class="btn primary" type="button" data-done="${esc(b.id)}">Bitirdim</button></div>`).join('')}</div>` : '')
+    + (feedFilter !== 'friends' && goal ? `<div class="fgoal"><b>${YEAR()} hedefi</b><div class="gbar"><i style="width:${Math.min(100, Math.round(s.thisYear / goal * 100))}%"></i></div><b>${s.thisYear}/${goal}</b></div>` : '');
+  const mine = {av: avURL(a, {}), name: esc(a.name || 'Sen'), user: p.username && social ? '@' + esc(p.username) : ''};
+  const whoCache = new Map();
+  const who = id => {
+    if (!id) return mine;
+    if (!whoCache.has(id)) { const f = SOC.friends.get(id); whoCache.set(id, {av: avURL(f.prof.avatar || AV_DEFAULT, {}), name: esc(f.prof.name || f.prof.username), user: '@' + esc(f.prof.username)}); }
+    return whoCache.get(id);
+  };
+  const onMe = new Map();
+  if (social) for (const r of SOC.onMe) { if (!onMe.has(r.ev)) onMe.set(r.ev, []); onMe.get(r.ev).push(r); }
+  const reacted = new Set(p.reacted || []);
   const ev = feedEvents(), shown = ev.slice(0, feedMax);
   let html = '', lastDay = '';
   const say = {
     add: 'kitaplığına yeni bir kitap ekledi',
-    buy: e => `yeni bir kitap aldı${e.b.purchasePlace ? ' · ' + esc(e.b.purchasePlace) : ''}`,
+    buy: e => `yeni bir kitap aldı${!e.who && e.b.purchasePlace ? ' · ' + esc(e.b.purchasePlace) : ''}`,
     wishbuy: 'istek listesindeki kitaba sonunda kavuştu',
-    done: e => `bir kitabı bitirdi${+e.b.rating ? ` <span class="stars">${'★'.repeat(+e.b.rating)}</span>` : ''}`,
+    done: e => `bir kitabı bitirdi${!e.who && +e.b.rating ? ` <span class="stars">${'★'.repeat(+e.b.rating)}</span>` : ''}`,
     wish: 'istek listesine bir kitap ekledi',
   };
   for (const e of shown) {
     const dl = dayLabel(e.at); if (dl !== lastDay) { html += `<p class="fday">${esc(dl)}</p>`; lastDay = dl; }
-    const t = typeof say[e.kind] === 'function' ? say[e.kind](e) : say[e.kind];
-    html += `<article class="post"><img class="pa" src="${av}" alt=""><div><div class="ph"><b>${name}</b><span>${user ? user + ' · ' : ''}${esc(relTime(e.at))}</span></div><p>${t}</p><button class="pbk" type="button" data-${e.kind === 'wish' ? 'wish' : 'open'}="${esc(e.b.id)}">${coverEl(e.b)}<div><div class="t">${esc(e.b.title)}</div><div class="a">${esc(e.b.author || '')}</div></div></button></div></article>`;
+    const t = typeof say[e.kind] === 'function' ? say[e.kind](e) : say[e.kind], w = who(e.who), evId = `${e.kind}_${e.b.id}`;
+    const bookAttr = e.who ? `data-fb="${esc(e.who)}|${esc(e.b.id)}|${e.kind === 'wish' ? 'w' : 'b'}"` : `data-${e.kind === 'wish' ? 'wish' : 'open'}="${esc(e.b.id)}"`;
+    let foot = '';
+    if (e.who) { const on = reacted.has(`reactions/${e.who}/items/${evId}_${me.uid}`); foot = `<div class="pfoot"><button class="react${on ? ' on' : ''}" type="button" data-react="${esc(e.who)}|${esc(evId)}" aria-label="${REACT_NAME[myType()]} gönder">${reactIco(myType(), on)}</button></div>`; }
+    else if (onMe.has(evId)) { const rs = onMe.get(evId); foot = `<div class="pfoot rsum">${[...new Set(rs.map(r => r.type))].map(tp => reactIco(tp, true)).join('')}<span>${esc(rs[0].name || 'Biri')}${rs.length > 1 ? ` ve ${rs.length - 1} kişi` : ''}</span></div>`; }
+    html += `<article class="post"><img class="pa" src="${w.av}" alt=""${e.who ? ` data-user="${esc(e.who)}"` : ''}><div><div class="ph"${e.who ? ` data-user="${esc(e.who)}"` : ''}><b>${w.name}</b><span>${w.user ? w.user + ' · ' : ''}${esc(relTime(e.at))}</span></div><p>${t}</p><button class="pbk" type="button" ${bookAttr}>${coverEl(e.b)}<div><div class="t">${esc(e.b.title)}</div><div class="a">${esc(e.b.author || '')}</div></div></button>${foot}</div></article>`;
   }
   if (ev.length > feedMax) html += `<button class="btn" type="button" id="feedMore" style="width:100%;margin-top:14px">Daha eski hareketler</button>`;
-  $('feed').innerHTML = html || '<p class="muted" style="padding:20px 4px;text-align:center">Akışın henüz boş. Kitap ekledikçe, bitirdikçe ve istek listene ekledikçe burada görünecek.</p>';
+  const empty = feedFilter === 'friends'
+    ? (social && !SOC.following.size ? 'Henüz kimseyi takip etmiyorsun.<br><button class="btn primary" type="button" id="feedFind" style="margin-top:12px">Arkadaş ara</button>' : 'Arkadaşlarından henüz bir hareket yok.')
+    : 'Akışın henüz boş. Kitap ekledikçe, bitirdikçe ve istek listene ekledikçe burada görünecek.';
+  $('feed').innerHTML = html || `<p class="muted" style="padding:20px 4px;text-align:center">${empty}</p>`;
   hydrate($('feedNow')); hydrate($('feed'));
 }
 $('tabFeed').addEventListener('click', e => {
-  const t = e.target.closest('[data-open],[data-wish],[data-done],#feedMore'); if (!t) return;
+  const t = e.target.closest('[data-open],[data-wish],[data-done],[data-ff],[data-react],[data-fb],[data-user],#feedMore,#feedFind,#fSearch,#fInbox'); if (!t) return;
   if (t.id === 'feedMore') { feedMax += 40; return renderFeed(); }
+  if (t.id === 'feedFind' || t.id === 'fSearch') return openSearch();
+  if (t.id === 'fInbox') return openInbox();
+  if (t.dataset.ff) { feedFilter = t.dataset.ff; return renderFeed(); }
+  if (t.dataset.user) return openUser(t.dataset.user);
+  if (t.dataset.react) { const [owner, ev] = t.dataset.react.split('|'); return toggleReact(owner, ev, t); }
+  if (t.dataset.fb) {
+    const [owner, id, kind] = t.dataset.fb.split('|'), f = SOC.friends.get(owner); if (!f) return;
+    const b = ((kind === 'w' ? f.shelf.wishes : f.shelf.books) || []).find(x => x.id === id); if (!b) return;
+    const mineB = books.find(x => bkey(x) === bkey(b));
+    if (mineB) return openSheet(mineB.id);
+    const inWish = wishes.some(x => bkey(x) === bkey(b));
+    note(`<span><b>${esc(b.title)}</b> ${inWish ? 'zaten istek listende.' : 'sende yok.'}</span>${inWish ? '' : '<button class="btn primary" type="button" id="fbWish">İstek listeme ekle</button>'}`);
+    if (!inWish) $('fbWish').onclick = () => { addTipToWish(b); $('note').hidden = true; sfx.unlock(); sfx.tick(); };
+    $('note').scrollIntoView({behavior: 'smooth', block: 'center'});
+    return;
+  }
   if (t.dataset.open) return openSheet(t.dataset.open);
   if (t.dataset.wish) return openSheet(t.dataset.wish);
   if (t.dataset.done) {
@@ -2685,9 +2808,15 @@ function openProfEdit(focusGoal) {
 $('pEditBtn').onclick = () => openProfEdit(false);
 $('pGoal').addEventListener('click', e => { if (e.target.closest('#pGoalEdit')) openProfEdit(true); });
 $('peCancel').onclick = () => { $('pEdit').hidden = true; $('pView').hidden = false; };
-$('peSave').onclick = () => {
-  const user = $('peUser').value.trim().replace(/^@/, '');
-  if (user && !/^[a-z0-9._ğüşıöç]{2,24}$/i.test(user)) { $('peMsg').textContent = 'Kullanıcı adı 2-24 karakter olsun; harf, rakam, nokta ve alt çizgi kullanabilirsin.'; return; }
+$('peSave').onclick = async () => {
+  const user = $('peUser').value.trim().replace(/^@/, '').toLowerCase();
+  if (user && !unameOk(user)) { $('peMsg').textContent = 'Kullanıcı adı 3-24 karakter olsun; küçük harf (Türkçe karaktersiz), rakam, nokta ve alt çizgi kullanabilirsin.'; return; }
+  if (SOC.on && user !== SOC.prof.username) {
+    if (!user) { $('peMsg').textContent = 'Arkadaş profilin açıkken kullanıcı adı boş olamaz.'; return; }
+    $('peSave').disabled = true;
+    try { SOC.prof = await claimUsername(user, SOC.prof.private); } catch (er) { $('peMsg').textContent = er instanceof UErr ? er.message : 'Kullanıcı adı değiştirilemedi.'; $('peSave').disabled = false; return; }
+    $('peSave').disabled = false;
+  }
   const goal = Math.max(0, Math.min(999, parseInt($('peGoal').value, 10) || 0));
   const p = profLoad(); p.username = user; p.bio = $('peBio').value.trim().slice(0, 140);
   p.goals = {...(p.goals || {})}; if (goal) p.goals[YEAR()] = goal; else delete p.goals[YEAR()];
@@ -2784,6 +2913,342 @@ $('pShare').onclick = async () => {
   } catch (e) { $('pShareMsg').textContent = e && e.name === 'AbortError' ? '' : 'Kart paylaşılamadı.'; }
   finally { $('pShare').disabled = false; }
 };
+
+// --- Friends: usernames, follows, friends in the feed, owl post, reactions, reading match ---
+const SOC = {on: false, prof: null, following: new Map(), followers: new Map(), friends: new Map(), blocked: new Set(), mail: [], onMe: [], unsub: [], loadedAt: 0};
+const unameOk = u => /^[a-z0-9._]{3,24}$/.test(u);
+const fd = (...p) => FB.doc(fbDb, ...p);
+const myType = () => (avLoad() || {}).type || 'cadi';
+const REACT_ICO = {
+  cadi: '<path d="M9 2h6v3c4 1.4 6.4 4.6 6.4 8.4C21.4 18.6 17.2 22 12 22s-9.4-3.4-9.4-8.6C2.6 9.6 5 6.4 9 5z"/>',
+  buyucu: '<path d="M12 1.5l3 6.8 7.3.7-5.5 4.9 1.6 7.3L12 17.4l-6.4 3.8 1.6-7.3L1.7 9l7.3-.7z"/>',
+  insan: '<path d="M12 21s-8.6-5.3-8.6-11.2A4.9 4.9 0 0 1 12 6.6a4.9 4.9 0 0 1 8.6 3.2C20.6 15.7 12 21 12 21z"/>',
+};
+const REACT_NAME = {cadi: 'iksir', buyucu: 'yıldız', insan: 'kalp'};
+const reactIco = (t, on) => `<svg viewBox="0 0 24 24" class="rico${on ? ' on' : ''}" aria-hidden="true">${REACT_ICO[t] || REACT_ICO.insan}</svg>`;
+const plain = o => JSON.parse(JSON.stringify(o));
+function socProfileData(username, priv) {
+  const a = avLoad() || {}, p = profLoad();
+  return {uid: me.uid, username, usernameLower: username, name: (a.name || '').slice(0, 30), nameLower: fold(a.name || ''), avatar: plain(a), bio: (p.bio || '').slice(0, 140), private: priv, updatedAt: Date.now()};
+}
+function shelfData() {
+  const s = profStats();
+  return {
+    books: books.map(b => ({id: b.id, title: b.title || '', author: b.author || '', isbn: b.isbn || '', genre: normGenre(b.genre) || '', status: b.status || '', pages: +b.pages || 0, addedAt: b.addedAt || '', finishedAt: b.finishedAt || '', acquisition: b.acquisition || '', fromWish: !!b.fromWish, cover: okUrl(b.cover) || ''})),
+    wishes: wishes.map(w => ({id: w.id, title: w.title || '', author: w.author || '', isbn: w.isbn || '', genre: normGenre(w.genre) || '', wishedAt: w.wishedAt || '', cover: okUrl(w.cover) || ''})),
+    stats: {total: s.total, read: s.read, reading: s.reading, toRead: s.toRead, wish: s.wish, pages: s.pages}, updatedAt: Date.now(),
+  };
+}
+let shelfTimer = 0, sprofTimer = 0;
+function socShelfDirty() { if (!SOC.on) return; clearTimeout(shelfTimer); shelfTimer = setTimeout(() => { if (SOC.on && me) FB.setDoc(fd('shelves', me.uid), shelfData()).catch(() => {}); }, 3000); }
+function socProfileDirty() { if (!SOC.on || !SOC.prof) return; clearTimeout(sprofTimer); sprofTimer = setTimeout(() => { if (!SOC.on || !SOC.prof || !me) return; const d = socProfileData(SOC.prof.username, SOC.prof.private); SOC.prof = d; FB.setDoc(fd('profiles', me.uid), d).catch(() => {}); }, 1000); }
+
+async function socStart() {
+  socStop();
+  try {
+    const s = await FB.getDoc(fd('profiles', me.uid));
+    SOC.prof = s.exists() ? s.data() : null; SOC.on = !!SOC.prof;
+  } catch (e) { SOC.prof = null; SOC.on = false; }
+  drawSocial();
+  if (!SOC.on) return;
+  try { const b = await FB.getDocs(FB.collection(fbDb, 'blocks', me.uid, 'items')); SOC.blocked = new Set(b.docs.map(d => d.id)); } catch (e) {}
+  const q = (...c) => FB.query(...c);
+  SOC.unsub.push(
+    FB.onSnapshot(q(FB.collection(fbDb, 'follows'), FB.where('from', '==', me.uid)), s => { SOC.following = new Map(s.docs.map(d => [d.data().to, d.data()])); SOC.loadedAt = 0; socRefresh(); }, () => {}),
+    FB.onSnapshot(q(FB.collection(fbDb, 'follows'), FB.where('to', '==', me.uid)), s => { SOC.followers = new Map(s.docs.map(d => [d.data().from, d.data()])); socRefresh(); }, () => {}),
+    FB.onSnapshot(q(FB.collection(fbDb, 'mail', me.uid, 'items'), FB.orderBy('at', 'desc'), FB.limit(60)), s => { SOC.mail = s.docs.map(d => ({id: d.id, ...d.data()})); socRefresh(); }, () => {}),
+    FB.onSnapshot(q(FB.collection(fbDb, 'reactions', me.uid, 'items'), FB.limit(400)), s => { SOC.onMe = s.docs.map(d => d.data()); socRefresh(); }, () => {}),
+  );
+  FB.setDoc(fd('shelves', me.uid), shelfData()).catch(() => {});
+}
+function socStop() { clearTimeout(shelfTimer); clearTimeout(sprofTimer); clearTimeout(refreshT); for (const u of SOC.unsub) try { u(); } catch (e) {} SOC.unsub = []; SOC.on = false; SOC.prof = null; SOC.following = new Map(); SOC.followers = new Map(); SOC.friends = new Map(); SOC.mail = []; SOC.onMe = []; SOC.blocked = new Set(); drawBadges(); }
+let refreshT = 0;
+function socRefresh() { clearTimeout(refreshT); refreshT = setTimeout(() => { if (!SOC.on) { drawBadges(); drawSocial(); return; } drawBadges(); drawSocial(); if (tabNow === 'feed') loadFriends().then(renderFeed); if (!$('userOv').hidden && userNow) openUser(userNow, true); if (!$('listOv').hidden) drawList(listKind); if (!$('inboxOv').hidden) drawInbox(); }, 120); }
+function drawBadges() {
+  const unread = SOC.mail.filter(m => !m.read).length, req = [...SOC.followers.values()].filter(f => f.status === 'pending').length;
+  $('tabbar').querySelector('[data-tab=feed]').classList.toggle('dot', unread > 0);
+  $('tabbar').querySelector('[data-tab=prof]').classList.toggle('dot', req > 0);
+  $('inboxN').textContent = unread || ''; $('inboxN').hidden = !unread;
+}
+async function loadFriends(force) {
+  if (!SOC.on) { SOC.friends = new Map(); return; }
+  if (!force && Date.now() - SOC.loadedAt < 90000) return;
+  SOC.loadedAt = Date.now();
+  const ids = [...SOC.following.values()].filter(f => f.status === 'accepted').map(f => f.to);
+  const next = new Map();
+  await Promise.all(ids.map(async uid => {
+    try {
+      const [p, sh] = await Promise.all([FB.getDoc(fd('profiles', uid)), FB.getDoc(fd('shelves', uid))]);
+      if (p.exists() && sh.exists()) next.set(uid, {prof: p.data(), shelf: sh.data()});
+    } catch (e) {}
+  }));
+  SOC.friends = next;
+}
+
+// --- set up / change username, privacy, leave ---
+async function claimUsername(raw, priv) {
+  const u = String(raw || '').trim().replace(/^@/, '').toLowerCase();
+  if (!unameOk(u)) throw new UErr('Kullanıcı adı 3-24 karakter olsun; küçük harf (Türkçe karaktersiz), rakam, nokta ve alt çizgi kullanabilirsin.');
+  const s = await FB.getDoc(fd('usernames', u));
+  if (s.exists() && s.data().uid !== me.uid) throw new UErr('Bu kullanıcı adı alınmış, başka bir tane dene.');
+  const old = SOC.prof && SOC.prof.username, b = FB.writeBatch(fbDb), d = socProfileData(u, priv);
+  if (!s.exists()) b.set(fd('usernames', u), {uid: me.uid});
+  if (old && old !== u) b.delete(fd('usernames', old));
+  b.set(fd('profiles', me.uid), d);
+  await b.commit();
+  const p = profLoad(); p.username = u; profSave(p);
+  return d;
+}
+async function socDisable(full) {
+  const uid = me.uid, del = async refs => { for (let i = 0; i < refs.length; i += 400) { const b = FB.writeBatch(fbDb); refs.slice(i, i + 400).forEach(r => b.delete(r)); await b.commit(); } };
+  const [f1, f2, mail, re, bl] = await Promise.all([
+    FB.getDocs(FB.query(FB.collection(fbDb, 'follows'), FB.where('from', '==', uid))), FB.getDocs(FB.query(FB.collection(fbDb, 'follows'), FB.where('to', '==', uid))),
+    FB.getDocs(FB.collection(fbDb, 'mail', uid, 'items')), FB.getDocs(FB.collection(fbDb, 'reactions', uid, 'items')),
+    full ? FB.getDocs(FB.collection(fbDb, 'blocks', uid, 'items')) : {docs: []}]);
+  const mine = (profLoad().reacted || []).map(pth => fd(...pth.split('/')));
+  await del([...f1.docs, ...f2.docs, ...mail.docs, ...re.docs, ...bl.docs].map(d => d.ref).concat(mine));
+  const refs = [fd('shelves', uid), fd('profiles', uid)];
+  if (SOC.prof && SOC.prof.username) refs.push(fd('usernames', SOC.prof.username));
+  await del(refs);
+  const p = profLoad(); delete p.reacted; profSave(p);
+  socStop(); drawSocial();
+}
+
+// --- following ---
+async function follow(uid, isPrivate) {
+  await FB.setDoc(fd('follows', me.uid + '_' + uid), {from: me.uid, to: uid, status: isPrivate ? 'pending' : 'accepted', at: Date.now()});
+}
+const unfollow = uid => FB.deleteDoc(fd('follows', me.uid + '_' + uid));
+const acceptReq = uid => FB.setDoc(fd('follows', uid + '_' + me.uid), {status: 'accepted'}, {merge: true});
+const dropFollower = uid => FB.deleteDoc(fd('follows', uid + '_' + me.uid));
+async function blockUser(uid) {
+  await FB.setDoc(fd('blocks', me.uid, 'items', uid), {at: Date.now()});
+  SOC.blocked.add(uid);
+  await Promise.all([unfollow(uid).catch(() => {}), dropFollower(uid).catch(() => {})]);
+}
+async function unblockUser(uid) { await FB.deleteDoc(fd('blocks', me.uid, 'items', uid)); SOC.blocked.delete(uid); }
+
+// --- reading match ---
+const bkey = b => isbn13(b.isbn) || fold(b.title) + '|' + fold(b.author);
+function readingMatch(theirs) {
+  const mine = new Set(books.map(bkey)), wished = new Set(wishes.map(bkey));
+  const common = theirs.filter(b => mine.has(bkey(b)));
+  const vec = list => { const m = new Map(); for (const b of list) { const g = normGenre(b.genre); if (g) m.set(g, (m.get(g) || 0) + 1); } return m; };
+  const A = vec(books), B = vec(theirs); let dot = 0, na = 0, nb = 0;
+  for (const [g, v] of A) { na += v * v; dot += v * (B.get(g) || 0); } for (const v of B.values()) nb += v * v;
+  const cos = na && nb ? dot / Math.sqrt(na * nb) : 0;
+  const shared = [...A.keys()].filter(g => B.has(g)).sort((x, y) => (B.get(y) + A.get(y)) - (B.get(x) + A.get(x))).slice(0, 3);
+  const enough = books.length >= 3 && theirs.length >= 3;
+  const score = enough ? Math.round(100 * (0.6 * cos + 0.4 * Math.min(1, common.length / 5))) : null;
+  const tips = theirs.filter(b => !mine.has(bkey(b)) && !wished.has(bkey(b))).sort((x, y) => (y.status === 'okundu') - (x.status === 'okundu')).slice(0, 8);
+  return {score, common, shared, tips};
+}
+function addTipToWish(b) {
+  if (wishes.some(w => bkey(w) === bkey(b)) || books.some(x => bkey(x) === bkey(b))) return false;
+  wishes = [...wishes, {id: uid(), title: b.title, author: b.author || '', isbn: b.isbn || '', genre: b.genre || '', cover: okUrl(b.cover) || '', wishedAt: today()}];
+  persistWish(); render(); return true;
+}
+
+// --- someone's profile ---
+let userNow = null;
+async function openUser(uid, quiet) {
+  userNow = uid; $('userOv').hidden = false;
+  if (!quiet) { $('uBody').innerHTML = '<p class="muted" style="padding:20px;text-align:center">Yükleniyor…</p>'; $('userOv').querySelector('.sheet').scrollTop = 0; }
+  let prof = null, shelf = null;
+  try { const p = await FB.getDoc(fd('profiles', uid)); prof = p.exists() ? p.data() : null; } catch (e) {}
+  if (userNow !== uid) return;
+  if (!prof) { $('uBody').innerHTML = '<p class="muted" style="padding:20px;text-align:center">Bu profil artık yok.</p>'; return; }
+  try { const s = await FB.getDoc(fd('shelves', uid)); shelf = s.exists() ? s.data() : null; } catch (e) {}
+  if (userNow !== uid) return;
+  const f = SOC.following.get(uid), back = SOC.followers.get(uid), blocked = SOC.blocked.has(uid);
+  const fbtn = blocked ? `<button class="btn" type="button" data-u="unblock">Engeli kaldır</button>`
+    : !f ? `<button class="btn primary" type="button" data-u="follow">${prof.private ? 'Takip isteği gönder' : 'Takip et'}</button>`
+    : f.status === 'pending' ? `<button class="btn" type="button" data-u="unfollow">İstek gönderildi · geri al</button>`
+    : `<button class="btn" type="button" data-u="unfollow">Takip ediliyor ✓</button>`;
+  const canOwl = f && f.status === 'accepted' && !blocked;
+  let html = `<div class="phead"><img class="pav" src="${avURL(prof.avatar || AV_DEFAULT, {})}" alt=""><div><p class="pname">${esc(prof.name || prof.username)}${prof.private ? ' <svg class="lock" viewBox="0 0 24 24" aria-label="Gizli hesap"><path d="M7 10V7a5 5 0 0 1 10 0v3h1.5v11h-13V10zm2.4 0h5.2V7a2.6 2.6 0 0 0-5.2 0z"/></svg>' : ''}</p><p class="puser">@${esc(prof.username)}</p>${prof.bio ? `<p class="pbio">${esc(prof.bio)}</p>` : ''}${back && back.status === 'accepted' ? '<span class="tag">Seni takip ediyor</span>' : ''}</div></div>
+    <div class="prow">${fbtn}${canOwl ? `<button class="btn lav" type="button" data-u="owl">Baykuş gönder</button>` : `<button class="btn" type="button" data-u="menu">Diğer</button>`}</div>`;
+  if (canOwl) html += `<div class="umenu"><button class="btn link" type="button" data-u="menu">Diğer seçenekler</button></div>`;
+  html += `<div class="umore" id="uMore" hidden>${back ? `<button class="btn" type="button" data-u="drop">Takipçilerimden çıkar</button>` : ''}${blocked ? '' : `<button class="btn danger" type="button" data-u="block">Engelle</button>`}</div>`;
+  if (shelf) {
+    const st = shelf.stats || {}, m = readingMatch(shelf.books || []);
+    html += `<div class="pstats">${[[st.total || 0, 'kitap', 'rose'], [st.read || 0, 'okundu', 'sage'], [st.reading || 0, 'okunuyor', 'butter']].map(([v, l, c]) => `<div class="ptile" style="--c:var(--${c})"><b>${v}</b><span>${l}</span></div>`).join('')}</div>
+      <h3 class="psec">Okuma uyumunuz</h3><div class="pcard match">${m.score === null ? '<p class="muted" style="margin:0">Uyumu hesaplamak için ikinizin de en az 3 kitabı olmalı.</p>'
+        : `<div class="mscore"><b>%${m.score}</b><span>${m.score >= 75 ? 'Ruh ikizi okurlar!' : m.score >= 50 ? 'Zevkleriniz çok yakın' : m.score >= 25 ? 'Ortak noktalarınız var' : 'Birbirinize yeni dünyalar açabilirsiniz'}</span></div>
+           <p style="margin:8px 0 0">${m.common.length ? `İkinizde de olan <b>${m.common.length}</b> kitap var` : 'Henüz ortak kitabınız yok'}${m.shared.length ? `; ortak türleriniz: ${m.shared.map(esc).join(', ')}` : ''}.</p>`}
+        ${m.tips.length ? `<p style="margin:12px 0 6px;font-weight:800">Onda olup sende olmayanlar</p><ul class="hlist">${m.tips.map((b, i) => `<li class="item">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div><button class="btn" type="button" data-tip="${i}">İstek listeme</button></li>`).join('')}</ul>` : ''}</div>
+      <h3 class="psec">Rafı</h3><ul class="hlist">${(shelf.books || []).slice().sort((a, b) => String(b.addedAt).localeCompare(String(a.addedAt))).slice(0, 40).map(b => `<li class="item">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div>${b.status ? `<span class="st ${esc(b.status)}">${STAT[b.status] || ''}</span>` : ''}</li>`).join('') || '<li class="muted">Rafı boş.</li>'}</ul>
+      ${(shelf.wishes || []).length ? `<details class="pcard" style="margin-top:12px"><summary>İstek listesi (${shelf.wishes.length})</summary><ul class="hlist">${shelf.wishes.map(b => `<li class="item">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div></li>`).join('')}</ul></details>` : ''}`;
+    $('uBody').dataset.tips = JSON.stringify(m.tips);
+  } else html += `<div class="pcard" style="text-align:center;margin-top:14px"><p class="pname" style="font-size:22px">Bu hesap gizli</p><p class="muted" style="margin:6px 0 0">${f && f.status === 'pending' ? 'Takip isteğin onaylanınca kitaplığını görebileceksin.' : 'Kitaplığını görmek için takip isteği gönder.'}</p></div>`;
+  $('uBody').innerHTML = html; hydrate($('uBody'));
+  $('uBody').dataset.uid = uid; $('uBody').dataset.priv = prof.private ? '1' : '';
+}
+$('uX').onclick = () => { $('userOv').hidden = true; userNow = null; };
+$('userOv').addEventListener('click', e => { if (e.target === $('userOv')) { $('userOv').hidden = true; userNow = null; } });
+$('uBody').addEventListener('click', async e => {
+  const t = e.target.closest('[data-u],[data-tip]'); if (!t) return;
+  const uid = $('uBody').dataset.uid;
+  if (t.dataset.tip !== undefined) { const b = JSON.parse($('uBody').dataset.tips || '[]')[+t.dataset.tip]; if (b && addTipToWish(b)) { t.textContent = 'Eklendi ✓'; t.disabled = true; sfx.unlock(); sfx.tick(); } return; }
+  const act = t.dataset.u; t.disabled = true;
+  try {
+    if (act === 'follow') { await follow(uid, !!$('uBody').dataset.priv); sfx.unlock(); sfx.sparkle(); }
+    else if (act === 'unfollow') await unfollow(uid);
+    else if (act === 'menu') { $('uMore').hidden = !$('uMore').hidden; t.disabled = false; return; }
+    else if (act === 'drop') await dropFollower(uid);
+    else if (act === 'block') { if (!t.dataset.armed) { t.dataset.armed = 1; t.textContent = 'Engellensin mi? Bir kez daha dokun'; t.disabled = false; return; } await blockUser(uid); }
+    else if (act === 'unblock') await unblockUser(uid);
+    else if (act === 'owl') { t.disabled = false; return openOwl(uid); }
+  } catch (er) { note('İşlem yapılamadı. İnternetini kontrol edip tekrar dene.'); }
+  openUser(uid, true);
+});
+
+// --- search ---
+let searchSeq = 0;
+async function runSearch() {
+  const q = fold($('sQ').value).replace(/^@/, ''), seq = ++searchSeq, box = $('sRes');
+  if (q.length < 2) { box.innerHTML = '<p class="muted" style="padding:8px 2px">Kullanıcı adının ya da ismin ilk harflerini yaz.</p>'; return; }
+  box.innerHTML = '<p class="muted" style="padding:8px 2px">Aranıyor…</p>';
+  try {
+    const qq = (f, v) => FB.getDocs(FB.query(FB.collection(fbDb, 'profiles'), FB.where(f, '>=', v), FB.where(f, '<=', v + ''), FB.limit(12)));
+    const [a, b] = await Promise.all([qq('usernameLower', q.replace(/\s+/g, '')), qq('nameLower', q)]);
+    if (seq !== searchSeq) return;
+    const seen = new Map(); for (const d of [...a.docs, ...b.docs]) if (d.id !== me.uid) seen.set(d.id, d.data());
+    box.innerHTML = seen.size ? `<ul class="hlist">${[...seen].map(([id, p]) => `<li class="item uitem" data-user="${esc(id)}"><img class="uav" src="${avURL(p.avatar || AV_DEFAULT, {})}" alt=""><div><div class="t">${esc(p.name || p.username)}</div><div class="a">@${esc(p.username)}${p.private ? ' · gizli' : ''}</div></div>${SOC.following.has(id) ? `<span class="tag">${SOC.following.get(id).status === 'accepted' ? 'Takip' : 'İstek'}</span>` : ''}</li>`).join('')}</ul>` : '<p class="muted" style="padding:8px 2px">Kimse bulunamadı.</p>';
+  } catch (e) { if (seq === searchSeq) box.innerHTML = '<p class="muted" style="padding:8px 2px">Arama yapılamadı. İnternetini kontrol et.</p>'; }
+}
+let sT = 0;
+$('sQ').addEventListener('input', () => { clearTimeout(sT); sT = setTimeout(runSearch, 300); });
+$('sX').onclick = () => { $('searchOv').hidden = true; };
+$('sRes').addEventListener('click', e => { const li = e.target.closest('[data-user]'); if (li) openUser(li.dataset.user); });
+function openSearch() {
+  if (!SOC.on) { showTab('prof'); setTimeout(() => $('socBox').scrollIntoView({behavior: 'smooth', block: 'center'}), 120); note('Arkadaş aramak için önce Profilim\'de arkadaş profilini oluştur.'); return; }
+  $('searchOv').hidden = false; $('sQ').value = ''; runSearch(); setTimeout(() => $('sQ').focus(), 80);
+}
+
+// --- follower lists ---
+let listKind = 'followers';
+async function drawList(kind) {
+  listKind = kind; $('listOv').hidden = false;
+  $('lTitle').textContent = {followers: 'Takipçilerin', following: 'Takip ettiklerin', requests: 'Takip istekleri', blocked: 'Engellediklerin'}[kind];
+  const ids = kind === 'followers' ? [...SOC.followers.values()].filter(f => f.status === 'accepted').map(f => f.from)
+    : kind === 'requests' ? [...SOC.followers.values()].filter(f => f.status === 'pending').map(f => f.from)
+    : kind === 'following' ? [...SOC.following.keys()] : [...SOC.blocked];
+  if (!ids.length) { $('lBody').innerHTML = `<p class="muted" style="padding:16px 2px;text-align:center">${kind === 'requests' ? 'Bekleyen istek yok.' : 'Burası şimdilik boş.'}</p>`; return; }
+  $('lBody').innerHTML = '<p class="muted">Yükleniyor…</p>';
+  const profs = await Promise.all(ids.map(id => FB.getDoc(fd('profiles', id)).then(s => [id, s.exists() ? s.data() : null]).catch(() => [id, null])));
+  if (listKind !== kind) return;
+  $('lBody').innerHTML = `<ul class="hlist">${profs.map(([id, p]) => `<li class="item uitem" data-user="${esc(id)}"><img class="uav" src="${avURL((p && p.avatar) || AV_DEFAULT, {})}" alt=""><div><div class="t">${esc((p && (p.name || p.username)) || 'Kullanıcı')}</div><div class="a">${p ? '@' + esc(p.username) : ''}</div></div>${kind === 'requests' ? `<div class="reqb"><button class="btn primary" type="button" data-acc="${esc(id)}">Onayla</button><button class="btn" type="button" data-rej="${esc(id)}">Sil</button></div>` : kind === 'blocked' ? `<button class="btn" type="button" data-unb="${esc(id)}">Engeli kaldır</button>` : ''}</li>`).join('')}</ul>`;
+}
+$('lX').onclick = () => { $('listOv').hidden = true; };
+$('lBody').addEventListener('click', async e => {
+  const a = e.target.closest('[data-acc],[data-rej],[data-unb]');
+  if (a) { a.disabled = true; try { if (a.dataset.acc) { await acceptReq(a.dataset.acc); sfx.unlock(); sfx.sparkle(); } else if (a.dataset.rej) await dropFollower(a.dataset.rej); else { await unblockUser(a.dataset.unb); drawList('blocked'); drawSocial(); } } catch (er) { a.disabled = false; } return; }
+  const li = e.target.closest('[data-user]'); if (li) openUser(li.dataset.user);
+});
+
+// --- owl post ---
+let owlTo = null, owlBook = null;
+function openOwl(uid) { owlTo = uid; owlBook = null; $('oNote').value = ''; $('oQ').value = ''; $('oMsg').textContent = ''; drawOwl(); $('owlOv').hidden = false; }
+function drawOwl() {
+  const q = fold($('oQ').value);
+  const list = books.filter(b => !q || fold(b.title + ' ' + (b.author || '')).includes(q)).sort((a, b) => (b.status === 'okundu') - (a.status === 'okundu') || coll.compare(a.title || '', b.title || '')).slice(0, 40);
+  $('oList').innerHTML = list.map(b => `<li class="item${owlBook === b.id ? ' on' : ''}" data-ob="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div></li>`).join('') || '<li class="muted">Kitap bulunamadı.</li>';
+  hydrate($('oList'));
+  $('oSend').disabled = !owlBook;
+}
+$('oQ').addEventListener('input', drawOwl);
+$('oList').addEventListener('click', e => { const li = e.target.closest('[data-ob]'); if (li) { owlBook = li.dataset.ob; drawOwl(); } });
+$('oX').onclick = () => { $('owlOv').hidden = true; };
+$('oSend').onclick = async () => {
+  const b = books.find(x => x.id === owlBook); if (!b || !owlTo) return;
+  const a = avLoad() || {};
+  $('oSend').disabled = true; $('oMsg').textContent = 'Baykuş yola çıkıyor…';
+  try {
+    await FB.setDoc(fd('mail', owlTo, 'items', uid()), {from: me.uid, fromName: a.name || SOC.prof.username, fromUser: SOC.prof.username, fromAv: plain(a), book: {title: b.title, author: b.author || '', isbn: b.isbn || '', genre: normGenre(b.genre) || '', cover: okUrl(b.cover) || ''}, note: $('oNote').value.trim().slice(0, 200), at: Date.now(), read: false});
+    $('owlOv').hidden = true; sfx.unlock(); sfx.whoosh(); note('<span>Baykuşun yola çıktı!</span>');
+  } catch (e) { $('oMsg').textContent = 'Gönderilemedi. Bu kişiyi takip ettiğinden ve internetin olduğundan emin ol.'; $('oSend').disabled = false; }
+};
+function drawInbox() {
+  const box = $('iBody');
+  box.innerHTML = SOC.mail.length ? SOC.mail.map(m => {
+    const have = books.some(b => bkey(b) === bkey(m.book)), wished = wishes.some(w => bkey(w) === bkey(m.book));
+    return `<article class="post owl${m.read ? '' : ' new'}"><img class="pa" src="${avURL(m.fromAv || AV_DEFAULT, {})}" alt=""><div><div class="ph"><b>${esc(m.fromName || m.fromUser)}</b><span>@${esc(m.fromUser || '')} · ${esc(relTime(new Date(m.at).toISOString()))}</span></div><p>sana bir kitap önerdi${m.note ? `: <i>“${esc(m.note)}”</i>` : '.'}</p><div class="pbk">${coverEl(m.book)}<div><div class="t">${esc(m.book.title)}</div><div class="a">${esc(m.book.author || '')}</div></div></div><div class="row" style="margin-top:8px">${have ? '<span class="tag">Zaten sende var</span>' : wished ? '<span class="tag w">İstek listende</span>' : `<button class="btn primary" type="button" data-mw="${esc(m.id)}">İstek listeme ekle</button>`}<button class="btn" type="button" data-md="${esc(m.id)}">Sil</button></div></div></article>`;
+  }).join('') : '<p class="muted" style="padding:20px 4px;text-align:center">Henüz baykuş gelmedi. Arkadaşların sana kitap önerdiğinde burada görünecek.</p>';
+  hydrate(box);
+}
+async function openInbox() {
+  if (!SOC.on) return openSearch();
+  $('inboxOv').hidden = false; drawInbox();
+  const unread = SOC.mail.filter(m => !m.read);
+  if (unread.length) { const b = FB.writeBatch(fbDb); unread.forEach(m => b.set(fd('mail', me.uid, 'items', m.id), {read: true}, {merge: true})); b.commit().catch(() => {}); }
+}
+$('iX').onclick = () => { $('inboxOv').hidden = true; };
+$('iBody').addEventListener('click', async e => {
+  const w = e.target.closest('[data-mw]'), d = e.target.closest('[data-md]');
+  if (w) { const m = SOC.mail.find(x => x.id === w.dataset.mw); if (m && addTipToWish(m.book)) { sfx.unlock(); sfx.tick(); drawInbox(); } }
+  if (d) { d.disabled = true; await FB.deleteDoc(fd('mail', me.uid, 'items', d.dataset.md)).catch(() => { d.disabled = false; }); }
+});
+
+// --- reactions ---
+async function toggleReact(owner, ev, btn) {
+  const p = profLoad(), list = new Set(p.reacted || []), pth = `reactions/${owner}/items/${ev}_${me.uid}`;
+  const on = list.has(pth);
+  btn.disabled = true;
+  try {
+    if (on) { await FB.deleteDoc(fd(...pth.split('/'))); list.delete(pth); }
+    else { const a = avLoad() || {}; await FB.setDoc(fd(...pth.split('/')), {by: me.uid, ev, type: myType(), name: a.name || (SOC.prof && SOC.prof.username) || '', at: Date.now()}); list.add(pth); sfx.unlock(); sfx.sparkle(); }
+    p.reacted = [...list].slice(-500); profSave(p);
+    btn.classList.toggle('on', !on); btn.innerHTML = reactIco(myType(), !on);
+  } catch (e) { note('Tepki gönderilemedi.'); }
+  btn.disabled = false;
+}
+
+// --- Profilim: friends box ---
+function drawSocial() {
+  const box = $('socBox'); if (!box) return;
+  if (!me) { box.innerHTML = ''; return; }
+  if (!SOC.on) {
+    box.innerHTML = `<div class="pcard"><p style="margin:0 0 10px">Arkadaşlarını bul, kitaplarınızı birbirinize gösterin, baykuşla kitap önerin. Arkadaş profili oluşturmadıkça kimse seni bulamaz.</p>
+      <label class="f">Kullanıcı adın<input id="socUser" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="ör. yazgi.okuyor" value="${esc(profLoad().username || '')}"></label>
+      <div class="radios"><label><input type="radio" name="socPriv" value="1" checked> <b>Gizli hesap</b><span class="muted">Kitaplığını yalnızca onayladığın takipçilerin görür</span></label><label><input type="radio" name="socPriv" value="0"> <b>Herkese açık</b><span class="muted">Seni bulan herkes kitaplığını görür</span></label></div>
+      <p class="muted" style="font-size:13px">Paylaşılan: adın, kullanıcı adın, avatarın, "hakkımda" yazın; takipçilerinle kitap listen, istek listen ve sayıların. Notların, puanların, nereden aldığın ve ödünç kayıtların asla paylaşılmaz. <button type="button" class="lnk" data-kvkk>Aydınlatma metni</button></p>
+      <p class="amsg" id="socMsg"></p>
+      <button class="btn primary" type="button" id="socGo" style="width:100%">Arkadaş profilimi oluştur</button></div>`;
+    return;
+  }
+  const fl = [...SOC.followers.values()], acc = fl.filter(f => f.status === 'accepted').length, req = fl.filter(f => f.status === 'pending').length;
+  box.innerHTML = `<div class="pcard">
+    <div class="socnums"><button type="button" data-l="followers"><b>${acc}</b><span>takipçi</span></button><button type="button" data-l="following"><b>${SOC.following.size}</b><span>takip</span></button><button type="button" data-l="requests" class="${req ? 'hot' : ''}"><b>${req}</b><span>istek</span></button></div>
+    <button class="btn primary" type="button" id="socFind" style="width:100%;margin-top:10px">Arkadaş ara</button>
+    <label class="switch"><input type="checkbox" id="socPrivT" ${SOC.prof.private ? 'checked' : ''}><span>Gizli hesap</span><small class="muted">${SOC.prof.private ? 'Kitaplığını yalnızca onayladığın takipçilerin görür.' : 'Kitaplığın herkese açık.'}</small></label>
+    <div class="row" style="margin-top:10px"><button class="btn" type="button" data-l="blocked">Engellediklerin${SOC.blocked.size ? ` (${SOC.blocked.size})` : ''}</button><button class="btn danger" type="button" id="socOff">Arkadaş profilini kapat</button></div>
+    <p class="amsg" id="socMsg"></p></div>`;
+}
+$('socBox').addEventListener('click', async e => {
+  const t = e.target.closest('#socGo,#socFind,#socOff,[data-l]'); if (!t) return;
+  if (t.dataset.l) return drawList(t.dataset.l);
+  if (t.id === 'socFind') return openSearch();
+  if (t.id === 'socGo') {
+    t.disabled = true; $('socMsg').textContent = '';
+    try {
+      SOC.prof = await claimUsername($('socUser').value, document.querySelector('input[name=socPriv]:checked').value === '1');
+      await socStart(); drawProfile(); sfx.unlock(); sfx.sparkle(); note('<span>Arkadaş profilin hazır! Şimdi arkadaşlarını arayabilirsin.</span>');
+    } catch (er) { $('socMsg').textContent = er instanceof UErr ? er.message : 'Oluşturulamadı. İnternetini kontrol edip tekrar dene.'; t.disabled = false; }
+    return;
+  }
+  if (t.id === 'socOff') {
+    if (!t.dataset.armed) { t.dataset.armed = 1; t.textContent = 'Takipçiler, takipler ve baykuşlar silinecek. Emin misin?'; return; }
+    t.disabled = true;
+    try { await socDisable(); note('Arkadaş profilin kapatıldı.'); } catch (er) { $('socMsg').textContent = 'Kapatılamadı, tekrar dene.'; t.disabled = false; }
+  }
+});
+$('socBox').addEventListener('change', async e => {
+  if (e.target.id !== 'socPrivT') return;
+  const priv = e.target.checked;
+  try { const d = {...socProfileData(SOC.prof.username, priv)}; await FB.setDoc(fd('profiles', me.uid), d); SOC.prof = d; drawSocial(); }
+  catch (er) { e.target.checked = !priv; $('socMsg').textContent = 'Değiştirilemedi.'; }
+});
 
 // --- Accounts: sign-in with Firebase; each person's books live in their own corner of the database ---
 const FB_CFG = {apiKey: 'AIzaSyDIc6YSDyZ2TB4Rb93qHsce30AjSmjwBMQ', authDomain: 'kitapligim-80e6a.firebaseapp.com', projectId: 'kitapligim-80e6a', storageBucket: 'kitapligim-80e6a.firebasestorage.app', messagingSenderId: '127488815555', appId: '1:127488815555:web:219d14ef48ea3151eb0d76'};
@@ -2900,6 +3365,7 @@ window.addEventListener('offline', () => syncState('off'));
 let profTimer = 0;
 function profileDirty() {
   if (!me || !profileReady) return;
+  socProfileDirty();
   clearTimeout(profTimer);
   profTimer = setTimeout(() => { FB.setDoc(FB.doc(fbDb, 'users', me.uid), {avatar: avLoad() || null, theme: themeNow(), prof: profLoad(), email: me.email || '', updatedAt: Date.now()}, {merge: true}).catch(() => {}); }, 800);
 }
@@ -2959,7 +3425,7 @@ $('authF').addEventListener('submit', async e => {
   $('authGo').disabled = true;
   try {
     if (authMode === 'up') {
-      try { localStorage.setItem('kitapligim.pendingType', pickType); const now = new Date().toISOString(); localStorage.setItem('kitapligim.ack', JSON.stringify({aydinlatma: {surum: '1.1', sunuldu: now}, kosullar: {surum: '1.0', kabul: now}})); } catch (x) {}
+      try { localStorage.setItem('kitapligim.pendingType', pickType); const now = new Date().toISOString(); localStorage.setItem('kitapligim.ack', JSON.stringify({aydinlatma: {surum: '1.2', sunuldu: now}, kosullar: {surum: '1.1', kabul: now}})); } catch (x) {}
       const cred = await FB.createUserWithEmailAndPassword(fbAuth, email, pw);
       await FB.sendEmailVerification(cred.user, {url: location.origin + location.pathname}).catch(() => {});
       showVerify(cred.user);
@@ -2994,7 +3460,7 @@ function enterApp(user) {
   setUserKeys(user.uid); load(); render();
   $('auth').hidden = true; $('acctMail').textContent = user.email || '';
   syncState(navigator.onLine ? 'wait' : 'off');
-  loadProfile();
+  loadProfile().then(socStart);
   const watch = (kind, name) => FB.onSnapshot(FB.collection(fbDb, 'users', user.uid, name), snap => {
     if (snap.metadata && snap.metadata.fromCache) return;
     remote[kind] = new Map(snap.docs.map(d => [d.id, d.data()]));
@@ -3004,6 +3470,7 @@ function enterApp(user) {
   unsubs = [watch('b', 'books'), watch('w', 'wishes')];
 }
 function leaveApp() {
+  socStop();
   for (const u of unsubs) try { u(); } catch (e) {}
   unsubs = []; me = null; remote = {b: null, w: null}; profileReady = false;
   books = []; wishes = []; render();
@@ -3029,6 +3496,7 @@ $('delAcct').onclick = async () => {
   $('acctMsg').textContent = 'Siliniyor…';
   try {
     const uid = me.uid;
+    await socDisable(true).catch(() => {});
     for (const name of ['books', 'wishes', 'covers']) {
       const s = await FB.getDocs(FB.collection(fbDb, 'users', uid, name));
       for (let i = 0; i < s.docs.length; i += 400) { const b = FB.writeBatch(fbDb); for (const d of s.docs.slice(i, i + 400)) b.delete(d.ref); await b.commit(); }
