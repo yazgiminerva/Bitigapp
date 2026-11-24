@@ -165,7 +165,9 @@ summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weig
 .scan p{margin:0;font-size:15px;font-weight:600}
 .seg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
 #f.wishing .nw{display:none}
-.wishbtn{grid-column:1/-1;background:color-mix(in srgb,var(--butter) 28%,var(--paper))}
+.havebtn{background:color-mix(in srgb,var(--sky) 30%,var(--paper))}
+.havebtn svg{color:var(--lavD)}
+.wishbtn{background:color-mix(in srgb,var(--butter) 28%,var(--paper))}
 .wishbtn svg{color:var(--butterD)}
 .wishbtn b{min-width:24px;height:24px;padding:0 7px;border-radius:99px;background:var(--butter);color:var(--on);font:900 13px/24px "Nunito",sans-serif}
 .wishbtn b:empty{display:none}
@@ -195,6 +197,37 @@ summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weig
 .hint{display:block;margin-top:4px;font-size:12px;font-weight:600;color:var(--mute)}
 .tbd{background:var(--butter);color:var(--on);border-radius:6px;padding:0 6px;font-weight:700}
 .authbox details{font-size:14px;padding:2px 12px}
+.listhead .selbtn{margin-left:auto;min-height:36px;padding:4px 14px;font-size:14px}
+.item{position:relative}
+#list.selmode .item{padding-left:44px;user-select:none;-webkit-user-select:none}
+#list.selmode .item::before{content:"";position:absolute;left:12px;top:50%;margin-top:-12px;width:24px;height:24px;border-radius:50%;box-sizing:border-box;border:2.5px solid var(--mute);background:var(--field)}
+#list.selmode .item.on{box-shadow:0 0 0 3px var(--rose),0 2px 0 var(--line)}
+#list.selmode .item.on::before{border-color:var(--rose);background:var(--rose) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/15px no-repeat}
+body.selecting{padding-bottom:170px}
+.bulk{position:fixed;left:0;right:0;bottom:0;z-index:8;background:var(--paper);box-shadow:0 -8px 24px var(--shadow);border-radius:22px 22px 0 0;padding:12px 14px calc(var(--sb) + 12px);animation:up .25s ease-out}
+:root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) .bulk{background:linear-gradient(#ffffff08,#0000),var(--card);box-shadow:inset 0 1px 0 var(--cardE),0 -8px 24px #0009}
+@keyframes up{from{transform:translateY(100%)}}
+.bulktop{display:flex;align-items:center;gap:8px;margin-bottom:8px}.bulktop b{margin-right:auto;font-size:16px}
+.bulktop .btn{min-height:36px;padding:4px 8px;font-size:14px}
+.bulkbtns{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.bulkbtns .btn{min-height:44px;font-size:15px;padding:6px 8px;gap:8px}
+.bulkbtns .danger{grid-column:1/-1}
+.bulkbtns i.st{display:inline-block;width:12px;height:12px;padding:0;border-radius:50%;flex:none}
+.bulk[aria-busy=true] .bulkbtns .btn{opacity:.5;pointer-events:none}
+.hres{margin-top:14px;border-radius:20px;padding:16px;background:var(--field);text-align:center}
+.hres.yes{background:color-mix(in srgb,var(--sage) 30%,var(--field))}
+.hres.wish{background:color-mix(in srgb,var(--butter) 30%,var(--field))}
+.hres.no{background:color-mix(in srgb,var(--peach) 22%,var(--field))}
+.hres .big{font:600 24px/1.2 var(--serif);font-variation-settings:"SOFT" 100;margin:0 0 10px}
+.hres .bk{display:flex;gap:12px;align-items:center;text-align:left;margin:10px 0;background:var(--paper);border-radius:14px;padding:8px}
+.hres .bk .cv{width:44px;height:64px;flex:none}
+.hres .bk .t{font:600 17px/1.2 var(--serif)}.hres .bk .a{color:var(--mute);font-size:14px}
+.hres .row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.hres .row .btn{flex:1 1 140px}
+.hlist{margin-top:10px;display:grid;gap:8px}
+.hlist .item{cursor:pointer}
+.tag{display:inline-block;font:800 12px "Nunito",sans-serif;border-radius:99px;padding:2px 9px;background:var(--sage);color:var(--on);margin-top:4px}
+.tag.w{background:var(--butter)}
 .wadd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.wadd .btn{font-size:14px;padding:8px 6px;min-height:46px}
 .witem{grid-template-columns:46px minmax(0,1fr) auto}
 .witem .n{color:var(--mute);font-size:13px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -487,13 +520,14 @@ a{color:var(--roseD)}
       <svg width="18" height="20" viewBox="0 0 18 20" aria-hidden="true"><path d="M2 1h12a2 2 0 0 1 2 2v16H4a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 6h6M6 10h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       Kapaktan ekle
     </button>
+    <button class="btn havebtn" id="haveBtn" type="button"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="6" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M13 13l5 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>Bende var mı?</button>
     <button class="btn wishbtn" id="wishBtn" type="button"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5l2.5 5.2 5.7.8-4.1 4 1 5.7L10 14.5l-5.1 2.7 1-5.7-4.1-4 5.7-.8z" fill="currentColor"/></svg>İstek listem<b id="wishN"></b></button>
     <button class="btn link" id="manual" type="button">Elle ekle</button>
   </div>
   <input type="file" id="coverIn" accept="image/*" capture="environment" hidden>
   <div class="note" id="note" hidden></div>
   <section class="band">
-    <div class="listhead"><h2>Raftakiler</h2><span class="muted" id="count"></span></div>
+    <div class="listhead"><h2>Raftakiler</h2><span class="muted" id="count"></span><button class="btn selbtn" id="selBtn" type="button">Seç</button></div>
     <div class="tools">
       <input type="search" id="q" placeholder="Başlık, yazar, yayınevi, ISBN ara" aria-label="Ara">
       <select id="sort" aria-label="Sırala"><option value="new">Son eklenen</option><option value="title">Başlık</option><option value="author">Yazar</option><option value="rating">Puan</option></select>
@@ -532,7 +566,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 25</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 26</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -720,6 +754,27 @@ a{color:var(--roseD)}
   </div>
 </div>
 
+<div class="ov" id="haveOv" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="hTitle">
+    <div class="sh-head"><h2 id="hTitle">Bende var mı?</h2><button class="x" id="hX" type="button" aria-label="Kapat">×</button></div>
+    <p class="muted" style="margin-top:0">Kitapçıda bir kitabı gördün ama sende var mı emin değil misin? Barkodunu okut ya da adını yaz.</p>
+    <button class="btn primary" id="hScan" type="button" style="width:100%">Barkod okut</button>
+    <label class="f" style="margin-top:12px">ya da ara<input type="search" id="hQ" placeholder="Başlık, yazar ya da ISBN" autocomplete="off"></label>
+    <div id="hRes" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="bulk" id="bulk" hidden role="toolbar" aria-label="Seçili kitaplar">
+  <div class="bulktop"><b id="bulkN">0 seçili</b><button class="btn link" id="bulkAll" type="button">Tümünü seç</button><button class="btn link" id="bulkDone" type="button">Vazgeç</button></div>
+  <div class="bulkbtns">
+    <button class="btn" type="button" data-st="okundu"><i class="st okundu"></i>Okundu</button>
+    <button class="btn" type="button" data-st="okunuyor"><i class="st okunuyor"></i>Okunuyor</button>
+    <button class="btn" type="button" data-st="okunacak"><i class="st okunacak"></i>Okunacak</button>
+    <button class="btn" type="button" data-st="yarim"><i class="st yarim"></i>Yarım kaldı</button>
+    <button class="btn danger" type="button" id="bulkDel">Sil</button>
+  </div>
+</div>
+
 <div class="ov" id="wishOv" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="wTitle">
     <div class="sh-head"><h2 id="wTitle">İstek listem</h2><button class="x" id="wX" type="button" aria-label="Kapat">×</button></div>
@@ -852,7 +907,8 @@ let gfilter = null;
 let books = [], filter = 'all', editId = null, rating = 0, fromScan = false, acq = 'existing';
 // wish list: books you want, kept apart from the ones you own
 let WKEY = 'kitapligim.wish.v1';
-let wishes = [], wishNext = false, convertId = null;
+let wishes = [], wishNext = false, convertId = null, checkNext = false, selMode = false;
+const selected = new Set();
 
 function load() {
   try { books = JSON.parse(localStorage.getItem(KEY) || '[]'); if (!Array.isArray(books)) books = []; } catch (e) { books = []; }
@@ -928,6 +984,127 @@ function shelfHTML(list) {
   return (th === 'cadi' ? BLACKCAT : CAT) + spines.join('') + (books.length > list.length ? `<button class="seeall" type="button" data-go="lib">Tüm kitaplık ›<br><small>${books.length}</small></button>` : '');
 }
 
+// --- Bulk selection: tick books, then mark them all at once ---
+let visibleIds = [], undoTimer = 0;
+function setSel(on) {
+  selMode = on; if (!on) selected.clear();
+  document.body.classList.toggle('selecting', on);
+  $('selBtn').textContent = on ? 'Bitti' : 'Seç';
+  $('list').classList.toggle('selmode', on);
+}
+function drawBulk() {
+  for (const id of [...selected]) if (!books.some(b => b.id === id)) selected.delete(id);
+  $('bulk').hidden = !selMode;
+  if (!selMode) return;
+  const n = selected.size, allOn = visibleIds.length && visibleIds.every(id => selected.has(id));
+  $('bulkN').textContent = n ? `${n} kitap seçili` : 'Kitaplara dokunarak seç';
+  $('bulkAll').textContent = allOn ? 'Seçimi kaldır' : 'Tümünü seç';
+  $('bulk').setAttribute('aria-busy', String(!n));
+}
+$('selBtn').onclick = () => { setSel(!selMode); render(); };
+$('bulkDone').onclick = () => { setSel(false); render(); };
+$('bulkAll').onclick = () => {
+  const allOn = visibleIds.length && visibleIds.every(id => selected.has(id));
+  for (const id of visibleIds) allOn ? selected.delete(id) : selected.add(id);
+  render();
+};
+function bulkApply(change, label) {
+  const ids = new Set(selected); if (!ids.size) return;
+  const before = books;
+  books = change(books, ids);
+  if (!persist()) { books = before; return; }
+  setSel(false); render(); sfx.unlock(); sfx.sparkle();
+  note(`<span>${label(ids.size)}</span><button class="btn" type="button" id="undoBulk">Geri al</button>`, true);
+  clearTimeout(undoTimer);
+  const removed = before.filter(b => ids.has(b.id) && !books.some(x => x.id === b.id));
+  undoTimer = setTimeout(() => { for (const b of removed) if (b.coverLocal && !books.some(x => x.id === b.id)) { idb.del(b.id).catch(() => {}); forgetLocal(b.id); } }, 15000);
+  $('undoBulk').onclick = () => {
+    clearTimeout(undoTimer);
+    const keep = new Map(books.map(b => [b.id, b]));
+    books = before.map(b => ids.has(b.id) ? b : keep.get(b.id) || b).filter(b => keep.has(b.id) || ids.has(b.id));
+    persist(); render(); $('note').hidden = true;
+  };
+}
+$('bulk').querySelector('.bulkbtns').addEventListener('click', e => {
+  const b = e.target.closest('[data-st]'); if (!b) return;
+  const st = b.dataset.st;
+  bulkApply((list, ids) => list.map(x => ids.has(x.id) ? {...x, status: st, updatedAt: new Date().toISOString()} : x), n => `${n} kitap “${STAT[st]}” olarak işaretlendi.`);
+});
+let delArmed = 0;
+$('bulkDel').onclick = () => {
+  if (!selected.size) return;
+  if (!delArmed) { delArmed = setTimeout(() => { delArmed = 0; $('bulkDel').textContent = 'Sil'; }, 4000); $('bulkDel').textContent = `${selected.size} kitap silinsin mi? Bir kez daha dokun`; return; }
+  clearTimeout(delArmed); delArmed = 0; $('bulkDel').textContent = 'Sil';
+  bulkApply((list, ids) => list.filter(x => !ids.has(x.id)), n => `${n} kitap silindi.`);
+};
+
+// --- "Do I have this book?" ---
+const isbn13 = v => {
+  const d = String(v || '').replace(/[^0-9Xx]/g, '').toUpperCase();
+  if (d.length === 13) return d;
+  if (d.length !== 10) return '';
+  const core = '978' + d.slice(0, 9); let sum = 0;
+  for (let i = 0; i < 12; i++) sum += (+core[i]) * (i % 2 ? 3 : 1);
+  return core + ((10 - sum % 10) % 10);
+};
+const fold = t => String(t || '').toLocaleLowerCase('tr').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+function openHave() { $('haveOv').hidden = false; }
+function haveCard(b, extra) {
+  const bits = [b.status && STAT[b.status], b.location && 'Rafı: ' + b.location, b.lentTo && 'Ödünçte: ' + b.lentTo].filter(Boolean).join(' · ');
+  return `<div class="bk">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div>${bits ? `<div class="a">${esc(bits)}</div>` : ''}${extra || ''}</div></div>`;
+}
+let haveSeq = 0;
+async function showHave(isbn) {
+  const seq = ++haveSeq, k = isbn13(isbn), box = $('hRes');
+  $('hQ').value = '';
+  const own = books.find(b => isbn13(b.isbn) === k), w = !own && wishes.find(b => isbn13(b.isbn) === k);
+  if (own) {
+    box.innerHTML = `<div class="hres yes"><p class="big">Evet, bu kitap sende var!</p>${haveCard(own)}<div class="row"><button class="btn" type="button" data-open="${esc(own.id)}">Kitabı aç</button><button class="btn primary" type="button" data-again>Başka bir kitap</button></div></div>`;
+    hydrate(box); sfx.unlock(); sfx.sparkle(); return;
+  }
+  if (w) {
+    box.innerHTML = `<div class="hres wish"><p class="big">Sende yok, ama istek listende.</p>${haveCard(w)}<div class="row"><button class="btn primary" type="button" data-buy="${esc(w.id)}">Aldım</button><button class="btn" type="button" data-again>Başka bir kitap</button></div></div>`;
+    hydrate(box); return;
+  }
+  box.innerHTML = `<div class="hres no"><p class="big">Kitaplığında yok.</p><p class="muted" id="hInfo">ISBN ${esc(k || isbn)} · Kitap bilgisi aranıyor…</p></div>`;
+  sfx.unlock(); sfx.tick();
+  const info = navigator.onLine ? await lookup(k || isbn).catch(() => null) : null;
+  if (seq !== haveSeq || $('haveOv').hidden) return;
+  const same = info && info.title ? books.filter(b => fold(b.title) === fold(info.title)) : [];
+  const book = info && info.title ? {title: info.title, author: info.author || '', isbn: k || isbn} : null;
+  box.innerHTML = `<div class="hres no"><p class="big">Kitaplığında yok.</p>${book ? haveCard(book) : `<p class="muted">ISBN ${esc(k || isbn)}${navigator.onLine ? ' · Kitap bilgisi bulunamadı.' : ' · İnternet yok.'}</p>`}
+    ${same.length ? `<p style="margin:10px 0 4px"><b>Ama aynı adlı bir kitabın var</b> (başka bir baskı olabilir):</p>${same.map(b => haveCard(b)).join('')}` : ''}
+    <div class="row"><button class="btn primary" type="button" data-wish="${esc(k || isbn)}">İstek listeme ekle</button><button class="btn" type="button" data-add="${esc(k || isbn)}">Aldım, kitaplığa ekle</button></div>
+    <div class="row"><button class="btn link" type="button" data-again>Başka bir kitap</button></div></div>`;
+  hydrate(box);
+}
+function searchHave() {
+  const q = fold($('hQ').value), box = $('hRes');
+  if (!q) { box.innerHTML = ''; return; }
+  const digits = $('hQ').value.replace(/[^0-9Xx]/g, '');
+  if (digits.length === 13 || digits.length === 10) { if (isbn13(digits)) return showHave(digits); }
+  const hit = b => fold([b.title, b.author, b.translator, b.isbn].join(' ')).includes(q);
+  const own = books.filter(hit).slice(0, 20), w = wishes.filter(hit).slice(0, 10);
+  box.innerHTML = own.length || w.length
+    ? `<p class="muted" style="margin:12px 0 0">${own.length ? `${own.length} kitabın eşleşti` : 'Kitaplığında eşleşen yok'}${w.length ? `, istek listende ${w.length}` : ''}.</p><ul class="hlist">${own.map(b => `<li class="item" data-open="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div><span class="tag">Sende var${b.status ? ' · ' + STAT[b.status] : ''}</span></div></li>`).join('')}${w.map(b => `<li class="item" data-buy="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div><span class="tag w">İstek listende</span></div></li>`).join('')}</ul>`
+    : `<div class="hres no"><p class="big">Bu adla bir kitabın yok.</p><p class="muted" style="margin:0">Emin olmak için barkodunu okutabilirsin; bazı kitaplar farklı adla kayıtlı olabilir.</p></div>`;
+  hydrate(box);
+}
+$('haveBtn').onclick = () => { $('hRes').innerHTML = ''; $('hQ').value = ''; openHave(); };
+$('hX').onclick = () => { $('haveOv').hidden = true; };
+$('haveOv').addEventListener('click', e => { if (e.target === $('haveOv')) $('haveOv').hidden = true; });
+$('hScan').onclick = () => { $('haveOv').hidden = true; wishNext = false; checkNext = true; startScan(); };
+$('hQ').addEventListener('input', searchHave);
+$('hRes').addEventListener('click', e => {
+  const t = e.target.closest('[data-open],[data-buy],[data-wish],[data-add],[data-again]'); if (!t) return;
+  if (t.dataset.again !== undefined) { $('hRes').innerHTML = ''; $('haveOv').hidden = true; checkNext = true; startScan(); return; }
+  $('haveOv').hidden = true;
+  if (t.dataset.open) return openSheet(t.dataset.open);
+  if (t.dataset.buy) return buyWish(t.dataset.buy);
+  if (t.dataset.wish) { wishNext = true; return onIsbn(t.dataset.wish); }
+  if (t.dataset.add) { wishNext = false; openSheet(null, true); setAcq('new'); f.elements.isbn.value = t.dataset.add; fillFrom(t.dataset.add); }
+});
+
 function coverEl(b) {
   const c = colorOf(b), cu = okUrl(b.cover);
   return b.coverLocal ? `<img class="cv" style="--c:${c}" data-local="${esc(b.id)}" alt="">` : cu ? `<img class="cv" style="--c:${c}" src="${esc(cu)}" alt="" loading="lazy">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`;
@@ -996,9 +1173,11 @@ function render() {
   $('count').textContent = books.length ? `${list.length} / ${books.length}` : '';
   $('list').innerHTML = list.length ? list.map(b => {
     const c = colorOf(b), cu = okUrl(b.cover);
-    return `<li class="item" data-id="${esc(b.id)}">${b.coverLocal ? `<img class="cv" style="--c:${c}" data-local="${esc(b.id)}" alt="">` : cu ? `<img class="cv" style="--c:${c}" src="${esc(cu)}" alt="" loading="lazy">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || 'Yazar yok')}${b.lentTo ? ' · Ödünç: ' + esc(b.lentTo) : ''}</div></div><div class="r"><span class="st ${esc(b.status)}">${esc(STAT[b.status] || 'Okunacak')}</span>${b.rating ? `<div class="stars">${'★'.repeat(Math.min(5, b.rating | 0))}</div>` : ''}</div></li>`;
+    return `<li class="item${selMode && selected.has(b.id) ? ' on' : ''}" data-id="${esc(b.id)}"${selMode ? ` role="checkbox" aria-checked="${selected.has(b.id)}"` : ''}>${b.coverLocal ? `<img class="cv" style="--c:${c}" data-local="${esc(b.id)}" alt="">` : cu ? `<img class="cv" style="--c:${c}" src="${esc(cu)}" alt="" loading="lazy">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || 'Yazar yok')}${b.lentTo ? ' · Ödünç: ' + esc(b.lentTo) : ''}</div></div><div class="r"><span class="st ${esc(b.status)}">${esc(STAT[b.status] || 'Okunacak')}</span>${b.rating ? `<div class="stars">${'★'.repeat(Math.min(5, b.rating | 0))}</div>` : ''}</div></li>`;
   }).join('') : `<li class="muted" style="padding:16px 4px">${books.length ? 'Bu aramaya uyan kitap yok.' : 'Henüz kitap eklenmedi.'}</li>`;
   hydrate($('list'));
+  visibleIds = list.map(b => b.id);
+  drawBulk();
   const lb = localStorage.getItem(BKEY);
   const days = lb ? Math.floor((Date.now() - +lb) / 864e5) : null;
   $('keyInfo').textContent = getKey() ? 'Kapak okuma açık. Anahtarı değiştirebilir ya da silebilirsin.' : 'Kapak okuma henüz kurulmadı. "Kapaktan ekle"ye dokunduğunda kurulum adımları açılır.';
@@ -1046,7 +1225,7 @@ function openSheet(id, scan) {
   if (b.coverLocal) localCoverUrl(b.id).then(u => { if (u && editId === b.id) addTile({key: 'own:cur', kind: 'own', url: u}, true); });
   else if (okUrl(b.cover)) addTile({key: b.cover, kind: 'web', url: okUrl(b.cover)}, true);
   drawTiles();
-  $('shTitle').textContent = inWish ? 'İstek listesi' : id ? 'Kitabı düzenle' : scan ? 'Barkoddan ekle' : acq === 'wish' ? 'İstek listesine ekle' : 'Yeni kitap';
+  $('shTitle').textContent = inWish ? 'İstek listesi' : id ? 'Kitabı düzenle' : acq === 'wish' ? 'İstek listesine ekle' : scan ? 'Barkoddan ekle' : 'Yeni kitap';
   $('del').hidden = !id; $('delAsk').hidden = true; $('dup').hidden = true;
   $('scanBox').hidden = !scan; $('scanMsg').textContent = ''; $('coverFill').hidden = true;
   $('ov').hidden = false;
@@ -1196,6 +1375,7 @@ async function lookup(isbn) {
 }
 
 function onIsbn(isbn) {
+  if (checkNext) { checkNext = false; openHave(); showHave(isbn); return; }
   openSheet(null, true);
   f.elements.isbn.value = isbn;
   fillFrom(isbn);
@@ -1266,7 +1446,7 @@ $('photo').addEventListener('change', async e => {
   $('note').hidden = true;
   if (isbn) onIsbn(isbn); else note('Fotoğrafta barkod okunamadı. Daha yakından ve net çekmeyi dene ya da ISBN\'i elle yaz.');
 });
-$('camType').onclick = () => { stopScan(); openSheet(null, true); $('scanMsg').textContent = 'Arka kapaktaki 13 haneli ISBN\'i yaz; bilgileri ben arayayım.'; setTimeout(() => f.elements.isbn.focus(), 60); };
+$('camType').onclick = () => { stopScan(); if (checkNext) { checkNext = false; openHave(); setTimeout(() => $('hQ').focus(), 60); return; } openSheet(null, true); $('scanMsg').textContent = 'Arka kapaktaki 13 haneli ISBN\'i yaz; bilgileri ben arayayım.'; setTimeout(() => f.elements.isbn.focus(), 60); };
 f.elements.isbn.addEventListener('input', drawTiles);
 f.elements.isbn.addEventListener('change', () => {
   const v = f.elements.isbn.value.replace(/[^0-9Xx]/g, '');
@@ -1274,8 +1454,8 @@ f.elements.isbn.addEventListener('change', () => {
   if (!editId && fromScan && /^97[89]\d{10}$/.test(v) && !f.elements.title.value) { f.elements.isbn.value = v; fillFrom(v); }
 });
 
-$('scanBtn').onclick = () => { wishNext = false; startScan(); };
-$('camClose').onclick = () => { wishNext = false; stopScan(); };
+$('scanBtn').onclick = () => { wishNext = false; checkNext = false; startScan(); };
+$('camClose').onclick = () => { wishNext = false; if (checkNext) { checkNext = false; stopScan(); openHave(); return; } stopScan(); };
 $('manual').onclick = () => { wishNext = false; openSheet(null, false); setTimeout(() => f.elements.title.focus(), 60); };
 $('x').onclick = closeSheet;
 $('ov').addEventListener('click', e => { if (e.target === $('ov')) closeSheet(); });
@@ -1307,7 +1487,23 @@ $('toMain').onclick = () => goPage(0);
 document.querySelector('.dots').addEventListener('click', e => { const b = e.target.closest('button'); if (b) goPage(+b.dataset.p); });
 pager.addEventListener('scroll', () => { const i = Math.round(pager.scrollLeft / pager.clientWidth); document.querySelectorAll('.dots button').forEach((b, k) => b.setAttribute('aria-current', String(k === i))); }, {passive: true});
 addEventListener('resize', () => { const i = Math.round(pager.scrollLeft / pager.clientWidth); pager.scrollLeft = i * pager.clientWidth; });
-$('list').addEventListener('click', e => { const li = e.target.closest('.item'); if (li) openSheet(li.dataset.id); });
+$('list').addEventListener('click', e => {
+  const li = e.target.closest('.item'); if (!li) return;
+  if (lpFired) { lpFired = false; return; }
+  if (!selMode) return openSheet(li.dataset.id);
+  const id = li.dataset.id;
+  if (selected.has(id)) selected.delete(id); else selected.add(id);
+  li.classList.toggle('on', selected.has(id)); li.setAttribute('aria-checked', String(selected.has(id)));
+  sfx.unlock(); sfx.tick(); drawBulk();
+});
+// long press on a book also starts selecting
+let lpFired = false;
+{
+  let lp = 0;
+  $('list').addEventListener('pointerdown', e => { const li = e.target.closest('.item'); if (!li || selMode) return; const id = li.dataset.id; lp = setTimeout(() => { lp = 0; lpFired = true; setSel(true); selected.add(id); render(); sfx.unlock(); sfx.tick(); if (navigator.vibrate) navigator.vibrate(20); }, 550); });
+  for (const ev of ['pointerup', 'pointerleave', 'pointercancel', 'pointermove']) $('list').addEventListener(ev, e => { if (ev === 'pointermove' && Math.abs(e.movementX) + Math.abs(e.movementY) < 4) return; clearTimeout(lp); }, {passive: true});
+  window.addEventListener('scroll', () => clearTimeout(lp), {passive: true});
+}
 $('chips').addEventListener('click', e => { const k = e.target.dataset.k; if (k) { filter = k; render(); } });
 $('gchips').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { gfilter = b.dataset.g === '*' ? null : b.dataset.g; render(); } });
 $('q').addEventListener('input', render);
@@ -2224,7 +2420,8 @@ function reconcile(kind) {
     const l = L.get(id), r = R.get(id), ln = l ? sortedJSON(l) : undefined, rn = r ? sortedJSON(r) : undefined, sn = S[id];
     if (ln === rn) { if (ln === undefined) delete S[id]; else S[id] = ln; continue; }
     const lc = ln !== sn, rc = rn !== sn;
-    const useLocal = lc && !rc ? true : rc && !lc ? false : l && r ? (l.updatedAt || 0) >= (r.updatedAt || 0) : !!l;
+    const ts = v => typeof v === 'number' ? v : Date.parse(v) || 0;
+    const useLocal = lc && !rc ? true : rc && !lc ? false : l && r ? ts(l.updatedAt) >= ts(r.updatedAt) : !!l;
     if (useLocal) {
       if (l) { if (lc) { l.updatedAt = Date.now(); localDirty = true; } const n = sortedJSON(l); ops.push(['set', id, JSON.parse(n)]); S[id] = n; R.set(id, JSON.parse(n)); }
       else { ops.push(['del', id]); delete S[id]; R.delete(id); }
