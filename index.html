@@ -525,7 +525,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 22</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 23</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -633,8 +633,8 @@ a{color:var(--roseD)}
         <label class="f">E-posta<input name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" required></label>
         <label class="f">Şifre<input name="pw" type="password" autocomplete="current-password" required></label>
         <label class="f" id="pw2Box" hidden>Şifre tekrar (en az 8 karakter)<input name="pw2" type="password" autocomplete="new-password"></label>
-        <details id="privacy" hidden><summary>Gizlilik notu</summary><p style="margin-top:0">Hesabını açmak için e-posta adresin ve şifren Google Firebase üzerinden işlenir; şifreni biz göremeyiz. Kitapların, notların, istek listen ve avatarın hesabına bağlı olarak Firebase veritabanında (Frankfurt, Almanya) saklanır ve onları yalnızca sen görebilirsin. Barkodla eklediğin kitapların yalnızca künye bilgileri (başlık, yazar, yayınevi gibi) herkesin yararlandığı ortak listeye eklenir ve seninle ilişkilendirilmez. Hesabını Ayarlar'daki "Hesabım" bölümünden istediğin zaman silebilirsin; silince hesaptaki bütün kitapların da silinir.</p></details>
-        <label class="share" id="kvkkBox" hidden><input type="checkbox" id="kvkk"><span>Gizlilik notunu okudum; e-postamın ve kitaplarımın bu şekilde saklanmasını kabul ediyorum.</span></label>
+        <details id="privacy" hidden><summary>Aydınlatma metni</summary><p style="margin-top:0">Hesabını açmak ve kitaplığını cihazların arasında saklamak için e-posta adresini ve kitap kayıtlarını işliyoruz. Veriler Google Firebase'te (Frankfurt, Almanya) tutulur ve onları yalnızca sen görebilirsin. Barkodla eklediğin kitapların yalnızca künye bilgileri, seninle ilişkilendirilmeden ortak listeye eklenir. Hesabını Ayarlar &gt; Hesabım bölümünden istediğin zaman silebilirsin; silince bütün kitapların da silinir.</p></details>
+        <label class="share" id="kvkkBox" hidden><input type="checkbox" id="kvkk"><span>Aydınlatma metnini okudum ve anladım.</span></label>
         <button class="btn primary" id="authGo" type="submit">Giriş yap</button>
         <button class="btn link" id="forgot" type="button">Şifremi unuttum</button>
         <p class="amsg" id="authMsg" role="alert"></p>
@@ -2262,7 +2262,7 @@ $('authF').addEventListener('submit', async e => {
   if (authMode === 'up') {
     if (pw.length < 8) { msg.textContent = 'Şifre en az 8 karakter olsun.'; return; }
     if (pw !== F.pw2.value) { msg.textContent = 'Şifreler birbirini tutmuyor.'; return; }
-    if (!$('kvkk').checked) { msg.textContent = 'Devam etmek için gizlilik notunu onayla.'; return; }
+    if (!$('kvkk').checked) { msg.textContent = 'Devam etmeden önce aydınlatma metnini okuduğunu işaretle.'; return; }
   }
   if (!fbAuth) { msg.textContent = 'Giriş servisine ulaşılamadı. İnternetini kontrol edip sayfayı yenile.'; return; }
   $('authGo').disabled = true;
