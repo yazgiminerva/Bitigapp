@@ -1,6 +1,6 @@
 {
-  "name": "Kitaplığım",
-  "short_name": "Kitaplığım",
+  "name": "Bitigapp",
+  "short_name": "Bitigapp",
   "description": "Kitaplığını barkod okutarak kaydet.",
   "lang": "tr",
   "start_url": "./",
