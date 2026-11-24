@@ -260,7 +260,7 @@ function render() {
   const lb = localStorage.getItem(BKEY);
   const days = lb ? Math.floor((Date.now() - +lb) / 864e5) : null;
   $('keyInfo').textContent = getKey() ? 'Kapak okuma açık. Anahtarı değiştirebilir ya da silebilirsin.' : 'Kapak okuma henüz kurulmadı. "Kapaktan ekle"ye dokunduğunda kurulum adımları açılır.';
-  $('bkInfo').textContent = 'Kitapların bu telefonda saklanıyor. Telefon değişirse ya da Safari verileri silinirse kaybolmasın diye ara ara yedek al. ' + (lb ? `Son yedek: ${days === 0 ? 'bugün' : days + ' gün önce'}.` : 'Henüz yedek alınmadı.');
+  $('bkInfo').textContent = 'Kitapların bu telefonda saklanıyor; barkodlu kitapların yalnızca künye bilgileri (başlık, yazar, yayınevi gibi) herkesin yararlanacağı ortak listeye de eklenir, notların ve puanların gönderilmez. Telefon değişirse ya da Safari verileri silinirse kaybolmasın diye ara ara yedek al. ' + (lb ? `Son yedek: ${days === 0 ? 'bugün' : days + ' gün önce'}.` : 'Henüz yedek alınmadı.');
   if (books.length >= 5 && (days === null || days > 30) && !sessionStorage.getItem('bkNag')) { sessionStorage.setItem('bkNag', 1); note('<span>Uzun zamandır yedek almadın.</span><button class="btn" type="button" id="goBk">Yedekle</button>', true); $('goBk').onclick = () => { $('bkBox').open = true; $('bkBox').scrollIntoView({behavior: 'smooth'}); $('note').hidden = true; }; }
 }
 
@@ -291,7 +291,13 @@ function checkDup(isbn) {
   $('openDup').onclick = () => openSheet(d.id);
 }
 
+const SHARED = 'https://kitapligim-mk.yazgi2397.workers.dev/book';
 async function lookup(isbn) {
+  try {
+    const r = await fetch(SHARED + '?isbn=' + isbn);
+    const j = await r.json();
+    if (j && j.found && j.book && j.book.title) { const v = j.book; return {title: v.title, author: v.author || '', translator: v.translator || '', publisher: v.publisher || '', year: v.year || '', pages: v.pages || '', genre: v.genre || '', cover: v.cover || '', src: 'ortak liste'}; }
+  } catch (e) {}
   try {
     const r = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn);
     const j = await r.json(); const v = j.items && j.items[0] && j.items[0].volumeInfo;
@@ -322,9 +328,9 @@ async function fillFrom(isbn) {
   const info = await lookup(isbn);
   if ($('ov').hidden || editId || f.elements.isbn.value !== isbn) return;
   if (info) {
-    for (const k of ['title','author','publisher','genre','year','pages']) if (info[k] && !f.elements[k].value) f.elements[k].value = String(info[k]).slice(0, 300);
+    for (const k of ['title','author','translator','publisher','genre','year','pages']) if (info[k] && !f.elements[k].value) f.elements[k].value = String(info[k]).slice(0, 300);
     curCover = okUrl(info.cover); setCover(curCover);
-    msg.textContent = `Bilgiler ${info.src}'tan geldi. Kontrol edip kaydet.`;
+    msg.textContent = info.src === 'ortak liste' ? 'Bilgiler ortak listeden geldi. Kontrol edip kaydet.' : `Bilgiler ${info.src}'tan geldi. Kontrol edip kaydet.`;
   } else {
     msg.textContent = 'Bu ISBN çevrimiçi kaynaklarda bulunamadı. Kapağın fotoğrafını çekersen bilgileri oradan doldurayım.';
   }
@@ -403,13 +409,13 @@ f.addEventListener('submit', e => {
   const v = k => f.elements[k].value.trim();
   const num = k => { const n = parseInt(v(k), 10); return Number.isFinite(n) ? n : null; };
   const old = books.find(b => b.id === editId);
-  const data = {id: editId || uid(), title: v('title'), author: v('author'), translator: v('translator'), publisher: v('publisher'), isbn: v('isbn').replace(/[^0-9Xx]/g, ''), genre: v('genre'), year: num('year'), pages: num('pages'), status: v('status'), finishedAt: v('finishedAt'), rating, location: v('location'), lentTo: v('lentTo'), notes: v('notes'), cover: curCover, addedAt: (old && old.addedAt) || new Date().toISOString(), updatedAt: new Date().toISOString()};
+  const data = {id: editId || uid(), title: v('title'), author: v('author'), translator: v('translator'), publisher: v('publisher'), isbn: v('isbn').replace(/[^0-9Xx]/g, ''), genre: v('genre'), year: num('year'), pages: num('pages'), status: v('status'), finishedAt: v('finishedAt'), rating, location: v('location'), lentTo: v('lentTo'), notes: v('notes'), cover: curCover, sharedAt: '', addedAt: (old && old.addedAt) || new Date().toISOString(), updatedAt: new Date().toISOString()};
   if (!data.title) return;
   const prev = books;
   books = old ? books.map(b => b.id === editId ? data : b) : [...books, data];
   if (!persist()) { books = prev; return; }
   const scanned = fromScan && !old;
-  closeSheet(); render();
+  closeSheet(); render(); syncShared();
   note(scanned ? `<span><b>${esc(data.title)}</b> rafa eklendi.</span><button class="btn primary" type="button" id="next">Sıradaki kitap</button>` : `<span><b>${esc(data.title)}</b> kaydedildi.</span>`);
   if (scanned) $('next').onclick = () => { $('note').hidden = true; startScan(); };
 });
@@ -444,7 +450,7 @@ function importArr(arr) {
     books.push({id: uid(), title: s('title'), author: s('author'), translator: s('translator'), publisher: s('publisher'), isbn: s('isbn'), genre: s('genre'), year: n('year'), pages: n('pages'), status: STAT[r.status] ? r.status : 'okunacak', finishedAt: s('finishedAt'), rating: Math.max(0, Math.min(5, n('rating') || 0)), location: s('location'), lentTo: s('lentTo'), notes: s('notes'), cover: okUrl(r.cover), addedAt: s('addedAt') || new Date().toISOString(), updatedAt: new Date().toISOString()});
     have.add(key); added++;
   }
-  persist(); render();
+  persist(); render(); syncShared();
   $('impMsg').textContent = added ? `${added} kitap eklendi.` : 'Eklenecek yeni kitap yoktu.';
 }
 $('impBtn').onclick = () => { try { importArr(JSON.parse($('imp').value)); $('imp').value = ''; } catch (e) { $('impMsg').textContent = 'Bu metin okunamadı.'; } };
@@ -567,7 +573,27 @@ $('keySave').onclick = async () => {
 };
 $('keyDel').onclick = () => { try { localStorage.removeItem(GKEY); localStorage.removeItem(GMOD); } catch (e) {} $('keyIn').value = ''; $('keyDel').hidden = true; $('keyMsg').textContent = 'Anahtar silindi.'; render(); };
 
-load(); render();
+// Ortak listeye yalnızca künye bilgileri gönderilir; durum, puan, notlar, yer ve ödünç bilgisi gönderilmez
+let syncing = false;
+async function syncShared() {
+  if (syncing || !navigator.onLine) return;
+  syncing = true;
+  try {
+    for (const b of books) {
+      const isbn = String(b.isbn || '');
+      if (b.sharedAt || !b.title || !/^(97[89]\d{10}|\d{9}[\dXx])$/.test(isbn)) continue;
+      const body = {isbn, title: b.title, author: b.author || '', translator: b.translator || '', publisher: b.publisher || '', year: b.year || null, pages: b.pages || null, genre: b.genre || '', cover: okUrl(b.cover)};
+      try {
+        const r = await fetch(SHARED, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
+        const j = await r.json();
+        if (j && (j.ok || j.error === 'Geçersiz ISBN' || j.error === 'ISBN ve başlık gerekli')) { b.sharedAt = j.ok ? new Date().toISOString() : 'skip'; persist(); }
+      } catch (e) { break; }
+    }
+  } finally { syncing = false; }
+}
+window.addEventListener('online', syncShared);
+
+load(); render(); setTimeout(syncShared, 1500);
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
