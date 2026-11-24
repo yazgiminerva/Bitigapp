@@ -385,7 +385,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 14</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 15</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -502,6 +502,7 @@ a{color:var(--roseD)}
     <div class="avopt"><span>Saç rengi</span><div class="sw" id="avHair"></div></div>
     <div class="avopt"><span>Çil</span><div class="tg" id="avFreck"><button type="button" data-v="1">Var</button><button type="button" data-v="0">Yok</button></div></div>
     <div class="avopt"><span>Kukuleta</span><div class="tg" id="avHood"><button type="button" data-v="1">Var</button><button type="button" data-v="0">Yok</button></div></div>
+    <div class="avopt" id="avTipBox"><span>Kukuleta ucu</span><div class="tg" id="avTip"><button type="button" data-v="l">Sola kıvrık</button><button type="button" data-v="r">Sağa kıvrık</button></div></div>
     <div class="avopt"><span>Pelerin rengi</span><div class="sw" id="avCloak"></div></div>
     <div class="row"><button class="btn primary" id="avSave" type="button">Kaydet</button><button class="btn" id="avRand" type="button">Rastgele</button></div>
   </div>
@@ -989,7 +990,7 @@ const AV = {
   cloaks: [['#6a4a9c', 'Mor'], ['#34406e', 'Gece mavisi'], ['#7a2f45', 'Bordo'], ['#2f5a46', 'Orman'], ['#2c2536', 'Siyah']],
   styles: [['duz', 'Düz'], ['dalgali', 'Dalgalı'], ['kivircik', 'Kıvırcık'], ['topuz', 'Topuz']],
 };
-const AV_DEFAULT = {skin: 1, hair: 2, style: 'dalgali', hairColor: 2, freckles: true, hood: false, cloak: 0, name: ''};
+const AV_DEFAULT = {skin: 1, hair: 2, style: 'dalgali', hairColor: 2, freckles: true, hood: false, tip: 'r', cloak: 0, name: ''};
 function avLoad() { try { const a = JSON.parse(localStorage.getItem(AV_KEY) || 'null'); return a && typeof a === 'object' ? {...AV_DEFAULT, ...a} : null; } catch (e) { return null; } }
 function avSave(a) { try { localStorage.setItem(AV_KEY, JSON.stringify(a)); } catch (e) {} }
 const shade = (hex, k) => { const n = parseInt(hex.slice(1), 16); const f = c => Math.max(0, Math.min(255, Math.round(c * k))); return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(f).map(v => v.toString(16).padStart(2, '0')).join(''); };
@@ -1030,9 +1031,16 @@ function avPixels(a, frame = {}) {
   rect(8, 17, 15, 17, clL); P(9, 18, clL); P(14, 18, clL);
   // the hood: a pointed cowl that falls onto the shoulders and joins the cloak
   if (a.hood) {
-    const outer = {1: [13, 13], 2: [12, 13], 3: [11, 14], 4: [9, 15], 5: [8, 16], 6: [7, 17], 7: [6, 17], 8: [5, 18], 9: [5, 18], 10: [4, 19], 11: [4, 19], 12: [4, 19], 13: [4, 19], 14: [4, 19], 15: [4, 19], 16: [4, 19], 17: [4, 19], 18: [4, 19], 19: [5, 18]};
+    // the tip rises, then curls over to one side and droops a little
+    const flip = a.tip === 'l' ? x => 23 - x : x => x;
+    const path = [[11.8, 5, 2.9], [12.2, 3.8, 2.5], [12.9, 2.8, 2.1], [13.9, 2, 1.8], [15.1, 1.5, 1.6], [16.4, 1.4, 1.4], [17.6, 1.8, 1.2], [18.6, 2.6, 1], [19.3, 3.5, .8], [19.7, 4.4, .6]];
+    for (const [x, y, r] of path) disc(flip(x), y, r, cl);
+    for (const [x, y] of [[13, 3], [14, 3], [15, 2.6], [16, 2.6], [17, 2.9], [18, 3.4], [19, 4.3]]) P(flip(x), y, clD);
+    for (const [x, y] of [[12, 2], [13, 1], [15, 0.4], [16, 0.4], [17, 0.6]]) P(flip(x), y, clL);
+    P(flip(20), 5, clD);
+    const outer = {4: [9, 14], 5: [8, 16], 6: [7, 17], 7: [6, 17], 8: [5, 18], 9: [5, 18], 10: [4, 19], 11: [4, 19], 12: [4, 19], 13: [4, 19], 14: [4, 19], 15: [4, 19], 16: [4, 19], 17: [4, 19], 18: [4, 19], 19: [5, 18]};
     for (const [y, [x0, x1]] of Object.entries(outer)) { rect(x0, +y, x1, +y, cl); P(x0, +y, clD); if (x1 - x0 > 3) { P(x0 + 1, +y, clD); P(x1, +y, clL); } }
-    for (let y = 2; y <= 7; y++) P(12 + (y < 4 ? 0 : 1) - (y > 5 ? 1 : 0), y, clD);
+    for (let y = 4; y <= 7; y++) P(flip(12), y, clD);
     const lining = shade(cl, .38), open = {5: [9, 14], 6: [8, 15], 7: [7, 16], 8: [6, 17], 9: [6, 17], 10: [6, 17], 11: [6, 17], 12: [6, 17], 13: [6, 17], 14: [6, 17], 15: [6, 17], 16: [7, 16], 17: [8, 15], 18: [9, 14]};
     for (const [y, [x0, x1]] of Object.entries(open)) rect(x0, +y, x1, +y, lining);
   }
@@ -1090,6 +1098,8 @@ function drawAvUI() {
   $('avStyle').innerHTML = AV.styles.map(([k, n]) => `<button type="button" data-k="${k}" aria-pressed="${a.style === k}">${n}</button>`).join('');
   for (const b of $('avFreck').children) b.setAttribute('aria-pressed', String(!!+b.dataset.v === !!a.freckles));
   for (const b of $('avHood').children) b.setAttribute('aria-pressed', String(!!+b.dataset.v === !!a.hood));
+  for (const b of $('avTip').children) b.setAttribute('aria-pressed', String(b.dataset.v === (a.tip || 'r')));
+  $('avTipBox').hidden = !a.hood;
   avDraw($('avBig'), a, {});
 }
 function openAv() { avDraft = {...(avLoad() || AV_DEFAULT)}; $('avName').value = avDraft.name || ''; drawAvUI(); $('avOv').hidden = false; }
@@ -1110,8 +1120,9 @@ pick('avCloak', b => { avDraft.cloak = +b.dataset.i; });
 pick('avStyle', b => { avDraft.style = b.dataset.k; });
 pick('avFreck', b => { avDraft.freckles = !!+b.dataset.v; });
 pick('avHood', b => { avDraft.hood = !!+b.dataset.v; });
+pick('avTip', b => { avDraft.tip = b.dataset.v; });
 $('avName').addEventListener('input', e => { avDraft.name = e.target.value.trim().slice(0, 24); });
-$('avRand').onclick = () => { const r = n => Math.floor(Math.random() * n); avDraft = {...avDraft, skin: r(AV.skins.length), hairColor: r(AV.hairs.length), cloak: r(AV.cloaks.length), style: AV.styles[r(AV.styles.length)][0], freckles: Math.random() < .5, hood: Math.random() < .4}; drawAvUI(); };
+$('avRand').onclick = () => { const r = n => Math.floor(Math.random() * n); avDraft = {...avDraft, skin: r(AV.skins.length), hairColor: r(AV.hairs.length), cloak: r(AV.cloaks.length), style: AV.styles[r(AV.styles.length)][0], freckles: Math.random() < .5, hood: Math.random() < .4, tip: Math.random() < .5 ? 'l' : 'r'}; drawAvUI(); };
 $('avSave').onclick = () => { avSave(avDraft); $('avOv').hidden = true; renderAvatarHead(); sfx.unlock(); sfx.sparkle(); note(`<span>${avDraft.name ? esc(avDraft.name) + ', avatarın' : 'Avatarın'} hazır!</span>`); };
 avMount($('avMini'), () => avLoad());
 let afterStory = null;
