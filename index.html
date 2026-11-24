@@ -36,7 +36,11 @@ h2{font-size:28px}
 .sp:active{transform:translateY(-6px)}
 .ghost{flex:none;width:30px;border:1.5px dashed #ffffff30;border-radius:3px}
 .empty{align-self:center;color:var(--mute);padding:0 12px;font-size:15px}
-.actions{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:10px}
+.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.btn.link{grid-column:1/-1;background:none;border:0;color:var(--mute);min-height:44px;padding:4px;text-decoration:underline;text-underline-offset:4px;font-weight:500}
+.btn.small{min-height:40px;padding:6px 12px;font-size:15px;margin-top:8px}
+.steps{padding-left:20px;margin:8px 0 14px}.steps li{margin-bottom:6px}
+a{color:var(--acc)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:10px 16px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:600 16px "Work Sans",sans-serif;cursor:pointer;text-align:center;text-decoration:none}
 .btn.primary{background:var(--acc);color:var(--accInk);border-color:var(--acc)}
 .btn.danger{color:var(--red)}
@@ -109,8 +113,13 @@ label.f>input,label.f>select,label.f>textarea{margin-top:4px}
       <svg width="22" height="18" viewBox="0 0 22 18" aria-hidden="true"><g fill="currentColor"><rect width="2" height="18"/><rect x="4" width="1" height="18"/><rect x="7" width="3" height="18"/><rect x="12" width="1" height="18"/><rect x="15" width="2" height="18"/><rect x="19" width="1" height="18"/><rect x="21" width="1" height="18"/></g></svg>
       Barkod okut
     </button>
-    <button class="btn" id="manual" type="button">Elle ekle</button>
+    <button class="btn" id="coverBtn" type="button">
+      <svg width="18" height="20" viewBox="0 0 18 20" aria-hidden="true"><path d="M2 1h12a2 2 0 0 1 2 2v16H4a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="2"/><path d="M6 6h6M6 10h4" stroke="currentColor" stroke-width="2"/></svg>
+      Kapaktan ekle
+    </button>
+    <button class="btn link" id="manual" type="button">Elle ekle</button>
   </div>
+  <input type="file" id="coverIn" accept="image/*" capture="environment" hidden>
   <div class="note" id="note" hidden></div>
   <section class="band stats" id="stats" aria-label="Özet"></section>
   <section class="band">
@@ -132,6 +141,11 @@ label.f>input,label.f>select,label.f>textarea{margin-top:4px}
         <p class="muted" id="impMsg"></p>
       </div>
     </details>
+    <details>
+      <summary>Kapak okuma ayarı</summary>
+      <p class="muted" id="keyInfo"></p>
+      <button class="btn" id="keyOpen" type="button">Anahtarı değiştir</button>
+    </details>
   </section>
 </div>
 
@@ -150,12 +164,13 @@ label.f>input,label.f>select,label.f>textarea{margin-top:4px}
 <div class="ov" id="ov" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle">
     <div class="sh-head"><h2 id="shTitle">Kitap</h2><button class="x" id="x" type="button" aria-label="Kapat">×</button></div>
-    <div class="scan" id="scanBox" hidden><img id="cover" alt=""><p id="scanMsg"></p></div>
+    <div class="scan" id="scanBox" hidden><img id="cover" alt=""><div><p id="scanMsg"></p><button class="btn small" id="coverFill" type="button" hidden>Kapaktan doldur</button></div></div>
     <div class="warn" id="dup" hidden></div>
     <form id="f" autocomplete="off">
       <div class="grid">
         <label class="f full">Başlık *<input name="title" required></label>
         <label class="f">Yazar<input name="author"></label>
+        <label class="f">Çevirmen<input name="translator"></label>
         <label class="f">Yayınevi<input name="publisher"></label>
         <label class="f">ISBN<input name="isbn" inputmode="numeric"></label>
         <label class="f">Tür<input name="genre" list="genres"></label>
@@ -174,6 +189,21 @@ label.f>input,label.f>select,label.f>textarea{margin-top:4px}
         <button class="btn danger" type="button" id="delYes">Evet, sil</button><button class="btn" type="button" id="delNo">Vazgeç</button>
       </div>
     </form>
+  </div>
+</div>
+<div class="ov" id="keyOv" hidden style="z-index:12">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="kTitle">
+    <div class="sh-head"><h2 id="kTitle">Kapak okumayı aç</h2><button class="x" id="kx" type="button" aria-label="Kapat">×</button></div>
+    <p style="margin-top:0">Kapaktaki yazıları Google'ın Gemini servisi okuyor. Bunun için ücretsiz bir anahtar alman gerekiyor; bir kez yapman yeterli.</p>
+    <ol class="steps">
+      <li><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> adresini aç, Google hesabınla gir.</li>
+      <li><b>Create API key</b> düğmesine dokun, oluşan anahtarı kopyala.</li>
+      <li>Aşağıya yapıştırıp kaydet.</li>
+    </ol>
+    <label class="f">API anahtarı<input id="keyIn" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
+    <p class="muted">Anahtar yalnızca bu telefonda saklanır, kimseyle paylaşma. Ücretsiz kullanımda Google gönderdiğin kapak fotoğraflarını kendi ürünlerini geliştirmek için kullanabilir.</p>
+    <div class="row"><button class="btn primary" id="keySave" type="button">Kaydet ve dene</button><button class="btn danger" id="keyDel" type="button">Anahtarı sil</button></div>
+    <p id="keyMsg" class="muted"></p>
   </div>
 </div>
 <datalist id="genres"><option>Roman</option><option>Polisiye</option><option>Gerilim</option><option>Fantastik</option><option>Bilim kurgu</option><option>Tarih</option><option>Deneme</option><option>Şiir</option><option>Biyografi</option><option>Felsefe</option><option>Klasik</option><option>Çocuk</option></datalist>
@@ -220,7 +250,7 @@ function render() {
   $('chips').innerHTML = FILTERS.map(([k, l]) => `<button class="chip" type="button" data-k="${k}" aria-pressed="${filter === k}">${l}</button>`).join('');
   const q = $('q').value.trim().toLocaleLowerCase('tr');
   let list = books.filter(b => filter === 'all' || (filter === 'lent' ? !!b.lentTo : b.status === filter));
-  if (q) list = list.filter(b => [b.title, b.author, b.publisher, b.isbn, b.genre, b.location].join(' ').toLocaleLowerCase('tr').includes(q));
+  if (q) list = list.filter(b => [b.title, b.author, b.translator, b.publisher, b.isbn, b.genre, b.location].join(' ').toLocaleLowerCase('tr').includes(q));
   const s = $('sort').value;
   list.sort(s === 'title' ? (a, b) => coll.compare(a.title || '', b.title || '') : s === 'author' ? (a, b) => coll.compare(a.author || '', b.author || '') : s === 'rating' ? (a, b) => (b.rating || 0) - (a.rating || 0) : (a, b) => String(b.addedAt || '').localeCompare(String(a.addedAt || '')));
   $('list').innerHTML = list.length ? list.map(b => {
@@ -229,6 +259,7 @@ function render() {
   }).join('') : `<li class="muted" style="padding:16px 4px">${books.length ? 'Bu aramaya uyan kitap yok.' : 'Henüz kitap eklenmedi.'}</li>`;
   const lb = localStorage.getItem(BKEY);
   const days = lb ? Math.floor((Date.now() - +lb) / 864e5) : null;
+  $('keyInfo').textContent = getKey() ? 'Kapak okuma açık. Anahtarı değiştirebilir ya da silebilirsin.' : 'Kapak okuma henüz kurulmadı. "Kapaktan ekle"ye dokunduğunda kurulum adımları açılır.';
   $('bkInfo').textContent = 'Kitapların bu telefonda saklanıyor. Telefon değişirse ya da Safari verileri silinirse kaybolmasın diye ara ara yedek al. ' + (lb ? `Son yedek: ${days === 0 ? 'bugün' : days + ' gün önce'}.` : 'Henüz yedek alınmadı.');
   if (books.length >= 5 && (days === null || days > 30) && !sessionStorage.getItem('bkNag')) { sessionStorage.setItem('bkNag', 1); note('<span>Uzun zamandır yedek almadın.</span><button class="btn" type="button" id="goBk">Yedekle</button>', true); $('goBk').onclick = () => { $('bkBox').open = true; $('bkBox').scrollIntoView({behavior: 'smooth'}); $('note').hidden = true; }; }
 }
@@ -239,13 +270,13 @@ function openSheet(id, scan) {
   editId = id; fromScan = !!scan;
   const b = books.find(x => x.id === id) || {};
   f.reset();
-  for (const k of ['title','author','publisher','isbn','genre','year','pages','finishedAt','location','lentTo','notes']) f.elements[k].value = b[k] ?? '';
+  for (const k of ['title','author','translator','publisher','isbn','genre','year','pages','finishedAt','location','lentTo','notes']) f.elements[k].value = b[k] ?? '';
   f.elements.status.value = b.status || 'okunacak';
   rating = b.rating || 0; drawRate();
   curCover = okUrl(b.cover); setCover(curCover);
   $('shTitle').textContent = id ? 'Kitabı düzenle' : scan ? 'Barkoddan ekle' : 'Yeni kitap';
   $('del').hidden = !id; $('delAsk').hidden = true; $('dup').hidden = true;
-  $('scanBox').hidden = !scan && !curCover; $('scanMsg').textContent = '';
+  $('scanBox').hidden = !scan && !curCover; $('scanMsg').textContent = ''; $('coverFill').hidden = true;
   $('ov').hidden = false;
 }
 function setCover(u) { const i = $('cover'); if (u) i.src = u; else i.removeAttribute('src'); }
@@ -286,6 +317,7 @@ async function fillFrom(isbn) {
   checkDup(isbn);
   const msg = $('scanMsg');
   if (!navigator.onLine) { msg.textContent = `ISBN ${isbn} okundu. İnternet yok; başlık ve yazarı elle yaz.`; return; }
+  $('coverFill').hidden = true;
   msg.textContent = `ISBN ${isbn} okundu. Kitap bilgileri aranıyor…`;
   const info = await lookup(isbn);
   if ($('ov').hidden || editId || f.elements.isbn.value !== isbn) return;
@@ -294,8 +326,9 @@ async function fillFrom(isbn) {
     curCover = okUrl(info.cover); setCover(curCover);
     msg.textContent = `Bilgiler ${info.src}'tan geldi. Kontrol edip kaydet.`;
   } else {
-    msg.textContent = 'Bu ISBN çevrimiçi kaynaklarda bulunamadı (Türkçe kitaplarda olabiliyor). Başlık ve yazarı yazıp kaydet.';
+    msg.textContent = 'Bu ISBN çevrimiçi kaynaklarda bulunamadı. Kapağın fotoğrafını çekersen bilgileri oradan doldurayım.';
   }
+  $('coverFill').hidden = !!f.elements.title.value;
 }
 
 // Live camera scanning
@@ -362,6 +395,7 @@ $('list').addEventListener('click', e => { const li = e.target.closest('.item');
 $('chips').addEventListener('click', e => { const k = e.target.dataset.k; if (k) { filter = k; render(); } });
 $('q').addEventListener('input', render);
 $('sort').addEventListener('change', render);
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('keyOv').hidden) $('keyOv').hidden = true; else if (!$('ov').hidden) closeSheet(); } });
 document.addEventListener('visibilitychange', () => { if (document.hidden && scanning) stopScan(); });
 
 f.addEventListener('submit', e => {
@@ -369,7 +403,7 @@ f.addEventListener('submit', e => {
   const v = k => f.elements[k].value.trim();
   const num = k => { const n = parseInt(v(k), 10); return Number.isFinite(n) ? n : null; };
   const old = books.find(b => b.id === editId);
-  const data = {id: editId || uid(), title: v('title'), author: v('author'), publisher: v('publisher'), isbn: v('isbn').replace(/[^0-9Xx]/g, ''), genre: v('genre'), year: num('year'), pages: num('pages'), status: v('status'), finishedAt: v('finishedAt'), rating, location: v('location'), lentTo: v('lentTo'), notes: v('notes'), cover: curCover, addedAt: (old && old.addedAt) || new Date().toISOString(), updatedAt: new Date().toISOString()};
+  const data = {id: editId || uid(), title: v('title'), author: v('author'), translator: v('translator'), publisher: v('publisher'), isbn: v('isbn').replace(/[^0-9Xx]/g, ''), genre: v('genre'), year: num('year'), pages: num('pages'), status: v('status'), finishedAt: v('finishedAt'), rating, location: v('location'), lentTo: v('lentTo'), notes: v('notes'), cover: curCover, addedAt: (old && old.addedAt) || new Date().toISOString(), updatedAt: new Date().toISOString()};
   if (!data.title) return;
   const prev = books;
   books = old ? books.map(b => b.id === editId ? data : b) : [...books, data];
@@ -407,7 +441,7 @@ function importArr(arr) {
     if (have.has(key)) continue;
     const s = k => typeof r[k] === 'string' ? r[k].slice(0, 2000) : '';
     const n = k => r[k] !== '' && r[k] != null && Number.isFinite(+r[k]) ? +r[k] : null;
-    books.push({id: uid(), title: s('title'), author: s('author'), publisher: s('publisher'), isbn: s('isbn'), genre: s('genre'), year: n('year'), pages: n('pages'), status: STAT[r.status] ? r.status : 'okunacak', finishedAt: s('finishedAt'), rating: Math.max(0, Math.min(5, n('rating') || 0)), location: s('location'), lentTo: s('lentTo'), notes: s('notes'), cover: okUrl(r.cover), addedAt: s('addedAt') || new Date().toISOString(), updatedAt: new Date().toISOString()});
+    books.push({id: uid(), title: s('title'), author: s('author'), translator: s('translator'), publisher: s('publisher'), isbn: s('isbn'), genre: s('genre'), year: n('year'), pages: n('pages'), status: STAT[r.status] ? r.status : 'okunacak', finishedAt: s('finishedAt'), rating: Math.max(0, Math.min(5, n('rating') || 0)), location: s('location'), lentTo: s('lentTo'), notes: s('notes'), cover: okUrl(r.cover), addedAt: s('addedAt') || new Date().toISOString(), updatedAt: new Date().toISOString()});
     have.add(key); added++;
   }
   persist(); render();
@@ -415,6 +449,123 @@ function importArr(arr) {
 }
 $('impBtn').onclick = () => { try { importArr(JSON.parse($('imp').value)); $('imp').value = ''; } catch (e) { $('impMsg').textContent = 'Bu metin okunamadı.'; } };
 $('impFile').addEventListener('change', async e => { const file = e.target.files && e.target.files[0]; e.target.value = ''; if (!file) return; try { importArr(JSON.parse(await file.text())); } catch (er) { $('impMsg').textContent = 'Dosya okunamadı.'; } });
+
+// Reading covers with Gemini
+const GKEY = 'kitapligim.gemKey', GMOD = 'kitapligim.gemModels', API = 'https://generativelanguage.googleapis.com/v1beta/';
+const getKey = () => { try { return localStorage.getItem(GKEY) || ''; } catch (e) { return ''; } };
+class UErr extends Error { constructor(m, status) { super(m); this.status = status || 0; } }
+const userMsg = e => e instanceof UErr ? e.message : 'Bağlantı kurulamadı. İnternetini kontrol edip tekrar dene.';
+async function apiErr(r) {
+  let e = {}; try { e = (await r.json()).error || {}; } catch (x) {}
+  const t = (e.message || '') + ' ' + JSON.stringify(e.details || '');
+  const m = /API_KEY|API key/i.test(t) ? 'Anahtar geçersiz görünüyor. Kopyalarken eksik kalmış olabilir.'
+    : r.status === 429 ? 'Ücretsiz kullanım sınırına ulaşıldı. Biraz bekleyip tekrar dene; günlük sınır her gün sıfırlanır.'
+    : /location|region|country/i.test(t) ? 'Gemini bu bölgede kullanılamıyor görünüyor.'
+    : r.status === 404 ? 'Uygun model bulunamadı.'
+    : `Kapak okunamadı (hata ${r.status}).`;
+  return new UErr(m, r.status);
+}
+async function pickModels(key) {
+  const r = await fetch(API + 'models?pageSize=1000', {headers: {'x-goog-api-key': key}});
+  if (!r.ok) throw await apiErr(r);
+  const all = ((await r.json()).models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent') && /gemini/i.test(m.name) && !/(image|tts|audio|live|embed|robotics|computer|thinking|nano|learnlm)/i.test(m.name));
+  const ver = n => parseFloat((n.match(/gemini-(\d+(?:\.\d+)?)/) || [0, 0])[1]);
+  const score = n => (/flash-lite/.test(n) ? 4 : /flash/.test(n) ? 3 : 1) - (/(preview|exp)/.test(n) ? 2 : 0);
+  all.sort((a, b) => score(b.name) - score(a.name) || ver(b.name) - ver(a.name));
+  const names = all.map(m => m.name).slice(0, 4);
+  if (!names.length) throw new UErr('Bu anahtarla kullanılabilecek bir model bulunamadı.');
+  return names;
+}
+async function models(key, fresh) {
+  let m = []; try { m = JSON.parse(localStorage.getItem(GMOD) || '[]'); } catch (e) {}
+  if (m.length && !fresh) return m;
+  m = await pickModels(key); try { localStorage.setItem(GMOD, JSON.stringify(m)); } catch (e) {}
+  return m;
+}
+async function imgB64(file) {
+  let bmp; try { bmp = await createImageBitmap(file); } catch (e) { throw new UErr('Fotoğraf açılamadı.'); }
+  const k = Math.min(1, 1280 / Math.max(bmp.width, bmp.height)), c = document.createElement('canvas');
+  c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k); c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+  return c.toDataURL('image/jpeg', .85).split(',')[1];
+}
+const PROMPT = `Bu fotoğraf bir kitaba ait (çoğunlukla ön kapak; arka kapak ya da kitap sırtı da olabilir). Kitabın bilgilerini fotoğrafta YAZANLARA göre çıkar.
+Kurallar:
+- Başlık ve yazar adını Türkçe yazım kurallarına uygun, normal büyük-küçük harfle yaz; kapakta hepsi büyük harfle yazsa bile ("KÜRK MANTOLU MADONNA" -> "Kürk Mantolu Madonna").
+- Fotoğrafta görmediğin alanları null bırak, asla uydurma. Çeviri kitapsa ve çevirmen görünüyorsa "translator" alanına yaz.
+- "genre": kitabı tanıyorsan ya da kapaktan anlaşılıyorsa kısa bir Türkçe tür (Roman, Polisiye, Gerilim, Fantastik, Bilim kurgu, Tarih, Deneme, Şiir, Biyografi, Felsefe, Klasik, Çocuk, Psikoloji, Kişisel gelişim gibi); emin değilsen null.
+- "isbn" yalnızca fotoğrafta yazıyorsa, sadece rakamlarla.
+Yalnızca tek bir JSON nesnesi döndür:
+{"title":"...","author":"...","translator":null,"publisher":"...","isbn":null,"genre":"Roman","year":null}`;
+async function readCover(file) {
+  const key = getKey();
+  if (!key) throw new UErr('Önce kapak okuma ayarından anahtar ekle.');
+  if (!navigator.onLine) throw new UErr('İnternet yok; kapak okunamıyor.');
+  const body = JSON.stringify({contents: [{parts: [{inline_data: {mime_type: 'image/jpeg', data: await imgB64(file)}}, {text: PROMPT}]}], generationConfig: {temperature: 0, responseMimeType: 'application/json'}});
+  let list = await models(key), last = null;
+  for (let round = 0; round < 2; round++) {
+    for (const m of list.slice(0, 3)) {
+      const r = await fetch(API + m + ':generateContent', {method: 'POST', headers: {'Content-Type': 'application/json', 'x-goog-api-key': key}, body});
+      if (r.ok) {
+        const j = await r.json();
+        const t = ((((j.candidates || [])[0] || {}).content || {}).parts || []).map(p => p.text || '').join('');
+        try { return JSON.parse(t); } catch (e) { const mm = t.match(/\{[\s\S]*\}/); if (mm) try { return JSON.parse(mm[0]); } catch (x) {} }
+        throw new UErr('Kapaktaki yazılar okunamadı. Daha net ve düz bir fotoğrafla tekrar dene.');
+      }
+      last = await apiErr(r);
+      if (!(r.status === 404 || r.status === 429 || r.status >= 500)) throw last;
+    }
+    if (round === 0 && last && last.status === 404) list = await models(key, true); else break;
+  }
+  throw last || new UErr('Kapak okunamadı.');
+}
+let coverMode = 'new';
+function askCover(mode) { coverMode = mode; if (!getKey()) openKey(); else $('coverIn').click(); }
+$('coverBtn').onclick = () => askCover('new');
+$('coverFill').onclick = () => askCover('fill');
+$('coverIn').addEventListener('change', async e => {
+  const file = e.target.files && e.target.files[0]; e.target.value = '';
+  if (!file) return;
+  if (coverMode !== 'fill' || $('ov').hidden) { openSheet(null, true); $('shTitle').textContent = 'Kapaktan ekle'; }
+  const msg = $('scanMsg'), mine = editId;
+  $('scanBox').hidden = false; $('coverFill').hidden = true;
+  const prev = $('cover').src; $('cover').src = URL.createObjectURL(file);
+  msg.textContent = 'Kapak okunuyor…';
+  try {
+    const info = await readCover(file);
+    if ($('ov').hidden || editId !== mine) return;
+    let n = 0;
+    for (const k of ['title','author','translator','publisher','genre','year']) {
+      const v = info && info[k];
+      if (v != null && v !== '' && !f.elements[k].value) { f.elements[k].value = String(v).slice(0, 300); n++; }
+    }
+    const isb = String((info && info.isbn) || '').replace(/[^0-9Xx]/g, '');
+    if (isb && !f.elements.isbn.value) { f.elements.isbn.value = isb; checkDup(isb); }
+    if (curCover) setCover(curCover);
+    msg.textContent = f.elements.title.value ? (n ? 'Kapaktan dolduruldu. Kontrol edip kaydet.' : 'Kapakta yeni bilgi bulunamadı.') : 'Kapakta kitabın adını okuyamadım. Daha yakından çekmeyi dene ya da elle yaz.';
+    if (!f.elements.title.value) $('coverFill').hidden = false;
+  } catch (err) {
+    if ($('ov').hidden) return;
+    msg.textContent = userMsg(err); $('coverFill').hidden = false;
+    if (curCover) setCover(curCover);
+  }
+});
+function openKey() { $('keyIn').value = getKey(); $('keyMsg').textContent = ''; $('keyDel').hidden = !getKey(); $('keyOv').hidden = false; }
+$('keyOpen').onclick = openKey;
+$('kx').onclick = () => { $('keyOv').hidden = true; };
+$('keyOv').addEventListener('click', e => { if (e.target === $('keyOv')) $('keyOv').hidden = true; });
+$('keySave').onclick = async () => {
+  const k = $('keyIn').value.trim();
+  if (!k) { $('keyMsg').textContent = 'Önce anahtarı yapıştır.'; return; }
+  $('keySave').disabled = true; $('keyMsg').textContent = 'Anahtar deneniyor…';
+  try {
+    const m = await pickModels(k);
+    localStorage.setItem(GKEY, k); localStorage.setItem(GMOD, JSON.stringify(m));
+    $('keyMsg').textContent = 'Hazır! Şimdi kapağın fotoğrafını çekebilirsin.'; $('keyDel').hidden = false; render();
+    setTimeout(() => { $('keyOv').hidden = true; }, 1400);
+  } catch (err) { $('keyMsg').textContent = userMsg(err); }
+  $('keySave').disabled = false;
+};
+$('keyDel').onclick = () => { try { localStorage.removeItem(GKEY); localStorage.removeItem(GMOD); } catch (e) {} $('keyIn').value = ''; $('keyDel').hidden = true; $('keyMsg').textContent = 'Anahtar silindi.'; render(); };
 
 load(); render();
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
