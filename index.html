@@ -47,7 +47,24 @@ background:radial-gradient(circle at 12px 12px,var(--dot) 1.5px,transparent 2px)
 .dots button[aria-current=true]{opacity:1;background:var(--rose);width:22px;border-radius:99px}
 .top{position:relative}
 .navbtn{border:0;background:var(--paper);color:var(--ink);border-radius:99px;padding:6px 14px;min-height:38px;font:800 14px "Nunito",sans-serif;box-shadow:0 2px 0 var(--line);cursor:pointer;margin-bottom:10px}
-.navbtn.r{position:absolute;right:max(4vw,16px);top:26px;margin:0}
+.hrow{display:flex;align-items:flex-end;gap:12px}
+.hello{margin:0 0 -2px;font-weight:800;color:var(--mute);font-size:14px;min-height:0}
+.avbtn{flex:none;position:relative;width:62px;height:78px;border:0;border-radius:16px;background:radial-gradient(circle at 50% 30%,#8b6fc944,#0000 70%),var(--paper);box-shadow:0 2px 0 var(--line),inset 0 0 0 2px #8b6fc955;display:grid;place-items:center;cursor:pointer;padding:0}
+.avbtn canvas{width:48px;height:64px;image-rendering:pixelated;animation:avbob 2.4s ease-in-out infinite}
+.avbtn b{position:absolute;right:-4px;top:-4px;width:24px;height:24px;border-radius:50%;background:var(--rose);color:var(--on);font:900 16px/24px "Nunito",sans-serif;box-shadow:0 2px 0 var(--roseD)}
+@keyframes avbob{50%{transform:translateY(-2px)}}
+.avstage{position:relative;height:250px;border-radius:20px;overflow:hidden;background:radial-gradient(circle at 78% 22%,#fff6d0 0 10px,#fff6d033 11px,#0000 30px),radial-gradient(ellipse at 50% 120%,#6a4a9c 0,#2a1d40 55%,#140e22 100%);display:grid;place-items:end center;margin-bottom:14px}
+.avstage::before{content:"";position:absolute;inset:0;background:radial-gradient(circle,#fff 0 1px,#0000 1.5px) 10px 14px/46px 38px,radial-gradient(circle,#ffe9b0 0 1px,#0000 1.5px) 30px 6px/70px 52px;opacity:.7}
+.avstage::after{content:"";position:absolute;left:0;right:0;bottom:0;height:34px;background:linear-gradient(#3b2a52,#2a1d3a);box-shadow:inset 0 3px 0 #5a4277}
+.avstage canvas{position:relative;z-index:1;width:168px;height:224px;image-rendering:pixelated;margin-bottom:12px;animation:avbob 2.4s ease-in-out infinite}
+.avopt{margin:12px 0 0}
+.avopt>span{display:block;font-size:13px;font-weight:800;color:var(--mute);margin-bottom:6px}
+.sw{display:flex;flex-wrap:wrap;gap:8px}
+.sw button{width:40px;height:40px;border-radius:50%;border:3px solid transparent;background:var(--c);cursor:pointer;box-shadow:inset 0 0 0 2px #0000002a}
+.sw button[aria-pressed=true]{border-color:var(--ink);box-shadow:0 0 0 2px var(--rose)}
+.tg{display:flex;flex-wrap:wrap;gap:6px}
+.tg button{border:2px solid var(--line);background:var(--field);color:var(--ink);border-radius:12px;padding:8px 14px;min-height:42px;font:800 14px "Nunito",sans-serif;cursor:pointer}
+.tg button[aria-pressed=true]{border-color:var(--rose);background:var(--segOn)}
 .seeall{flex:none;align-self:flex-end;height:150px;width:58px;border:2px dashed var(--mute);border-radius:6px;background:none;color:var(--ink);font:800 12px/1.2 "Nunito",sans-serif;cursor:pointer;margin-left:6px;opacity:.85}
 /* big bookcase */
 .bigcase{margin:4px max(3vw,10px) 24px;background:var(--woodD);border-radius:18px;padding:10px;box-shadow:0 14px 30px var(--shadow);position:relative}
@@ -312,10 +329,13 @@ a{color:var(--roseD)}
 <section class="page" id="pMain" aria-label="Raf">
 <div class="wrap">
   <header class="band top">
-    <button class="navbtn r" id="toLib" type="button">Büyük kitaplık ›</button>
-    <h1>Kitaplığım</h1>
-    <svg class="swash" viewBox="0 0 150 12" aria-hidden="true"><path d="M2 8c30-6 60-6 90-2s40 2 56-3" fill="none" stroke="#f3b9c0" stroke-width="4" stroke-linecap="round"/></svg>
+    <div class="hrow">
+      <button class="avbtn" id="avBtn" type="button" aria-label="Avatarım"><canvas id="avMini" width="24" height="32"></canvas><b id="avPlus" hidden>+</b></button>
+      <div><p class="hello" id="hello"></p><h1>Kitaplığım</h1>
+      <svg class="swash" viewBox="0 0 150 12" aria-hidden="true"><path d="M2 8c30-6 60-6 90-2s40 2 56-3" fill="none" stroke="#f3b9c0" stroke-width="4" stroke-linecap="round"/></svg></div>
+    </div>
     <div class="pills" id="stats"></div>
+    <button class="navbtn" id="toLib" type="button" style="margin:10px 0 0">Büyük kitaplık ›</button>
   </header>
   <section class="case" aria-label="Raf">
     <div class="back"><div class="shelf" id="shelf"></div></div>
@@ -365,7 +385,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 12</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 13</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -469,6 +489,21 @@ a{color:var(--roseD)}
     <p class="muted">Anahtar yalnızca bu telefonda saklanır, kimseyle paylaşma. Ücretsiz kullanımda Google gönderdiğin kapak fotoğraflarını kendi ürünlerini geliştirmek için kullanabilir.</p>
     <div class="row"><button class="btn primary" id="keySave" type="button">Kaydet ve dene</button><button class="btn danger" id="keyDel" type="button">Anahtarı sil</button></div>
     <p id="keyMsg" class="muted"></p>
+  </div>
+</div>
+
+<div class="ov" id="avOv" hidden style="z-index:12">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="avTitle">
+    <div class="sh-head"><h2 id="avTitle">Avatarın</h2><button class="x" id="avX" type="button" aria-label="Kapat">×</button></div>
+    <div class="avstage"><canvas id="avBig" width="24" height="32"></canvas></div>
+    <label class="f">Adın<input id="avName" maxlength="24" placeholder="Seni nasıl çağıralım?"></label>
+    <div class="avopt"><span>Ten rengi</span><div class="sw" id="avSkin"></div></div>
+    <div class="avopt"><span>Saç modeli</span><div class="tg" id="avStyle"></div></div>
+    <div class="avopt"><span>Saç rengi</span><div class="sw" id="avHair"></div></div>
+    <div class="avopt"><span>Çil</span><div class="tg" id="avFreck"><button type="button" data-v="1">Var</button><button type="button" data-v="0">Yok</button></div></div>
+    <div class="avopt"><span>Kukuleta</span><div class="tg" id="avHood"><button type="button" data-v="1">Var</button><button type="button" data-v="0">Yok</button></div></div>
+    <div class="avopt"><span>Pelerin rengi</span><div class="sw" id="avCloak"></div></div>
+    <div class="row"><button class="btn primary" id="avSave" type="button">Kaydet</button><button class="btn" id="avRand" type="button">Rastgele</button></div>
   </div>
 </div>
 
@@ -946,6 +981,128 @@ const sfx = (() => {
 document.addEventListener('pointerdown', sfx.unlock, {passive: true});
 document.addEventListener('touchend', sfx.unlock, {passive: true});
 
+// --- Pixel avatar (24 x 32 pixels, drawn in code; nothing copied from any game) ---
+const AV_KEY = 'kitapligim.avatar';
+const AV = {
+  skins: [['#f6dac6', '#e7bea4', 'Açık'], ['#ecc4a2', '#d5a682', 'Buğday'], ['#d4a07a', '#b9845e', 'Esmer'], ['#a87250', '#8c5a3c', 'Kumral'], ['#7a4e35', '#613b27', 'Koyu']],
+  hairs: [['#2b2331', '#17121b', '#4c405a', 'Siyah'], ['#4a2f22', '#2e1c14', '#70503b', 'Koyu kahve'], ['#7b4026', '#55291a', '#a65d38', 'Kestane'], ['#b9532c', '#82371c', '#e5834c', 'Kızıl'], ['#d8b35c', '#a7843a', '#f3da8e', 'Sarı'], ['#ab9ed8', '#7c6eab', '#d6ccf2', 'Lila']],
+  cloaks: [['#6a4a9c', 'Mor'], ['#34406e', 'Gece mavisi'], ['#7a2f45', 'Bordo'], ['#2f5a46', 'Orman'], ['#2c2536', 'Siyah']],
+  styles: [['duz', 'Düz'], ['dalgali', 'Dalgalı'], ['kivircik', 'Kıvırcık'], ['topuz', 'Topuz']],
+};
+const AV_DEFAULT = {skin: 1, hair: 2, style: 'dalgali', hairColor: 2, freckles: true, hood: false, cloak: 0, name: ''};
+function avLoad() { try { const a = JSON.parse(localStorage.getItem(AV_KEY) || 'null'); return a && typeof a === 'object' ? {...AV_DEFAULT, ...a} : null; } catch (e) { return null; } }
+function avSave(a) { try { localStorage.setItem(AV_KEY, JSON.stringify(a)); } catch (e) {} }
+const shade = (hex, k) => { const n = parseInt(hex.slice(1), 16); const f = c => Math.max(0, Math.min(255, Math.round(c * k))); return '#' + [n >> 16, (n >> 8) & 255, n & 255].map(f).map(v => v.toString(16).padStart(2, '0')).join(''); };
+
+// draws the avatar into a 24x32 pixel buffer; frame: {blink, wave}
+function avPixels(a, frame = {}) {
+  const W = 24, H = 32, buf = Array.from({length: H}, () => Array(W).fill(null));
+  const P = (x, y, c) => { x = Math.round(x); y = Math.round(y); if (x >= 0 && x < W && y >= 0 && y < H && c) buf[y][x] = c; };
+  const rect = (x0, y0, x1, y1, c) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) P(x, y, c); };
+  const disc = (cx, cy, r, c) => { for (let y = Math.floor(cy - r); y <= cy + r; y++) for (let x = Math.floor(cx - r); x <= cx + r; x++) if ((x - cx) ** 2 + (y - cy) ** 2 <= r * r) P(x, y, c); };
+  const [sk, skD] = AV.skins[a.skin] || AV.skins[0];
+  const [hb, hd, hl] = AV.hairs[a.hairColor] || AV.hairs[0];
+  const cl = (AV.cloaks[a.cloak] || AV.cloaks[0])[0], clD = shade(cl, .7), clL = shade(cl, 1.25);
+  const face = y => [[6, 9, 14], [7, 8, 15], [8, 7, 16], [9, 7, 16], [10, 7, 16], [11, 7, 16], [12, 7, 16], [13, 7, 16], [14, 7, 16], [15, 8, 15], [16, 9, 14]].find(r => r[0] === y);
+  // ground shadow
+  rect(7, 31, 16, 31, '#00000033');
+  // hair behind the head
+  const st = a.style;
+  if (st === 'duz') { disc(11.5, 10, 6.5, hb); rect(5, 10, 18, 22, hb); rect(5, 21, 18, 22, hd); }
+  if (st === 'dalgali') {
+    disc(11.5, 10, 6.5, hb);
+    for (let y = 10; y <= 23; y++) { const o = (y >> 1) % 2; rect(5 - o, y, 18 + o, y, hb); }
+    for (let y = 18; y <= 23; y += 2) { P(4, y, hd); P(19, y + 1, hd); }
+    rect(6, 23, 17, 23, hd);
+  }
+  if (st === 'kivircik') {
+    for (const [x, y, r] of (a.hood ? [[6, 15.5, 3], [17, 15.5, 3], [6, 19.5, 2.6], [17, 19.5, 2.6]] : [[11.5, 8, 7.5], [5.5, 12, 3.5], [17.5, 12, 3.5], [5, 16.5, 3], [18, 16.5, 3], [6, 20, 2.6], [17, 20, 2.6], [8.5, 4, 3], [14.5, 4, 3]])) disc(x, y, r, hb);
+    for (const [x, y] of [[4, 14], [19, 14], [5, 18], [18, 18], [7, 2], [16, 2], [3, 11], [20, 11], [6, 21], [17, 21]]) P(x, y, hd);
+    for (const [x, y] of [[9, 3], [14, 3], [6, 10], [17, 10]]) P(x, y, hl);
+  }
+  if (st === 'topuz') { disc(11.5, 9.5, 6.2, hb); if (!a.hood) { disc(11.5, 3, 3, hb); P(10, 2, hl); P(11, 2, hl); } rect(9, 5, 14, 5, hd); }
+  // hood behind the head
+  if (a.hood) { disc(11.5, 10.5, 8.4, clD); disc(11.5, 10.2, 7.6, cl); }
+  if (a.hood && st === 'kivircik') for (const [x, y, r] of [[6.5, 17, 2.6], [16.5, 17, 2.6], [7, 20.5, 2.3], [16, 20.5, 2.3]]) disc(x, y, r, hb);
+  // body and cloak
+  for (let y = 17; y <= 30; y++) { const w = Math.min(7, 4 + ((y - 17) >> 2)); rect(11.5 - w - .5, y, 11.5 + w + .5, y, cl); P(11.5 - w - .5, y, clD); P(11.5 + w + .5, y, clD); }
+  rect(10, 18, 13, 29, clD); rect(11, 18, 12, 29, '#1f1a26');
+  for (let y = 19; y <= 28; y += 3) P(11, y, '#d8b56a');
+  rect(8, 17, 15, 17, clL); P(9, 18, clL); P(14, 18, clL);
+  // neck, face
+  rect(10, 16, 13, 17, skD);
+  for (let y = 6; y <= 16; y++) { const r = face(y); rect(r[1], y, r[2], y, sk); }
+  rect(8, 15, 15, 15, sk); P(7, 14, skD); P(16, 14, skD);
+  // eyes, cheeks, freckles, mouth
+  if (frame.blink) { rect(9, 12, 10, 12, '#3a2a35'); rect(13, 12, 14, 12, '#3a2a35'); }
+  else { rect(9, 11, 9, 12, '#2a1f2a'); rect(14, 11, 14, 12, '#2a1f2a'); P(10, 11, '#fff'); P(15, 11, '#fff'); P(10, 12, '#2a1f2a'); P(15, 12, '#2a1f2a'); }
+  P(8, 14, '#f0a0a8'); P(15, 14, '#f0a0a8');
+  if (a.freckles) for (const [x, y] of [[9, 13], [10, 14], [8, 13], [14, 13], [13, 14], [15, 13]]) P(x, y, shade(sk, .78));
+  rect(11, 15, 12, 15, '#b36a6a');
+  // bangs and front locks
+  if (st === 'duz') { rect(7, 6, 16, 7, hb); rect(7, 8, 9, 8, hb); rect(13, 8, 16, 8, hb); P(12, 8, hb); P(7, 9, hb); P(16, 9, hb); rect(6, 9, 6, 20, hb); rect(17, 9, 17, 20, hb); P(10, 6, hl); P(11, 6, hl); }
+  if (st === 'dalgali') { rect(7, 6, 16, 7, hb); P(7, 8, hb); P(8, 8, hb); P(15, 8, hb); P(16, 8, hb); P(11, 8, hb); for (let y = 9; y <= 21; y++) { const o = (y >> 1) % 2; P(6 + o, y, hb); P(17 - o, y, hb); } P(9, 6, hl); P(10, 6, hl); }
+  if (st === 'kivircik') { for (const [x, y, r] of [[8.5, 7, 1.8], [11.5, 6.5, 1.8], [14.5, 7, 1.8]]) disc(x, y, r, hb); P(10, 6, hl); P(13, 6, hl); for (const [x, y] of [[6, 10], [6, 13], [17, 10], [17, 13]]) disc(x, y, 1.2, hb); }
+  if (st === 'topuz') { rect(7, 6, 16, 7, hb); P(7, 8, hb); P(16, 8, hb); P(7, 9, hd); P(16, 9, hd); P(9, 6, hl); }
+  // hood rim around the face
+  if (a.hood) { for (let y = 3; y <= 16; y++) for (let x = 2; x <= 21; x++) { const d = Math.hypot(x - 11.5, y - 10.5); if (d <= 8.4 && d > 6.9 && y < 16 && !buf[y][x]?.startsWith?.(sk)) P(x, y, d > 7.8 ? clD : cl); } P(11, 2, clD); P(12, 2, clD); }
+  // hands
+  const wave = frame.wave ? -2 : 0;
+  P(4, 24 + wave, sk); P(4, 25 + wave, skD); P(19, 24, sk); P(19, 25, skD);
+  // boots
+  rect(8, 30, 10, 30, '#2a1f24'); rect(13, 30, 15, 30, '#2a1f24');
+  return buf;
+}
+function avDraw(canvas, a, frame) {
+  const buf = avPixels(a, frame), ctx = canvas.getContext('2d');
+  canvas.width = 24; canvas.height = 32; ctx.clearRect(0, 0, 24, 32);
+  for (let y = 0; y < 32; y++) for (let x = 0; x < 24; x++) { const c = buf[y][x]; if (c) { ctx.fillStyle = c; ctx.fillRect(x, y, 1, 1); } }
+}
+// a small idle loop: blink now and then
+const avLive = new Set();
+function avMount(canvas, getA) { avLive.add({canvas, getA}); const a = getA(); if (a) avDraw(canvas, a, {}); }
+setInterval(() => {
+  for (const it of [...avLive]) {
+    if (!it.canvas.isConnected) { avLive.delete(it); continue; }
+    const a = it.getA(); if (!a) continue;
+    avDraw(it.canvas, a, {blink: true}); setTimeout(() => avDraw(it.canvas, it.getA() || a, {}), 140);
+  }
+}, 3800);
+
+let avDraft = null;
+const avNow = () => avLoad();
+function drawAvUI() {
+  const a = avDraft;
+  $('avSkin').innerHTML = AV.skins.map(([c, , n], i) => `<button type="button" style="--c:${c}" aria-label="${n}" aria-pressed="${a.skin === i}" data-i="${i}"></button>`).join('');
+  $('avHair').innerHTML = AV.hairs.map(([c, , , n], i) => `<button type="button" style="--c:${c}" aria-label="${n}" aria-pressed="${a.hairColor === i}" data-i="${i}"></button>`).join('');
+  $('avCloak').innerHTML = AV.cloaks.map(([c, n], i) => `<button type="button" style="--c:${c}" aria-label="${n}" aria-pressed="${a.cloak === i}" data-i="${i}"></button>`).join('');
+  $('avStyle').innerHTML = AV.styles.map(([k, n]) => `<button type="button" data-k="${k}" aria-pressed="${a.style === k}">${n}</button>`).join('');
+  for (const b of $('avFreck').children) b.setAttribute('aria-pressed', String(!!+b.dataset.v === !!a.freckles));
+  for (const b of $('avHood').children) b.setAttribute('aria-pressed', String(!!+b.dataset.v === !!a.hood));
+  avDraw($('avBig'), a, {});
+}
+function openAv() { avDraft = {...(avLoad() || AV_DEFAULT)}; $('avName').value = avDraft.name || ''; drawAvUI(); $('avOv').hidden = false; }
+function renderAvatarHead() {
+  const a = avLoad();
+  $('avPlus').hidden = !!a;
+  avDraw($('avMini'), a || {...AV_DEFAULT, hood: true, cloak: 4, hairColor: 0}, {});
+  $('avMini').style.opacity = a ? 1 : .45;
+  $('hello').textContent = a && a.name ? `Merhaba, ${a.name}` : '';
+}
+$('avBtn').onclick = openAv;
+$('avX').onclick = () => { $('avOv').hidden = true; };
+$('avOv').addEventListener('click', e => { if (e.target === $('avOv')) $('avOv').hidden = true; });
+const pick = (id, fn) => $(id).addEventListener('click', e => { const b = e.target.closest('button'); if (b) { fn(b); drawAvUI(); } });
+pick('avSkin', b => { avDraft.skin = +b.dataset.i; });
+pick('avHair', b => { avDraft.hairColor = +b.dataset.i; });
+pick('avCloak', b => { avDraft.cloak = +b.dataset.i; });
+pick('avStyle', b => { avDraft.style = b.dataset.k; });
+pick('avFreck', b => { avDraft.freckles = !!+b.dataset.v; });
+pick('avHood', b => { avDraft.hood = !!+b.dataset.v; });
+$('avName').addEventListener('input', e => { avDraft.name = e.target.value.trim().slice(0, 24); });
+$('avRand').onclick = () => { const r = n => Math.floor(Math.random() * n); avDraft = {...avDraft, skin: r(AV.skins.length), hairColor: r(AV.hairs.length), cloak: r(AV.cloaks.length), style: AV.styles[r(AV.styles.length)][0], freckles: Math.random() < .5, hood: Math.random() < .4}; drawAvUI(); };
+$('avSave').onclick = () => { avSave(avDraft); $('avOv').hidden = true; renderAvatarHead(); sfx.unlock(); sfx.sparkle(); note(`<span>${avDraft.name ? esc(avDraft.name) + ', avatarın' : 'Avatarın'} hazır!</span>`); };
+avMount($('avMini'), () => avLoad());
 let afterStory = null;
 function nextPrompt(b, scanned) {
   note(scanned ? `<span><b>${esc(b.title)}</b> rafta.</span><button class="btn primary" type="button" id="next">Sıradaki kitap</button>` : `<span><b>${esc(b.title)}</b> kaydedildi.</span>`);
@@ -1343,7 +1500,8 @@ async function syncShared() {
 window.addEventListener('online', syncShared);
 
 f.elements.genre.innerHTML = '<option value="">Belirtilmedi</option>' + GENRES.map(([g]) => `<option>${esc(g)}</option>`).join('');
-load(); setTheme(themeNow()); drawSound(); setTimeout(syncShared, 1500);
+load(); setTheme(themeNow()); drawSound(); renderAvatarHead();
+if (!avLoad() && !localStorage.getItem('kitapligim.avAsked')) { try { localStorage.setItem('kitapligim.avAsked', '1'); } catch (e) {} setTimeout(() => { note('<span>Kendine küçük bir cadı avatarı oluşturmak ister misin?</span><button class="btn primary" type="button" id="avGo">Oluştur</button>', true); $('avGo').onclick = () => { $('note').hidden = true; openAv(); }; }, 2800); } setTimeout(syncShared, 1500);
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
