@@ -45,7 +45,7 @@ async function handle(req) {
       r = await fetch(MK(isbn), {headers: {
         'User-Agent': 'Mozilla/5.0 (compatible; Kitapligim/1.0; kisisel kitaplik uygulamasi)',
         'Accept': 'text/html', 'Accept-Language': 'tr-TR,tr;q=0.9',
-      }, signal: AbortSignal.timeout(20000)});
+      }, signal: AbortSignal.timeout(+(url.searchParams.get("t") || 20000))});
     } catch (e) {
       return json(req, {ok: false, error: 'Katalog sitesine ulaşılamadı', detail: String(e)});
     }
