@@ -104,11 +104,21 @@ summary{cursor:pointer;min-height:48px;display:flex;align-items:center;font-weig
 .sheet{background:var(--paper);width:min(640px,100%);max-height:92vh;overflow-y:auto;border-radius:26px 26px 0 0;padding:18px max(4vw,16px) calc(28px + var(--sb));box-shadow:0 -10px 30px #5a465522}
 .sh-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
 .x{width:44px;height:44px;border-radius:50%;border:0;background:var(--bg);color:var(--ink);font-size:24px;cursor:pointer;flex:none}
-.scan{display:grid;grid-template-columns:64px minmax(0,1fr);gap:12px;align-items:center;background:var(--bg);border-radius:16px;padding:10px;margin-bottom:14px}
+.scan{background:var(--bg);border-radius:16px;padding:12px;margin-bottom:14px}
 .scan img{width:64px;height:92px;object-fit:cover;border-radius:4px 8px 8px 4px;background:var(--lav)}
 .scan img:not([src]){visibility:hidden}
 .scan p{margin:0;font-size:15px;font-weight:600}
 .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.cvpick{grid-column:1/-1}
+.cvpick>span{font-size:13px;font-weight:700;color:var(--mute)}
+.cvrow{display:flex;gap:8px;overflow-x:auto;padding:6px 2px 8px;scrollbar-width:none}
+.cvrow::-webkit-scrollbar{display:none}
+.cvt{flex:none;width:76px;border:3px solid transparent;border-radius:12px;background:var(--field);padding:4px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--mute);font:800 11px "Nunito",sans-serif}
+.cvt img,.cvt span{width:62px;height:90px;object-fit:cover;border-radius:3px 7px 7px 3px;display:grid;place-items:center;background:var(--line);text-align:center;padding:2px}
+.cvt[aria-pressed=true]{border-color:var(--rose);color:var(--ink)}
+.cvbtns{display:flex;flex-wrap:wrap;gap:8px}.cvbtns .btn{margin-top:0;flex:1 1 140px}
+.chip i{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--c);margin-right:6px;vertical-align:-1px;box-shadow:inset 0 0 0 1px #0000001a}
+.chip small{margin-left:5px;opacity:.7}
 .seg button{border:2px solid var(--line);background:var(--field);border-radius:16px;padding:10px 8px;min-height:64px;font:800 14px/1.2 "Nunito",sans-serif;color:var(--ink);display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
 .seg button[aria-pressed=true]{border-color:var(--rose);background:var(--segOn)}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 12px}
@@ -263,6 +273,7 @@ a{color:var(--roseD)}
       <select id="sort" aria-label="Sırala"><option value="new">Son eklenen</option><option value="title">Başlık</option><option value="author">Yazar</option><option value="rating">Puan</option></select>
     </div>
     <div class="chips" id="chips" role="group" aria-label="Duruma göre süz"></div>
+    <div class="chips" id="gchips" role="group" aria-label="Türe göre süz"></div>
     <ul id="list"></ul>
     <div class="more">
       <details id="bkBox">
@@ -306,11 +317,12 @@ a{color:var(--roseD)}
   </div>
 </div>
 <input type="file" id="photo" accept="image/*" hidden>
+<input type="file" id="cvPhoto" accept="image/*" hidden>
 
 <div class="ov" id="ov" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="shTitle">
     <div class="sh-head"><h2 id="shTitle">Kitap</h2><button class="x" id="x" type="button" aria-label="Kapat">×</button></div>
-    <div class="scan" id="scanBox" hidden><img id="cover" alt=""><div><p id="scanMsg"></p><button class="btn small lav" id="coverFill" type="button" hidden>Kapaktan doldur</button></div></div>
+    <div class="scan" id="scanBox" hidden><p id="scanMsg"></p><button class="btn small lav" id="coverFill" type="button" hidden>Kapaktan doldur</button></div>
     <div class="warn" id="dup" hidden></div>
     <div class="seg" id="seg" role="group" aria-label="Bu kitap nasıl geldi?">
       <button type="button" data-acq="existing" aria-pressed="true">
@@ -324,12 +336,18 @@ a{color:var(--roseD)}
     </div>
     <form id="f" autocomplete="off">
       <div class="grid">
+        <div class="cvpick">
+          <span>Kapak</span>
+          <div class="cvrow" id="cvRow"></div>
+          <div class="cvbtns"><label class="btn small" for="cvPhoto">Fotoğraf çek ya da seç</label><button class="btn small" type="button" id="cvFind">İnternette ara</button></div>
+          <p class="muted" id="cvMsg" style="margin:6px 0 0"></p>
+        </div>
         <label class="f full">Başlık *<input name="title" required></label>
         <label class="f">Yazar<input name="author"></label>
         <label class="f">Çevirmen<input name="translator"></label>
         <label class="f">Yayınevi<input name="publisher"></label>
         <label class="f">ISBN<input name="isbn" inputmode="numeric"></label>
-        <label class="f">Tür<input name="genre" list="genres"></label>
+        <label class="f">Tür<select name="genre"></select></label>
         <label class="f">Basım yılı<input name="year" inputmode="numeric"></label>
         <label class="f">Sayfa<input name="pages" inputmode="numeric"></label>
         <label class="f">Durum<select name="status"><option value="okunacak">Okunacak</option><option value="okunuyor">Okunuyor</option><option value="okundu">Okundu</option><option value="yarim">Yarım kaldı</option></select></label>
@@ -392,7 +410,7 @@ a{color:var(--roseD)}
 <div class="plaque" id="plaque" aria-hidden="true">Kitaplığım</div>
 <div class="hint" id="hint" aria-hidden="true">Gizli rafı açmak için dokun</div>
 
-<datalist id="genres"><option>Roman</option><option>Polisiye</option><option>Gerilim</option><option>Fantastik</option><option>Bilim kurgu</option><option>Tarih</option><option>Deneme</option><option>Şiir</option><option>Biyografi</option><option>Felsefe</option><option>Klasik</option><option>Çocuk</option></datalist>
+
 
 <script src="zxing.min.js"></script>
 <script>
@@ -404,7 +422,25 @@ const PALS = {light: ['#f3b9c0','#cfe3cf','#dcd3f3','#f7e3a3','#cfe2f3','#f8d2bd
 const isDark = () => document.documentElement.dataset.theme !== 'light';
 let PAL = PALS[isDark() ? 'dark' : 'light'];
 const hash = s => { let h = 7; for (const c of String(s)) h = (h * 31 + c.codePointAt(0)) | 0; return Math.abs(h); };
-const colorOf = b => PAL[hash((b.title || '') + (b.author || '')) % PAL.length];
+// Every genre has its own colour; "Belirtilmedi" stays a quiet grey
+const GENRES = [['Roman',8],['Romantik',335],['Klasik',35],['Tarih',20],['Siyaset',212],['Polisiye',228],['Gerilim',285],['Korku',300],['Fantastik',262],['Bilim kurgu',188],['Deneme',90],['Şiir',318],['Biyografi',48],['Felsefe',172],['Psikoloji',152],['Kişisel gelişim',125],['Bilim',200],['Çocuk',56],['Çizgi roman',14],['Din',64],['Sanat',348],['Diğer',30]];
+const G_ALIAS = [[/romant|aşk|romance|love/,'Romantik'],[/klasik|classic/,'Klasik'],[/tarih|histor/,'Tarih'],[/siyas|politi/,'Siyaset'],[/polisiye|crime|mystery|dedektif|detective/,'Polisiye'],[/gerilim|thriller|suspense/,'Gerilim'],[/korku|horror/,'Korku'],[/fantas/,'Fantastik'],[/bilim ?kurgu|science fiction|sci-fi|distopya|dystop/,'Bilim kurgu'],[/deneme|essay/,'Deneme'],[/şiir|poetry|poem/,'Şiir'],[/biyograf|biograph|otobiyograf|memoir|\banı\b/,'Biyografi'],[/felsefe|philosoph/,'Felsefe'],[/psikoloj|psycholog/,'Psikoloji'],[/kişisel gelişim|self-help|self help/,'Kişisel gelişim'],[/bilim|science/,'Bilim'],[/çocuk|juvenile|children|gençlik|young adult/,'Çocuk'],[/çizgi|comic|manga|graphic novel/,'Çizgi roman'],[/\bdin\b|religio/,'Din'],[/sanat|\bart\b|music|müzik/,'Sanat'],[/roman|fiction|novel|edebiyat|literat|öykü|hikaye|hikâye/,'Roman']];
+function normGenre(g) {
+  const t = String(g || '').trim().toLocaleLowerCase('tr');
+  if (!t) return '';
+  const exact = GENRES.find(([n]) => n.toLocaleLowerCase('tr') === t);
+  if (exact) return exact[0];
+  for (const [re, n] of G_ALIAS) if (re.test(t)) return n;
+  return 'Diğer';
+}
+const genreIdx = g => { const n = normGenre(g); const i = GENRES.findIndex(x => x[0] === n); return i < 0 ? GENRES.length : i; };
+function genreColor(g, v = 0) {
+  const n = normGenre(g), e = GENRES.find(x => x[0] === n), dark = document.documentElement.dataset.theme !== 'light';
+  if (!e) return dark ? `hsl(300 6% ${54 + v}%)` : `hsl(30 10% ${84 + v}%)`;
+  const other = n === 'Diğer';
+  return dark ? `hsl(${e[1]} ${other ? 14 : 32}% ${58 + v}%)` : `hsl(${e[1]} ${other ? 25 : 62}% ${82 + v}%)`;
+}
+const colorOf = b => genreColor(b.genre, hash((b.title || '') + (b.author || '')) % 7 - 3);
 const initial = t => (String(t || '?').trim()[0] || '?').toLocaleUpperCase('tr');
 const STAT = {okunacak:'Okunacak', okunuyor:'Okunuyor', okundu:'Okundu', yarim:'Yarım kaldı'};
 const FILTERS = [['all','Tümü'],['okunuyor','Okunuyor'],['okunacak','Okunacak'],['okundu','Okundu'],['yarim','Yarım kaldı'],['lent','Ödünçte']];
@@ -414,7 +450,8 @@ const okUrl = u => typeof u === 'string' && /^https:\/\//.test(u) ? u : '';
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
 const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10); };
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
-let books = [], filter = 'all', editId = null, rating = 0, fromScan = false, curCover = '', acq = 'existing';
+let gfilter = null;
+let books = [], filter = 'all', editId = null, rating = 0, fromScan = false, acq = 'existing';
 
 function load() { try { books = JSON.parse(localStorage.getItem(KEY) || '[]'); if (!Array.isArray(books)) books = []; } catch (e) { books = []; } }
 function persist() {
@@ -442,22 +479,30 @@ function shelfHTML(list) {
 
 function render() {
   const byNew = [...books].sort((a, b) => String(b.addedAt || '').localeCompare(String(a.addedAt || '')));
-  $('shelf').innerHTML = shelfHTML(byNew.slice(0, 60));
+  const shelfList = byNew.slice(0, 60).sort((a, b) => genreIdx(a.genre) - genreIdx(b.genre));
+  $('shelf').innerHTML = shelfHTML(shelfList);
   const n = s => books.filter(b => b.status === s).length;
   const yr = String(new Date().getFullYear());
   const thisYear = books.filter(b => b.status === 'okundu' && String(b.finishedAt || '').startsWith(yr)).length;
   $('stats').innerHTML = books.length ? [[books.length, 'kitap', 'var(--rose)'], [n('okunuyor'), 'okunuyor', 'var(--butter)'], [n('okundu'), 'okundu', 'var(--sage)'], [thisYear, 'bu yıl biten', 'var(--lav)']].map(([v, l, c]) => `<span class="pill" style="--c:${c}"><b>${v}</b>${esc(l)}</span>`).join('') : '<span class="pill" style="--c:var(--rose)">Hoş geldin! İlk kitabını ekleyerek başla.</span>';
   $('chips').innerHTML = FILTERS.map(([k, l]) => `<button class="chip" type="button" data-k="${k}" aria-pressed="${filter === k}">${l}</button>`).join('');
   const q = $('q').value.trim().toLocaleLowerCase('tr');
+  const gcount = new Map();
+  for (const b of books) { const g = normGenre(b.genre) || ''; gcount.set(g, (gcount.get(g) || 0) + 1); }
+  if (gfilter !== null && !gcount.has(gfilter)) gfilter = null;
+  const gkeys = [...gcount.keys()].sort((a, b) => genreIdx(a) - genreIdx(b));
+  $('gchips').innerHTML = books.length ? `<button class="chip" type="button" data-g="*" aria-pressed="${gfilter === null}">Tüm türler</button>` + gkeys.map(g => `<button class="chip" type="button" data-g="${esc(g)}" aria-pressed="${gfilter === g}"><i style="--c:${genreColor(g)}"></i>${esc(g || 'Belirtilmedi')}<small>${gcount.get(g)}</small></button>`).join('') : '';
   let list = books.filter(b => filter === 'all' || (filter === 'lent' ? !!b.lentTo : b.status === filter));
+  if (gfilter !== null) list = list.filter(b => (normGenre(b.genre) || '') === gfilter);
   if (q) list = list.filter(b => [b.title, b.author, b.translator, b.publisher, b.isbn, b.genre, b.location, b.purchasePlace].join(' ').toLocaleLowerCase('tr').includes(q));
   const s = $('sort').value;
   list.sort(s === 'title' ? (a, b) => coll.compare(a.title || '', b.title || '') : s === 'author' ? (a, b) => coll.compare(a.author || '', b.author || '') : s === 'rating' ? (a, b) => (b.rating || 0) - (a.rating || 0) : (a, b) => String(b.addedAt || '').localeCompare(String(a.addedAt || '')));
   $('count').textContent = books.length ? `${list.length} / ${books.length}` : '';
   $('list').innerHTML = list.length ? list.map(b => {
     const c = colorOf(b), cu = okUrl(b.cover);
-    return `<li class="item" data-id="${esc(b.id)}">${cu ? `<img class="cv" style="--c:${c}" src="${esc(cu)}" alt="" loading="lazy">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || 'Yazar yok')}${b.lentTo ? ' · Ödünç: ' + esc(b.lentTo) : ''}</div></div><div class="r"><span class="st ${esc(b.status)}">${esc(STAT[b.status] || 'Okunacak')}</span>${b.rating ? `<div class="stars">${'★'.repeat(Math.min(5, b.rating | 0))}</div>` : ''}</div></li>`;
+    return `<li class="item" data-id="${esc(b.id)}">${b.coverLocal ? `<img class="cv" style="--c:${c}" data-local="${esc(b.id)}" alt="">` : cu ? `<img class="cv" style="--c:${c}" src="${esc(cu)}" alt="" loading="lazy">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || 'Yazar yok')}${b.lentTo ? ' · Ödünç: ' + esc(b.lentTo) : ''}</div></div><div class="r"><span class="st ${esc(b.status)}">${esc(STAT[b.status] || 'Okunacak')}</span>${b.rating ? `<div class="stars">${'★'.repeat(Math.min(5, b.rating | 0))}</div>` : ''}</div></li>`;
   }).join('') : `<li class="muted" style="padding:16px 4px">${books.length ? 'Bu aramaya uyan kitap yok.' : 'Henüz kitap eklenmedi.'}</li>`;
+  hydrate($('list'));
   const lb = localStorage.getItem(BKEY);
   const days = lb ? Math.floor((Date.now() - +lb) / 864e5) : null;
   $('keyInfo').textContent = getKey() ? 'Kapak okuma açık. Anahtarı değiştirebilir ya da silebilirsin.' : 'Kapak okuma henüz kurulmadı. "Kapaktan ekle"ye dokunduğunda kurulum adımları açılır.';
@@ -484,16 +529,84 @@ function openSheet(id, scan) {
   const b = books.find(x => x.id === id) || {};
   f.reset();
   for (const k of FORM_KEYS) f.elements[k].value = b[k] ?? '';
+  f.elements.genre.value = normGenre(b.genre);
   f.elements.status.value = b.status || 'okunacak';
   rating = b.rating || 0; drawRate();
   setAcq('existing'); $('seg').hidden = !!id;
-  curCover = okUrl(b.cover); setCover(curCover);
+  cvTiles = [{key: 'none', kind: 'none'}]; cvSel = 'none'; $('cvMsg').textContent = '';
+  if (b.coverLocal) localCoverUrl(b.id).then(u => { if (u && editId === b.id) addTile({key: 'own:cur', kind: 'own', url: u}, true); });
+  else if (okUrl(b.cover)) addTile({key: b.cover, kind: 'web', url: okUrl(b.cover)}, true);
+  drawTiles();
   $('shTitle').textContent = id ? 'Kitabı düzenle' : scan ? 'Barkoddan ekle' : 'Yeni kitap';
   $('del').hidden = !id; $('delAsk').hidden = true; $('dup').hidden = true;
-  $('scanBox').hidden = !scan && !curCover; $('scanMsg').textContent = ''; $('coverFill').hidden = true;
+  $('scanBox').hidden = !scan; $('scanMsg').textContent = ''; $('coverFill').hidden = true;
   $('ov').hidden = false;
 }
-function setCover(u) { const i = $('cover'); if (u) i.src = u; else i.removeAttribute('src'); }
+// --- Covers: your own photos stay in this phone's storage (IndexedDB); web covers are only links ---
+const idb = (() => {
+  let p = null;
+  const open = () => p || (p = new Promise((ok, no) => { const r = indexedDB.open('kitapligim', 1); r.onupgradeneeded = () => r.result.createObjectStore('covers'); r.onsuccess = () => ok(r.result); r.onerror = () => no(r.error); }));
+  const tx = async (mode, fn) => { const db = await open(); return new Promise((ok, no) => { const t = db.transaction('covers', mode); const req = fn(t.objectStore('covers')); t.oncomplete = () => ok(req && req.result); t.onerror = () => no(t.error); }); };
+  return {get: k => tx('readonly', st => st.get(k)), put: (k, v) => tx('readwrite', st => st.put(v, k)), del: k => tx('readwrite', st => st.delete(k))};
+})();
+const localUrls = new Map();
+async function localCoverUrl(id) {
+  if (localUrls.has(id)) return localUrls.get(id);
+  try { const blob = await idb.get(id); if (!blob) return ''; const u = URL.createObjectURL(blob); localUrls.set(id, u); return u; } catch (e) { return ''; }
+}
+function forgetLocal(id) { const u = localUrls.get(id); if (u) URL.revokeObjectURL(u); localUrls.delete(id); }
+async function hydrate(root) { for (const el of root.querySelectorAll('img[data-local]')) { const u = await localCoverUrl(el.dataset.local); if (u) el.src = u; } }
+let cvTiles = [], cvSel = 'none', cvOwnN = 0;
+function drawTiles() {
+  $('cvRow').innerHTML = cvTiles.map(t => `<button type="button" class="cvt" data-k="${esc(t.key)}" aria-pressed="${t.key === cvSel}">${t.kind === 'none' ? '<span aria-hidden="true">—</span>' : `<img src="${esc(t.url)}" alt="">`}${t.kind === 'own' ? 'Fotoğrafım' : t.kind === 'web' ? 'İnternetten' : 'Kapaksız'}</button>`).join('');
+}
+function addTile(t, select) {
+  if (!cvTiles.some(x => x.key === t.key)) cvTiles.splice(cvTiles.length - 1, 0, t);
+  if (select) cvSel = t.key;
+  drawTiles();
+}
+$('cvRow').addEventListener('click', e => { const b = e.target.closest('.cvt'); if (b) { cvSel = b.dataset.k; drawTiles(); } });
+async function findCovers(title, author) {
+  const out = [], tq = String(title || '').trim(), aq = String(author || '').trim();
+  if (!tq || !navigator.onLine) return out;
+  try {
+    const r = await fetch('https://www.googleapis.com/books/v1/volumes?maxResults=10&q=' + encodeURIComponent('intitle:' + tq + (aq ? ' inauthor:' + aq : '')));
+    const j = await r.json();
+    for (const it of j.items || []) { const l = (it.volumeInfo || {}).imageLinks; const u = l && (l.thumbnail || l.smallThumbnail); if (u) out.push(u.replace(/^http:/, 'https:').replace('&edge=curl', '')); }
+  } catch (e) {}
+  try {
+    const r = await fetch(`https://openlibrary.org/search.json?limit=10&fields=cover_i&title=${encodeURIComponent(tq)}${aq ? '&author=' + encodeURIComponent(aq) : ''}`);
+    const j = await r.json();
+    for (const d of j.docs || []) if (d.cover_i) out.push(`https://covers.openlibrary.org/b/id/${d.cover_i}-L.jpg`);
+  } catch (e) {}
+  return [...new Set(out)].slice(0, 8);
+}
+let finding = false;
+async function searchCovers(manual) {
+  const t = f.elements.title.value.trim();
+  if (!t) { if (manual) $('cvMsg').textContent = 'Önce kitabın adını yaz, sonra kapak arayayım.'; return; }
+  if (finding) return; finding = true;
+  const mine = editId, opened = $('ov').hidden;
+  $('cvMsg').textContent = 'İnternette kapak aranıyor…';
+  const urls = await findCovers(t, f.elements.author.value);
+  finding = false;
+  if ($('ov').hidden !== opened || editId !== mine) return;
+  urls.forEach(u => addTile({key: u, kind: 'web', url: u}, false));
+  $('cvMsg').textContent = urls.length ? 'Beğendiğin kapağa dokun; istemezsen "Kapaksız" kalsın.' : 'İnternette kapak bulunamadı. Fotoğraf çekebilirsin.';
+}
+$('cvFind').onclick = () => searchCovers(true);
+async function cropCover(file, box) {
+  const bmp = await createImageBitmap(file);
+  let [y0, x0, y1, x1] = Array.isArray(box) && box.length === 4 ? box.map(Number) : [0, 0, 1000, 1000];
+  if (![y0, x0, y1, x1].every(Number.isFinite) || y1 - y0 < 80 || x1 - x0 < 50) [y0, x0, y1, x1] = [0, 0, 1000, 1000];
+  y0 = Math.max(0, y0 - 6); x0 = Math.max(0, x0 - 6); y1 = Math.min(1000, y1 + 6); x1 = Math.min(1000, x1 + 6);
+  const sx = x0 / 1000 * bmp.width, sy = y0 / 1000 * bmp.height, sw = (x1 - x0) / 1000 * bmp.width, sh = (y1 - y0) / 1000 * bmp.height;
+  const k = Math.min(1, 720 / sh, 720 / sw), c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(sw * k)); c.height = Math.max(1, Math.round(sh * k));
+  c.getContext('2d').drawImage(bmp, sx, sy, sw, sh, 0, 0, c.width, c.height);
+  return new Promise(ok => c.toBlob(ok, 'image/jpeg', .85));
+}
+function addOwn(blob) { if (!blob) return; const u = URL.createObjectURL(blob); addTile({key: 'own:' + (++cvOwnN), kind: 'own', url: u, blob}, true); }
 const closeSheet = () => { $('ov').hidden = true; };
 
 function checkDup(isbn) {
@@ -542,8 +655,10 @@ async function fillFrom(isbn) {
   const info = await lookup(isbn);
   if ($('ov').hidden || editId || f.elements.isbn.value !== isbn) return;
   if (info) {
-    for (const k of ['title','author','translator','publisher','genre','year','pages']) if (info[k] && !f.elements[k].value) f.elements[k].value = String(info[k]).slice(0, 300);
-    curCover = okUrl(info.cover); setCover(curCover);
+    for (const k of ['title','author','translator','publisher','year','pages']) if (info[k] && !f.elements[k].value) f.elements[k].value = String(info[k]).slice(0, 300);
+    if (info.genre && !f.elements.genre.value) f.elements.genre.value = normGenre(info.genre);
+    if (okUrl(info.cover)) addTile({key: info.cover, kind: 'web', url: okUrl(info.cover)}, cvSel === 'none');
+    searchCovers(false);
     msg.textContent = info.src === 'ortak liste' ? 'Bilgiler ortak listeden geldi. Kontrol edip kaydet.' : `Bilgiler ${info.src}'tan geldi. Kontrol edip kaydet.`;
   } else {
     msg.textContent = 'Bu ISBN çevrimiçi kaynaklarda bulunamadı. Kapağın fotoğrafını çekersen bilgileri oradan doldurayım.';
@@ -613,6 +728,7 @@ $('seg').addEventListener('click', e => { const b = e.target.closest('button'); 
 $('shelf').addEventListener('click', e => { const b = e.target.closest('.sp'); if (b) openSheet(b.dataset.id); });
 $('list').addEventListener('click', e => { const li = e.target.closest('.item'); if (li) openSheet(li.dataset.id); });
 $('chips').addEventListener('click', e => { const k = e.target.dataset.k; if (k) { filter = k; render(); } });
+$('gchips').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { gfilter = b.dataset.g === '*' ? null : b.dataset.g; render(); } });
 $('q').addEventListener('input', render);
 $('sort').addEventListener('change', render);
 document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('keyOv').hidden) $('keyOv').hidden = true; else if (!$('ov').hidden) closeSheet(); } });
@@ -673,21 +789,26 @@ f.addEventListener('submit', e => {
   const num = k => { const n = parseInt(v(k), 10); return Number.isFinite(n) ? n : null; };
   const old = books.find(b => b.id === editId);
   const isNewBuy = !old && acq === 'new';
-  const data = {...(old || {}), id: editId || uid(), title: v('title'), author: v('author'), translator: v('translator'), publisher: v('publisher'), isbn: v('isbn').replace(/[^0-9Xx]/g, ''), genre: v('genre'), year: num('year'), pages: num('pages'), status: v('status'), finishedAt: v('finishedAt'), rating, location: v('location'), lentTo: v('lentTo'), notes: v('notes'), purchasedAt: v('purchasedAt') || (isNewBuy ? today() : ''), purchasePlace: v('purchasePlace'), acquisition: old ? (old.acquisition || 'existing') : acq, cover: curCover, sharedAt: '', addedAt: (old && old.addedAt) || new Date().toISOString(), updatedAt: new Date().toISOString()};
+  const data = {...(old || {}), id: editId || uid(), title: v('title'), author: v('author'), translator: v('translator'), publisher: v('publisher'), isbn: v('isbn').replace(/[^0-9Xx]/g, ''), genre: v('genre'), year: num('year'), pages: num('pages'), status: v('status'), finishedAt: v('finishedAt'), rating, location: v('location'), lentTo: v('lentTo'), notes: v('notes'), purchasedAt: v('purchasedAt') || (isNewBuy ? today() : ''), purchasePlace: v('purchasePlace'), acquisition: old ? (old.acquisition || 'existing') : acq, cover: '', coverLocal: false, sharedAt: '', addedAt: (old && old.addedAt) || new Date().toISOString(), updatedAt: new Date().toISOString()};
   if (!data.title) return;
+  const sel = cvTiles.find(t => t.key === cvSel) || {kind: 'none'};
+  if (sel.kind === 'web') data.cover = sel.url;
+  if (sel.kind === 'own') data.coverLocal = true;
   const prev = books;
   books = old ? books.map(b => b.id === editId ? data : b) : [...books, data];
   if (!persist()) { books = prev; return; }
   const scanned = fromScan && !old;
+  if (sel.kind === 'own' && sel.blob) idb.put(data.id, sel.blob).then(() => { forgetLocal(data.id); render(); }).catch(() => note('Kapak fotoğrafı kaydedilemedi.'));
+  else if (sel.kind !== 'own') { idb.del(data.id).catch(() => {}); forgetLocal(data.id); }
   closeSheet(); render(); syncShared();
   if (old) { nextPrompt(data, false); return; }
-  if (isNewBuy) playNewBook(data, scanned); else playSettle(data, scanned);
+  if (isNewBuy) playNewBook({...data, _coverUrl: sel.kind === 'own' ? sel.url : ''}, scanned); else playSettle(data, scanned);
 });
 $('del').onclick = () => { $('delAsk').hidden = false; };
 $('delNo').onclick = () => { $('delAsk').hidden = true; };
 $('delYes').onclick = () => {
   const t = (books.find(b => b.id === editId) || {}).title;
-  books = books.filter(b => b.id !== editId); persist(); closeSheet(); render();
+  const gone = editId; books = books.filter(b => b.id !== gone); persist(); idb.del(gone).catch(() => {}); forgetLocal(gone); closeSheet(); render();
   note(`<span>${esc(t)} silindi.</span>`);
 };
 
@@ -786,7 +907,7 @@ function showWelcome() {
   clearStory();
   const b = storyBook, st = $('story');
   st.classList.add('card'); $('skip').hidden = true; $('caption').textContent = '';
-  const wc = $('wCover'), cu = okUrl(b.cover);
+  const wc = $('wCover'), cu = b._coverUrl || okUrl(b.cover);
   wc.style.setProperty('--c', colorOf(b));
   wc.style.backgroundImage = cu ? `url("${cu.replace(/"/g, '')}")` : '';
   wc.style.backgroundSize = 'cover'; wc.textContent = cu ? '' : initial(b.title);
@@ -883,7 +1004,13 @@ function playSettle(b, scanned) {
 
 $('exp').onclick = async () => {
   const d = new Date().toISOString().slice(0, 10);
-  const json = JSON.stringify(books.map(({id, ...b}) => b), null, 1);
+  const out = [];
+  for (const {id, ...b} of books) {
+    const o = {...b};
+    if (b.coverLocal) { try { const blob = await idb.get(id); if (blob) o.coverData = await new Promise(ok => { const r = new FileReader(); r.onload = () => ok(r.result); r.readAsDataURL(blob); }); } catch (e) {} }
+    out.push(o);
+  }
+  const json = JSON.stringify(out, null, 1);
   const file = new File([json], `kitapligim-yedek-${d}.json`, {type: 'application/json'});
   try {
     if (navigator.canShare && navigator.canShare({files: [file]})) await navigator.share({files: [file], title: 'Kitaplığım yedeği'});
@@ -901,7 +1028,9 @@ function importArr(arr) {
     if (have.has(key)) continue;
     const s = k => typeof r[k] === 'string' ? r[k].slice(0, 2000) : '';
     const n = k => r[k] !== '' && r[k] != null && Number.isFinite(+r[k]) ? +r[k] : null;
-    books.push({id: uid(), title: s('title'), author: s('author'), translator: s('translator'), publisher: s('publisher'), isbn: s('isbn'), genre: s('genre'), year: n('year'), pages: n('pages'), status: STAT[r.status] ? r.status : 'okunacak', finishedAt: s('finishedAt'), rating: Math.max(0, Math.min(5, n('rating') || 0)), location: s('location'), lentTo: s('lentTo'), notes: s('notes'), purchasedAt: s('purchasedAt'), purchasePlace: s('purchasePlace'), acquisition: r.acquisition === 'new' ? 'new' : 'existing', cover: okUrl(r.cover), addedAt: s('addedAt') || new Date().toISOString(), updatedAt: new Date().toISOString()});
+    const nid = uid(), cd = typeof r.coverData === 'string' && /^data:image\/(jpeg|png|webp);base64,/.test(r.coverData) ? r.coverData : '';
+    if (cd) fetch(cd).then(x => x.blob()).then(bl => idb.put(nid, bl)).then(() => render()).catch(() => {});
+    books.push({id: nid, coverLocal: !!cd, title: s('title'), author: s('author'), translator: s('translator'), publisher: s('publisher'), isbn: s('isbn'), genre: normGenre(s('genre')), year: n('year'), pages: n('pages'), status: STAT[r.status] ? r.status : 'okunacak', finishedAt: s('finishedAt'), rating: Math.max(0, Math.min(5, n('rating') || 0)), location: s('location'), lentTo: s('lentTo'), notes: s('notes'), purchasedAt: s('purchasedAt'), purchasePlace: s('purchasePlace'), acquisition: r.acquisition === 'new' ? 'new' : 'existing', cover: okUrl(r.cover), addedAt: s('addedAt') || new Date().toISOString(), updatedAt: new Date().toISOString()});
     have.add(key); added++;
   }
   persist(); render(); syncShared();
@@ -952,10 +1081,11 @@ const PROMPT = `Bu fotoğraf bir kitaba ait (çoğunlukla ön kapak; arka kapak 
 Kurallar:
 - Başlık ve yazar adını Türkçe yazım kurallarına uygun, normal büyük-küçük harfle yaz; kapakta hepsi büyük harfle yazsa bile ("KÜRK MANTOLU MADONNA" -> "Kürk Mantolu Madonna").
 - Fotoğrafta görmediğin alanları null bırak, asla uydurma. Çeviri kitapsa ve çevirmen görünüyorsa "translator" alanına yaz.
-- "genre": kitabı tanıyorsan ya da kapaktan anlaşılıyorsa kısa bir Türkçe tür (Roman, Polisiye, Gerilim, Fantastik, Bilim kurgu, Tarih, Deneme, Şiir, Biyografi, Felsefe, Klasik, Çocuk, Psikoloji, Kişisel gelişim gibi); emin değilsen null.
+- "genre": kitabı tanıyorsan ya da kapaktan anlaşılıyorsa şu listeden TAM OLARAK birini yaz: ${GENRES.map(g => g[0]).join(', ')}. Emin değilsen null.
+- "box_2d": fotoğraftaki kitabın (kapağın) sınırları, [ymin, xmin, ymax, xmax] biçiminde, 0-1000 aralığına ölçeklenmiş tam sayılar. Kitap seçilemiyorsa null.
 - "isbn" yalnızca fotoğrafta yazıyorsa, sadece rakamlarla.
 Yalnızca tek bir JSON nesnesi döndür:
-{"title":"...","author":"...","translator":null,"publisher":"...","isbn":null,"genre":"Roman","year":null}`;
+{"title":"...","author":"...","translator":null,"publisher":"...","isbn":null,"genre":"Roman","year":null,"box_2d":[60,180,940,820]}`;
 async function readCover(file) {
   const key = getKey();
   if (!key) throw new UErr('Önce kapak okuma ayarından anahtar ekle.');
@@ -982,32 +1112,43 @@ let coverMode = 'new';
 function askCover(mode) { coverMode = mode; if (!getKey()) openKey(); else $('coverIn').click(); }
 $('coverBtn').onclick = () => askCover('new');
 $('coverFill').onclick = () => askCover('fill');
-$('coverIn').addEventListener('change', async e => {
-  const file = e.target.files && e.target.files[0]; e.target.value = '';
-  if (!file) return;
-  if (coverMode !== 'fill' || $('ov').hidden) { openSheet(null, true); $('shTitle').textContent = 'Kapaktan ekle'; }
+async function coverPhoto(file, newSheet) {
+  if (newSheet) { openSheet(null, true); $('shTitle').textContent = 'Kapaktan ekle'; }
   const msg = $('scanMsg'), mine = editId;
   $('scanBox').hidden = false; $('coverFill').hidden = true;
-  $('cover').src = URL.createObjectURL(file);
+  if (!getKey()) {
+    addOwn(await cropCover(file, null).catch(() => null));
+    msg.textContent = 'Fotoğrafı kapak olarak ekledim. Kitabın bilgilerini de otomatik okumamı istersen kapak okumayı aç.';
+    return;
+  }
   msg.textContent = 'Kapak okunuyor…';
   try {
     const info = await readCover(file);
     if ($('ov').hidden || editId !== mine) return;
     let n = 0;
-    for (const k of ['title','author','translator','publisher','genre','year']) {
+    for (const k of ['title','author','translator','publisher','year']) {
       const v = info && info[k];
       if (v != null && v !== '' && !f.elements[k].value) { f.elements[k].value = String(v).slice(0, 300); n++; }
     }
+    if (info && info.genre && !f.elements.genre.value) { f.elements.genre.value = normGenre(info.genre); n++; }
     const isb = String((info && info.isbn) || '').replace(/[^0-9Xx]/g, '');
     if (isb && !f.elements.isbn.value) { f.elements.isbn.value = isb; checkDup(isb); }
-    if (curCover) setCover(curCover);
-    msg.textContent = f.elements.title.value ? (n ? 'Kapaktan dolduruldu. Kontrol edip kaydet.' : 'Kapakta yeni bilgi bulunamadı.') : 'Kapakta kitabın adını okuyamadım. Daha yakından çekmeyi dene ya da elle yaz.';
-    if (!f.elements.title.value) $('coverFill').hidden = false;
+    addOwn(await cropCover(file, info && info.box_2d).catch(() => null));
+    msg.textContent = f.elements.title.value ? (n ? 'Kapaktan dolduruldu. Fotoğrafını kapak yaptım; istersen internetteki kapaklardan birini seçebilirsin.' : 'Kapakta yeni bilgi bulunamadı.') : 'Kapakta kitabın adını okuyamadım. Daha yakından çekmeyi dene ya da elle yaz.';
+    if (!f.elements.title.value) $('coverFill').hidden = false; else searchCovers(false);
   } catch (err) {
     if ($('ov').hidden) return;
     msg.textContent = userMsg(err); $('coverFill').hidden = false;
-    if (curCover) setCover(curCover);
+    addOwn(await cropCover(file, null).catch(() => null));
   }
+}
+$('coverIn').addEventListener('change', e => {
+  const file = e.target.files && e.target.files[0]; e.target.value = '';
+  if (file) coverPhoto(file, coverMode !== 'fill' || $('ov').hidden);
+});
+$('cvPhoto').addEventListener('change', e => {
+  const file = e.target.files && e.target.files[0]; e.target.value = '';
+  if (file) coverPhoto(file, false);
 });
 function openKey() { $('keyIn').value = getKey(); $('keyMsg').textContent = ''; $('keyDel').hidden = !getKey(); $('keyOv').hidden = false; }
 $('keyOpen').onclick = openKey;
@@ -1047,6 +1188,7 @@ async function syncShared() {
 }
 window.addEventListener('online', syncShared);
 
+f.elements.genre.innerHTML = '<option value="">Belirtilmedi</option>' + GENRES.map(([g]) => `<option>${esc(g)}</option>`).join('');
 load(); setTheme(isDark() ? 'dark' : 'light'); drawSound(); setTimeout(syncShared, 1500);
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
