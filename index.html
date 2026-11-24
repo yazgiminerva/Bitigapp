@@ -47,10 +47,10 @@ html,body{height:100%}
 body{margin:0;color:var(--ink);font:16px/1.55 "Nunito",system-ui,sans-serif;overflow:hidden;padding:0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
 background:radial-gradient(circle at 12px 12px,var(--dot) 1.5px,transparent 2px) 0 0/24px 24px,var(--bg)}
 .wrap{max-width:780px;margin:0 auto}
-.pager{display:flex;height:100%;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
+.pager{display:flex;height:calc(100% - 60px - var(--sb));overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain}
 .pager::-webkit-scrollbar{display:none}
 .page{flex:none;width:100%;height:100%;overflow-y:auto;scroll-snap-align:start;scroll-snap-stop:always;-webkit-overflow-scrolling:touch;padding:var(--st) 0 calc(var(--sb) + 40px)}
-.dots{position:fixed;left:50%;bottom:calc(var(--sb) + 10px);transform:translateX(-50%);display:flex;gap:8px;z-index:8;background:color-mix(in srgb,var(--paper) 85%,transparent);padding:7px 10px;border-radius:99px;box-shadow:0 2px 10px var(--shadow)}
+.dots{position:fixed;left:50%;bottom:calc(var(--sb) + 70px);transform:translateX(-50%);display:flex;gap:8px;z-index:8;background:color-mix(in srgb,var(--paper) 85%,transparent);padding:7px 10px;border-radius:99px;box-shadow:0 2px 10px var(--shadow)}
 .dots button{width:9px;height:9px;padding:0;border:0;border-radius:50%;background:var(--mute);opacity:.45;cursor:pointer}
 .dots button[aria-current=true]{opacity:1;background:var(--rose);width:22px;border-radius:99px}
 .top{position:relative}
@@ -256,6 +256,31 @@ body.selecting{padding-bottom:170px}
 .badge .medal{width:52px;height:54px;display:block;margin:0 auto 4px}
 .badge b{display:block;font-size:13px;line-height:1.2}.badge span{display:block;font-size:11px;color:var(--mute);margin-top:2px;line-height:1.25}
 .hlist .item.on{box-shadow:0 0 0 3px var(--rose)}
+/* sections: feed, library, profile */
+.tabpage{position:fixed;left:0;right:0;top:0;bottom:calc(60px + var(--sb));overflow-y:auto;-webkit-overflow-scrolling:touch;padding:var(--st) env(safe-area-inset-right) 40px env(safe-area-inset-left)}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:7;display:grid;grid-template-columns:repeat(3,1fr);height:calc(60px + var(--sb));padding-bottom:var(--sb);background:color-mix(in srgb,var(--paper) 94%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-top:1px solid var(--line)}
+:root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) .tabbar{background:color-mix(in srgb,var(--card) 94%,transparent);border-top-color:var(--cardE)}
+.tabbar button{border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--mute);font:800 11px "Nunito",sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.tabbar svg{width:26px;height:26px}.tabbar svg .o{fill:none;stroke:currentColor;stroke-width:1.9;stroke-linejoin:round}
+.tabbar button[aria-current=page]{color:var(--ink)}.tabbar button[aria-current=page] svg .o{fill:currentColor;stroke-width:1.4}
+.tabbar img{width:20px;height:30px;image-rendering:pixelated;margin-top:-2px;opacity:.75}.tabbar button[aria-current=page] img{opacity:1;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--rose) 70%,transparent))}
+body.selecting .tabbar{display:none}
+.pbody{padding:0 max(4vw,16px)}
+#profMore .more{margin:0;padding:0}
+.post{display:grid;grid-template-columns:44px minmax(0,1fr);gap:10px;padding:14px 2px;border-bottom:1px solid var(--line)}
+.post .pa{width:40px;height:60px;image-rendering:pixelated}
+.post .ph{display:flex;gap:6px;align-items:baseline;flex-wrap:wrap;font-size:15px}.post .ph b{font-weight:800}.post .ph span{color:var(--mute);font-size:14px}
+.post p{margin:2px 0 8px}
+.post .stars{color:var(--butterD);letter-spacing:1px}
+.pbk{display:flex;gap:10px;align-items:center;width:100%;text-align:left;border:1px solid var(--line);background:var(--field);border-radius:16px;padding:8px;color:var(--ink);font:inherit;cursor:pointer}
+.pbk .cv{width:40px;height:58px;flex:none}.pbk .t{font:600 16px/1.2 var(--serif);font-variation-settings:"SOFT" 100}.pbk .a{color:var(--mute);font-size:13px}
+.fday{margin:18px 2px 0;font:800 12px "Nunito",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+.nowrow{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}.nowrow::-webkit-scrollbar{display:none}
+.nowc{flex:none;width:150px;background:var(--field);border-radius:18px;padding:10px;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center}
+.nowc .cv{width:64px;height:94px}.nowc b{font:600 14px/1.2 var(--serif);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.nowc .btn{min-height:36px;padding:4px 10px;font-size:13px;width:100%}
+.fgoal{display:flex;align-items:center;gap:12px;background:var(--field);border-radius:18px;padding:12px 14px;margin-top:6px}
+.fgoal .gbar{flex:1;margin:0}.fgoal b{white-space:nowrap}
 .wadd{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.wadd .btn{font-size:14px;padding:8px 6px;min-height:46px}
 .witem{grid-template-columns:46px minmax(0,1fr) auto}
 .witem .n{color:var(--mute);font-size:13px;font-style:italic;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -564,7 +589,7 @@ a{color:var(--roseD)}
     <div class="chips" id="chips" role="group" aria-label="Duruma göre süz"></div>
     <div class="chips" id="gchips" role="group" aria-label="Türe göre süz"></div>
     <ul id="list"></ul>
-    <div class="more">
+    <div class="more" id="moreBox">
       <details id="acctBox">
         <summary>Hesabım</summary>
         <p style="margin:0 0 4px"><b id="acctMail"></b></p>
@@ -595,7 +620,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 29</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 30</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -621,6 +646,18 @@ a{color:var(--roseD)}
 </div>
 </section>
 </main>
+<div class="tabpage" id="tabFeed" hidden>
+  <div class="wrap">
+    <header class="band top"><h1>Akış</h1><p class="muted" style="margin:0">Kitaplığında olan biten her şey</p></header>
+    <div class="band" id="feedNow"></div>
+    <div class="band" id="feed"></div>
+  </div>
+</div>
+<nav class="tabbar" id="tabbar" aria-label="Bölümler">
+  <button type="button" data-tab="feed"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="o" d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg><span>Akış</span></button>
+  <button type="button" data-tab="lib" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true"><path class="o" d="M4 3h4v18H4zM10 3h4v18h-4zM15.5 4.2l3.8-1 4 17.4-3.8 1z"/></svg><span>Kitaplığım</span></button>
+  <button type="button" data-tab="prof"><img id="tabAv" alt=""><span>Profilim</span></button>
+</nav>
 <nav class="dots" aria-label="Sayfalar"><button type="button" data-p="0" aria-label="Raf" aria-current="true"></button><button type="button" data-p="1" aria-label="Büyük kitaplık"></button></nav>
 
 <div class="cam" id="cam" hidden>
@@ -783,9 +820,10 @@ a{color:var(--roseD)}
   </div>
 </div>
 
-<div class="ov" id="profOv" hidden>
-  <div class="sheet prof" role="dialog" aria-modal="true" aria-labelledby="pTitle">
-    <div class="sh-head"><h2 id="pTitle">Profilim</h2><button class="x" id="pX" type="button" aria-label="Kapat">×</button></div>
+<div class="tabpage" id="tabProf" hidden>
+  <div class="wrap prof">
+    <header class="band top"><h1>Profilim</h1></header>
+    <div class="pbody">
     <div id="pView">
       <div class="phead">
         <img id="pAv" class="pav" alt="">
@@ -805,6 +843,8 @@ a{color:var(--roseD)}
       <button class="btn primary" id="pShare" type="button" style="width:100%;margin-top:18px">Profil kartını paylaş</button>
       <p class="muted" id="pShareMsg" style="text-align:center;margin:8px 0 0"></p>
       <p class="muted" style="font-size:13px;text-align:center;margin:6px 0 0">Profilin yalnızca sana görünür.</p>
+      <h3 class="psec">Ayarlar</h3>
+      <div id="profMore"></div>
     </div>
     <div id="pEdit" hidden>
       <label class="f">Görünen adın<input id="peName" maxlength="30" autocomplete="off" placeholder="Örn. Yazgı"></label>
@@ -813,6 +853,7 @@ a{color:var(--roseD)}
       <label class="f"><span><span id="peYear"></span> okuma hedefim (kitap)</span><input id="peGoal" type="number" inputmode="numeric" min="0" max="999" placeholder="Örn. 24"></label>
       <p class="amsg" id="peMsg" role="alert"></p>
       <div class="row"><button class="btn primary" id="peSave" type="button">Kaydet</button><button class="btn" id="peCancel" type="button">Vazgeç</button></div>
+    </div>
     </div>
   </div>
 </div>
@@ -1176,6 +1217,92 @@ $('hRes').addEventListener('click', e => {
   if (t.dataset.add) { wishNext = false; openSheet(null, true); setAcq('new'); f.elements.isbn.value = t.dataset.add; fillFrom(t.dataset.add); }
 });
 
+// --- Bottom tabs, like a social app: Akış · Kitaplığım · Profilim ---
+let tabNow = 'lib';
+function showTab(t) {
+  tabNow = t; try { sessionStorage.setItem('tab', t); } catch (e) {}
+  $('pager').hidden = t !== 'lib'; document.querySelector('.dots').hidden = t !== 'lib';
+  $('tabFeed').hidden = t !== 'feed'; $('tabProf').hidden = t !== 'prof';
+  for (const b of $('tabbar').children) if (b.dataset.tab === t) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+  if (t === 'prof') { $('pEdit').hidden = true; $('pView').hidden = false; drawProfile(); }
+  if (t === 'feed') renderFeed();
+}
+$('tabbar').addEventListener('click', e => {
+  const b = e.target.closest('[data-tab]'); if (!b) return;
+  const page = b.dataset.tab === 'feed' ? $('tabFeed') : b.dataset.tab === 'prof' ? $('tabProf') : null;
+  if (b.dataset.tab === tabNow) { if (page) page.scrollTo({top: 0, behavior: 'smooth'}); else document.querySelector('#pMain').scrollTo({top: 0, behavior: 'smooth'}); return; }
+  sfx.unlock(); sfx.tick(); showTab(b.dataset.tab);
+});
+$('profMore').append($('moreBox'));
+function relTime(v) {
+  if (!v) return '';
+  const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(v), d = new Date(dateOnly ? v + 'T12:00' : v), now = new Date();
+  const days = Math.round((new Date(now.toDateString()) - new Date(d.toDateString())) / 864e5);
+  if (!dateOnly && days === 0) { const m = Math.max(0, Math.round((now - d) / 6e4)); return m < 1 ? 'şimdi' : m < 60 ? `${m} dk` : `${Math.floor(m / 60)} sa`; }
+  if (days === 0) return 'bugün'; if (days === 1) return 'dün'; if (days < 7) return `${days} gün`;
+  return d.toLocaleDateString('tr-TR', {day: 'numeric', month: 'short', ...(d.getFullYear() !== now.getFullYear() ? {year: 'numeric'} : {})});
+}
+function dayLabel(v) {
+  const d = new Date(/^\d{4}-\d{2}-\d{2}$/.test(v) ? v + 'T12:00' : v), now = new Date();
+  const days = Math.round((new Date(now.toDateString()) - new Date(d.toDateString())) / 864e5);
+  return days === 0 ? 'Bugün' : days === 1 ? 'Dün' : days < 7 ? d.toLocaleDateString('tr-TR', {weekday: 'long'}) : d.toLocaleDateString('tr-TR', {day: 'numeric', month: 'long', ...(d.getFullYear() !== now.getFullYear() ? {year: 'numeric'} : {})});
+}
+let feedMax = 40;
+function feedEvents() {
+  const ev = [];
+  for (const b of books) {
+    if (b.addedAt) ev.push({at: b.addedAt, b, kind: b.fromWish ? 'wishbuy' : b.acquisition === 'new' ? 'buy' : 'add'});
+    if (b.status === 'okundu' && b.finishedAt) {
+      const u = b.updatedAt ? new Date(typeof b.updatedAt === 'number' ? b.updatedAt : Date.parse(b.updatedAt)) : null;
+      const local = u && !isNaN(u) ? new Date(u - u.getTimezoneOffset() * 6e4).toISOString().slice(0, 10) : '';
+      ev.push({at: local === b.finishedAt ? u.toISOString() : b.finishedAt, b, kind: 'done'});
+    }
+  }
+  for (const w of wishes) if (w.wishedAt) ev.push({at: w.wishedAt, b: w, kind: 'wish'});
+  const key = v => /^\d{4}-\d{2}-\d{2}$/.test(v) ? v + 'T12:00' : v;
+  return ev.sort((x, y) => String(key(y.at)).localeCompare(String(key(x.at))));
+}
+function renderFeed() {
+  if ($('tabFeed').hidden) return;
+  const a = avLoad() || {...AV_DEFAULT}, p = profLoad(), av = avURL(a, {}), name = esc(a.name || 'Sen'), user = p.username ? '@' + esc(p.username) : '';
+  const now = books.filter(b => b.status === 'okunuyor');
+  const goal = +(p.goals || {})[YEAR()] || 0, s = profStats();
+  $('feedNow').innerHTML = (now.length ? `<p class="fday">Şu an okuduğun</p><div class="nowrow">${now.map(b => `<div class="nowc">${coverEl(b)}<b>${esc(b.title)}</b><button class="btn primary" type="button" data-done="${esc(b.id)}">Bitirdim</button></div>`).join('')}</div>` : '')
+    + (goal ? `<div class="fgoal"><b>${YEAR()} hedefi</b><div class="gbar"><i style="width:${Math.min(100, Math.round(s.thisYear / goal * 100))}%"></i></div><b>${s.thisYear}/${goal}</b></div>` : '');
+  const ev = feedEvents(), shown = ev.slice(0, feedMax);
+  let html = '', lastDay = '';
+  const say = {
+    add: 'kitaplığına yeni bir kitap ekledi',
+    buy: e => `yeni bir kitap aldı${e.b.purchasePlace ? ' · ' + esc(e.b.purchasePlace) : ''}`,
+    wishbuy: 'istek listesindeki kitaba sonunda kavuştu',
+    done: e => `bir kitabı bitirdi${+e.b.rating ? ` <span class="stars">${'★'.repeat(+e.b.rating)}</span>` : ''}`,
+    wish: 'istek listesine bir kitap ekledi',
+  };
+  for (const e of shown) {
+    const dl = dayLabel(e.at); if (dl !== lastDay) { html += `<p class="fday">${esc(dl)}</p>`; lastDay = dl; }
+    const t = typeof say[e.kind] === 'function' ? say[e.kind](e) : say[e.kind];
+    html += `<article class="post"><img class="pa" src="${av}" alt=""><div><div class="ph"><b>${name}</b><span>${user ? user + ' · ' : ''}${esc(relTime(e.at))}</span></div><p>${t}</p><button class="pbk" type="button" data-${e.kind === 'wish' ? 'wish' : 'open'}="${esc(e.b.id)}">${coverEl(e.b)}<div><div class="t">${esc(e.b.title)}</div><div class="a">${esc(e.b.author || '')}</div></div></button></div></article>`;
+  }
+  if (ev.length > feedMax) html += `<button class="btn" type="button" id="feedMore" style="width:100%;margin-top:14px">Daha eski hareketler</button>`;
+  $('feed').innerHTML = html || '<p class="muted" style="padding:20px 4px;text-align:center">Akışın henüz boş. Kitap ekledikçe, bitirdikçe ve istek listene ekledikçe burada görünecek.</p>';
+  hydrate($('feedNow')); hydrate($('feed'));
+}
+$('tabFeed').addEventListener('click', e => {
+  const t = e.target.closest('[data-open],[data-wish],[data-done],#feedMore'); if (!t) return;
+  if (t.id === 'feedMore') { feedMax += 40; return renderFeed(); }
+  if (t.dataset.open) return openSheet(t.dataset.open);
+  if (t.dataset.wish) return openSheet(t.dataset.wish);
+  if (t.dataset.done) {
+    const b = books.find(x => x.id === t.dataset.done); if (!b) return;
+    const before = books;
+    books = books.map(x => x.id === b.id ? {...x, status: 'okundu', finishedAt: x.finishedAt || today(), updatedAt: new Date().toISOString()} : x);
+    if (!persist()) { books = before; return; }
+    render(); sfx.unlock(); sfx.sparkle();
+    note(`<span><b>${esc(b.title)}</b> bitti! Tebrikler.</span><button class="btn" type="button" id="rateIt">Puan ver</button>`);
+    $('rateIt').onclick = () => { $('note').hidden = true; openSheet(b.id); };
+  }
+});
+
 function coverEl(b) {
   const c = colorOf(b), cu = okUrl(b.cover);
   return b.coverLocal ? `<img class="cv" style="--c:${c}" data-local="${esc(b.id)}" alt="">` : cu ? `<img class="cv" style="--c:${c}" src="${esc(cu)}" alt="" loading="lazy">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`;
@@ -1221,6 +1348,7 @@ $('wShare').onclick = async () => {
 };
 function render() {
   renderWish();
+  if (typeof tabNow !== 'undefined') { if (tabNow === 'feed') renderFeed(); else if (tabNow === 'prof' && $('pEdit').hidden) drawProfile(); }
   const byNew = [...books].sort((a, b) => String(b.addedAt || '').localeCompare(String(a.addedAt || '')));
   const shelfList = byNew.slice(0, 18).sort((a, b) => genreIdx(a.genre) - genreIdx(b.genre));
   $('shelf').innerHTML = shelfHTML(shelfList);
@@ -1860,6 +1988,7 @@ function drawAvUI() {
 function openAv() { avDraft = {...(avLoad() || AV_DEFAULT)}; $('avName').value = avDraft.name || ''; drawAvUI(); $('avOv').hidden = false; }
 function renderAvatarHead() {
   const a = avLoad();
+  $('tabAv').src = avURL(a || {...AV_DEFAULT, hood: true, cloak: 4, hairColor: 0}, {});
   $('avPlus').hidden = !!a;
   avDraw($('avMini'), a || {...AV_DEFAULT, hood: true, cloak: 4, hairColor: 0}, {});
   $('avMini').style.opacity = a ? 1 : .45;
@@ -2529,11 +2658,9 @@ function drawProfile() {
     setTimeout(() => { sfx.unlock(); sfx.sparkle(); note(`<span><b>Tebrikler!</b> ${yr} okuma hedefin olan ${goal} kitabı tamamladın.</span>`); }, 400);
   }
 }
-function openProfile() { $('profOv').hidden = false; $('pEdit').hidden = true; $('pView').hidden = false; drawProfile(); $('profOv').querySelector('.sheet').scrollTop = 0; }
+function openProfile() { showTab('prof'); }
 $('avBtn').onclick = () => { if (!avLoad()) return openAv(); openProfile(); };
-$('pX').onclick = () => { $('profOv').hidden = true; };
-$('profOv').addEventListener('click', e => { if (e.target === $('profOv')) $('profOv').hidden = true; });
-$('pAvEdit').onclick = () => { $('profOv').hidden = true; openAv(); };
+$('pAvEdit').onclick = () => openAv();
 function openProfEdit(focusGoal) {
   const p = profLoad(), a = avLoad() || {};
   $('peName').value = a.name || ''; $('peUser').value = p.username || ''; $('peBio').value = p.bio || ''; $('peGoal').value = (p.goals || {})[YEAR()] || '';
@@ -2922,6 +3049,7 @@ async function startAuth() {
 f.elements.status.addEventListener('change', () => { if (f.elements.status.value === 'okundu' && !f.elements.finishedAt.value) f.elements.finishedAt.value = today(); });
 f.elements.genre.innerHTML = '<option value="">Belirtilmedi</option>' + GENRES.map(([g]) => `<option>${esc(g)}</option>`).join('');
 setTheme(themeNow()); drawSound(); renderAvatarHead(); startAuth();
+showTab(sessionStorage.getItem('tab') || 'lib');
 if (false) { try { localStorage.setItem('kitapligim.avAsked', '1'); } catch (e) {} setTimeout(() => { note('<span>Kendine küçük bir cadı avatarı oluşturmak ister misin?</span><button class="btn primary" type="button" id="avGo">Oluştur</button>', true); $('avGo').onclick = () => { $('note').hidden = true; openAv(); }; }, 2800); } setTimeout(syncShared, 1500);
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 }
