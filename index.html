@@ -661,6 +661,14 @@ a{color:var(--roseD)}
         <p style="margin:0 0 4px"><b id="acctMail"></b></p>
         <p class="muted" id="syncInfo" style="margin:0 0 10px"></p>
         <div class="bk"><button class="btn" id="pwReset" type="button">Şifremi değiştir</button><button class="btn" id="logout" type="button">Çıkış yap</button><button class="btn" type="button" data-kvkk>Aydınlatma metni</button><button class="btn" type="button" data-kosul>Kullanım koşulları</button><button class="btn danger" id="delAcct" type="button">Hesabımı ve kitaplarımı sil</button></div>
+        <form id="pwForm" hidden autocomplete="on" novalidate style="margin-top:12px">
+          <input type="email" name="username" id="pwUser" autocomplete="username" hidden>
+          <label class="f">Mevcut şifren<input type="password" name="cur" autocomplete="current-password" required></label>
+          <label class="f">Yeni şifre (en az 8 karakter)<input type="password" name="nw" autocomplete="new-password" minlength="8" required></label>
+          <label class="f">Yeni şifre tekrar<input type="password" name="nw2" autocomplete="new-password" required></label>
+          <div class="bk"><button class="btn primary" id="pwSave" type="submit">Şifreyi kaydet</button><button class="btn" id="pwCancel" type="button">Vazgeç</button></div>
+          <button class="btn link" id="pwMail" type="button" style="margin-top:4px">Mevcut şifreni hatırlamıyor musun? E-postana bağlantı gönder</button>
+        </form>
         <p class="muted" id="acctMsg"></p>
       </details>
       <details id="bkBox">
@@ -686,7 +694,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 38</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 39</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -3542,9 +3550,29 @@ $('logout').onclick = async () => {
 };
 const confirmed = new Set();
 function confirmOnce(k, text) { if (confirmed.has(k)) return true; confirmed.add(k); $('acctMsg').textContent = text; setTimeout(() => confirmed.delete(k), 8000); return false; }
-$('pwReset').onclick = async () => {
-  try { await FB.sendPasswordResetEmail(fbAuth, me.email); $('acctMsg').textContent = 'Şifre değiştirme bağlantısı e-postana gönderildi.'; } catch (er) { $('acctMsg').textContent = authErr(er); }
+const pwForm = $('pwForm');
+$('pwReset').onclick = () => { pwForm.reset(); $('pwUser').value = me.email || ''; pwForm.hidden = false; $('pwReset').hidden = true; $('acctMsg').textContent = ''; setTimeout(() => pwForm.elements.cur.focus(), 60); };
+const pwClose = () => { pwForm.reset(); pwForm.hidden = true; $('pwReset').hidden = false; };
+$('pwCancel').onclick = () => { pwClose(); $('acctMsg').textContent = ''; };
+$('pwMail').onclick = async () => {
+  try { await FB.sendPasswordResetEmail(fbAuth, me.email); $('acctMsg').textContent = 'Şifre değiştirme bağlantısı e-postana gönderildi. Gereksiz/spam klasörüne de bak.'; } catch (er) { $('acctMsg').textContent = authErr(er); }
 };
+pwForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  const F = pwForm.elements, msg = $('acctMsg');
+  if (!F.cur.value) { msg.textContent = 'Mevcut şifreni yaz.'; return; }
+  if (F.nw.value.length < 8) { msg.textContent = 'Yeni şifre en az 8 karakter olsun.'; return; }
+  if (F.nw.value !== F.nw2.value) { msg.textContent = 'Yeni şifreler birbirini tutmuyor.'; return; }
+  if (F.nw.value === F.cur.value) { msg.textContent = 'Yeni şifre eskisinden farklı olsun.'; return; }
+  $('pwSave').disabled = true; msg.textContent = 'Kaydediliyor…';
+  try {
+    const u = fbAuth.currentUser;
+    await FB.reauthenticateWithCredential(u, FB.EmailAuthProvider.credential(u.email, F.cur.value));
+    await FB.updatePassword(u, F.nw.value);
+    pwClose(); msg.textContent = 'Şifren değişti.'; sfx.unlock(); sfx.sparkle();
+  } catch (er) { msg.textContent = er && (er.code === 'auth/invalid-credential' || er.code === 'auth/wrong-password') ? 'Mevcut şifren hatalı.' : authErr(er); }
+  finally { $('pwSave').disabled = false; }
+});
 $('delAcct').onclick = async () => {
   if (!confirmOnce('del', 'Hesabın ve hesaptaki bütün kitapların kalıcı olarak silinecek. Eminsen bir kez daha dokun.')) return;
   $('acctMsg').textContent = 'Siliniyor…';
