@@ -1,4 +1,4 @@
-const CACHE = 'kitapligim-v13';
+const CACHE = 'kitapligim-v14';
 const SHELL = ['./', './index.html', './zxing.min.js', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png', './splash.jpg', './cornice.jpg', './cabinet.jpg', './wood-v.jpg', './wood-h.jpg', './wood-h-light.jpg', './leather.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL.map(u => new Request(u, {cache: 'reload'})))).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });

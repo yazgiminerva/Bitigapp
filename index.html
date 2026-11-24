@@ -385,7 +385,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 13</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 14</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -1006,8 +1006,9 @@ function avPixels(a, frame = {}) {
   const face = y => [[6, 9, 14], [7, 8, 15], [8, 7, 16], [9, 7, 16], [10, 7, 16], [11, 7, 16], [12, 7, 16], [13, 7, 16], [14, 7, 16], [15, 8, 15], [16, 9, 14]].find(r => r[0] === y);
   // ground shadow
   rect(7, 31, 16, 31, '#00000033');
-  // hair behind the head
+  // hair behind the head (hidden inside a hood)
   const st = a.style;
+  if (!a.hood) {
   if (st === 'duz') { disc(11.5, 10, 6.5, hb); rect(5, 10, 18, 22, hb); rect(5, 21, 18, 22, hd); }
   if (st === 'dalgali') {
     disc(11.5, 10, 6.5, hb);
@@ -1016,19 +1017,25 @@ function avPixels(a, frame = {}) {
     rect(6, 23, 17, 23, hd);
   }
   if (st === 'kivircik') {
-    for (const [x, y, r] of (a.hood ? [[6, 15.5, 3], [17, 15.5, 3], [6, 19.5, 2.6], [17, 19.5, 2.6]] : [[11.5, 8, 7.5], [5.5, 12, 3.5], [17.5, 12, 3.5], [5, 16.5, 3], [18, 16.5, 3], [6, 20, 2.6], [17, 20, 2.6], [8.5, 4, 3], [14.5, 4, 3]])) disc(x, y, r, hb);
+    for (const [x, y, r] of [[11.5, 8, 7.5], [5.5, 12, 3.5], [17.5, 12, 3.5], [5, 16.5, 3], [18, 16.5, 3], [6, 20, 2.6], [17, 20, 2.6], [8.5, 4, 3], [14.5, 4, 3]]) disc(x, y, r, hb);
     for (const [x, y] of [[4, 14], [19, 14], [5, 18], [18, 18], [7, 2], [16, 2], [3, 11], [20, 11], [6, 21], [17, 21]]) P(x, y, hd);
     for (const [x, y] of [[9, 3], [14, 3], [6, 10], [17, 10]]) P(x, y, hl);
   }
-  if (st === 'topuz') { disc(11.5, 9.5, 6.2, hb); if (!a.hood) { disc(11.5, 3, 3, hb); P(10, 2, hl); P(11, 2, hl); } rect(9, 5, 14, 5, hd); }
-  // hood behind the head
-  if (a.hood) { disc(11.5, 10.5, 8.4, clD); disc(11.5, 10.2, 7.6, cl); }
-  if (a.hood && st === 'kivircik') for (const [x, y, r] of [[6.5, 17, 2.6], [16.5, 17, 2.6], [7, 20.5, 2.3], [16, 20.5, 2.3]]) disc(x, y, r, hb);
+  if (st === 'topuz') { disc(11.5, 9.5, 6.2, hb); disc(11.5, 3, 3, hb); P(10, 2, hl); P(11, 2, hl); rect(9, 5, 14, 5, hd); }
+  }
   // body and cloak
-  for (let y = 17; y <= 30; y++) { const w = Math.min(7, 4 + ((y - 17) >> 2)); rect(11.5 - w - .5, y, 11.5 + w + .5, y, cl); P(11.5 - w - .5, y, clD); P(11.5 + w + .5, y, clD); }
+  for (let y = 17; y <= 30; y++) { const w = a.hood ? Math.min(8, 6 + ((y - 17) >> 2)) : Math.min(7, 4 + ((y - 17) >> 2)); rect(11.5 - w - .5, y, 11.5 + w + .5, y, cl); P(11.5 - w - .5, y, clD); P(11.5 + w + .5, y, clD); }
   rect(10, 18, 13, 29, clD); rect(11, 18, 12, 29, '#1f1a26');
   for (let y = 19; y <= 28; y += 3) P(11, y, '#d8b56a');
   rect(8, 17, 15, 17, clL); P(9, 18, clL); P(14, 18, clL);
+  // the hood: a pointed cowl that falls onto the shoulders and joins the cloak
+  if (a.hood) {
+    const outer = {1: [13, 13], 2: [12, 13], 3: [11, 14], 4: [9, 15], 5: [8, 16], 6: [7, 17], 7: [6, 17], 8: [5, 18], 9: [5, 18], 10: [4, 19], 11: [4, 19], 12: [4, 19], 13: [4, 19], 14: [4, 19], 15: [4, 19], 16: [4, 19], 17: [4, 19], 18: [4, 19], 19: [5, 18]};
+    for (const [y, [x0, x1]] of Object.entries(outer)) { rect(x0, +y, x1, +y, cl); P(x0, +y, clD); if (x1 - x0 > 3) { P(x0 + 1, +y, clD); P(x1, +y, clL); } }
+    for (let y = 2; y <= 7; y++) P(12 + (y < 4 ? 0 : 1) - (y > 5 ? 1 : 0), y, clD);
+    const lining = shade(cl, .38), open = {5: [9, 14], 6: [8, 15], 7: [7, 16], 8: [6, 17], 9: [6, 17], 10: [6, 17], 11: [6, 17], 12: [6, 17], 13: [6, 17], 14: [6, 17], 15: [6, 17], 16: [7, 16], 17: [8, 15], 18: [9, 14]};
+    for (const [y, [x0, x1]] of Object.entries(open)) rect(x0, +y, x1, +y, lining);
+  }
   // neck, face
   rect(10, 16, 13, 17, skD);
   for (let y = 6; y <= 16; y++) { const r = face(y); rect(r[1], y, r[2], y, sk); }
@@ -1044,8 +1051,12 @@ function avPixels(a, frame = {}) {
   if (st === 'dalgali') { rect(7, 6, 16, 7, hb); P(7, 8, hb); P(8, 8, hb); P(15, 8, hb); P(16, 8, hb); P(11, 8, hb); for (let y = 9; y <= 21; y++) { const o = (y >> 1) % 2; P(6 + o, y, hb); P(17 - o, y, hb); } P(9, 6, hl); P(10, 6, hl); }
   if (st === 'kivircik') { for (const [x, y, r] of [[8.5, 7, 1.8], [11.5, 6.5, 1.8], [14.5, 7, 1.8]]) disc(x, y, r, hb); P(10, 6, hl); P(13, 6, hl); for (const [x, y] of [[6, 10], [6, 13], [17, 10], [17, 13]]) disc(x, y, 1.2, hb); }
   if (st === 'topuz') { rect(7, 6, 16, 7, hb); P(7, 8, hb); P(16, 8, hb); P(7, 9, hd); P(16, 9, hd); P(9, 6, hl); }
-  // hood rim around the face
-  if (a.hood) { for (let y = 3; y <= 16; y++) for (let x = 2; x <= 21; x++) { const d = Math.hypot(x - 11.5, y - 10.5); if (d <= 8.4 && d > 6.9 && y < 16 && !buf[y][x]?.startsWith?.(sk)) P(x, y, d > 7.8 ? clD : cl); } P(11, 2, clD); P(12, 2, clD); }
+  // hair falling out of the hood onto the chest
+  if (a.hood) {
+    if (st === 'kivircik') for (const [x, y, r] of [[6.6, 13, 1.4], [16.4, 13, 1.4], [6.8, 17, 1.6], [16.2, 17, 1.6], [7.2, 20.5, 1.6], [15.8, 20.5, 1.6]]) disc(x, y, r, hb);
+    if (st === 'duz') { rect(6, 9, 6, 22, hb); rect(17, 9, 17, 22, hb); P(6, 22, hd); P(17, 22, hd); }
+    if (st === 'dalgali') for (let y = 9; y <= 22; y++) { const o = (y >> 1) % 2; P(6 + o, y, hb); P(17 - o, y, hb); }
+  }
   // hands
   const wave = frame.wave ? -2 : 0;
   P(4, 24 + wave, sk); P(4, 25 + wave, skD); P(19, 24, sk); P(19, 25, skD);
