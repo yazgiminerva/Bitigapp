@@ -31,7 +31,7 @@ export default {
     if (req.method === 'OPTIONS') return new Response(null, {headers: cors(req)});
     const url = new URL(req.url);
     const isbn = (url.searchParams.get('isbn') || '').replace(/[^0-9Xx]/g, '').toUpperCase();
-    if (!/^(\d{9}[\dX]|97[89]\d{10})$/.test(isbn)) return json(req, {error: 'Geçersiz ISBN'}, 400);
+    if (!/^(\d{9}[\dX]|97[89]\d{10})$/.test(isbn)) return json(req, {ok: false, error: 'Geçersiz ISBN'});
     const mode = url.searchParams.get('mode') || 'text';
 
     let r;
@@ -41,7 +41,7 @@ export default {
         'Accept': 'text/html', 'Accept-Language': 'tr-TR,tr;q=0.9',
       }, cf: {cacheTtl: 86400, cacheEverything: true}});
     } catch (e) {
-      return json(req, {error: 'Katalog sitesine ulaşılamadı', detail: String(e)}, 502);
+      return json(req, {ok: false, error: 'Katalog sitesine ulaşılamadı', detail: String(e)});
     }
     const html = await r.text();
     // Geliştirme için: sayfanın ham hâli
@@ -49,6 +49,6 @@ export default {
     const text = toText(html);
     const at = text.indexOf(isbn);
     const snippet = at >= 0 ? text.slice(Math.max(0, at - 1500), at + 1500) : text.slice(0, 3000);
-    return json(req, {isbn, status: r.status, found: at >= 0, text: snippet, source: 'Milli Kütüphane'}, 200, {'Cache-Control': 'public, max-age=86400'});
+    return json(req, {ok: r.ok, isbn, status: r.status, found: at >= 0, length: html.length, text: snippet, source: 'Milli Kütüphane'}, 200, r.ok ? {'Cache-Control': 'public, max-age=86400'} : {});
   },
 };
