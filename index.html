@@ -672,7 +672,7 @@ a{color:var(--roseD)}
         <p class="muted" id="acctMsg"></p>
       </details>
       <details id="bkBox">
-        <summary>Yedekleme</summary>
+        <summary>Yedek dosyası (isteğe bağlı)</summary>
         <div class="bk">
           <p class="muted" id="bkInfo" style="margin-top:0"></p>
           <button class="btn primary" id="exp" type="button">Yedek dosyası oluştur</button>
@@ -694,7 +694,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 39</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 40</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -1551,8 +1551,7 @@ function render() {
   const lb = localStorage.getItem(BKEY);
   const days = lb ? Math.floor((Date.now() - +lb) / 864e5) : null;
   $('keyInfo').textContent = getKey() ? 'Kapak okuma açık. Anahtarı değiştirebilir ya da silebilirsin.' : 'Kapak okuma henüz kurulmadı. "Kapaktan ekle"ye dokunduğunda kurulum adımları açılır.';
-  $('bkInfo').textContent = 'Kitapların hem bu telefonda hem hesabında saklanıyor; barkodlu kitapların yalnızca künye bilgileri (başlık, yazar, yayınevi gibi) herkesin yararlanacağı ortak listeye de eklenir. Notların, puanların ve hatıraların gönderilmez. İstersen ara ara ayrıca bir yedek dosyası da alabilirsin. ' + (lb ? `Son yedek: ${days === 0 ? 'bugün' : days + ' gün önce'}.` : 'Henüz yedek alınmadı.');
-  if (books.length >= 5 && (days === null || days > 30) && !sessionStorage.getItem('bkNag')) { sessionStorage.setItem('bkNag', 1); note('<span>Uzun zamandır yedek almadın.</span><button class="btn" type="button" id="goBk">Yedekle</button>', true); $('goBk').onclick = () => { goPage(0); $('bkBox').open = true; $('bkBox').scrollIntoView({behavior: 'smooth'}); $('note').hidden = true; }; }
+  $('bkInfo').textContent = 'Kitapların hesabına otomatik kaydediliyor; başka bir cihazdan giriş yaptığında hepsi gelir. Ayrıca bir dosya almak zorunda değilsin. Yedek dosyası, yanlışlıkla sildiğin bir kitabı geri getirmek ya da kitaplığını başka bir yerde saklamak istersen işine yarar. ' + (lb ? `Son yedek dosyası: ${days === 0 ? 'bugün' : days + ' gün önce'}.` : '');
 }
 
 function setTheme(t) {
