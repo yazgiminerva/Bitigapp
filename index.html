@@ -719,7 +719,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 55</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 56</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -1682,7 +1682,7 @@ async function findCovers(title, author, isbn) {
   const gb = async q => {
     tried++;
     try {
-      const r = await fetch('https://www.googleapis.com/books/v1/volumes?maxResults=10&q=' + encodeURIComponent(q));
+      const r = await gbFetch('maxResults=10&q=' + encodeURIComponent(q));
       if (!r.ok) { failed++; return; }
       const j = await r.json();
       for (const it of j.items || []) { const l = (it.volumeInfo || {}).imageLinks; const u = l && (l.thumbnail || l.smallThumbnail); if (u) out.push(u.replace(/^http:/, 'https:').replace('&edge=curl', '')); }
@@ -1778,7 +1778,7 @@ async function lookup(isbn) {
     if (j && j.found && j.book && j.book.title) { const v = j.book; return {title: v.title, author: v.author || '', translator: v.translator || '', publisher: v.publisher || '', year: v.year || '', pages: v.pages || '', genre: v.genre || '', cover: v.cover || '', src: 'ortak liste'}; }
   } catch (e) {}
   try {
-    const r = await fetch('https://www.googleapis.com/books/v1/volumes?q=isbn:' + isbn);
+    const r = await gbFetch('q=isbn:' + isbn);
     const j = await r.json(); const v = j.items && j.items[0] && j.items[0].volumeInfo;
     if (v && v.title) {
       const cat = (v.categories || [])[0] || '';
@@ -1921,7 +1921,7 @@ async function fetchDesc(b) {
   if (b.title) tries.push('intitle:"' + String(b.title).split(':')[0] + '"' + (b.author ? ' inauthor:"' + String(b.author).split(',')[0] + '"' : ''));
   for (const q of tries) {
     try {
-      const j = await (await fetch('https://www.googleapis.com/books/v1/volumes?maxResults=5&q=' + encodeURIComponent(q))).json();
+      const j = await (await gbFetch('maxResults=5&q=' + encodeURIComponent(q))).json();
       const items = (j.items || []).map(i => i.volumeInfo || {}).filter(v => v.description);
       const v = items.find(x => x.language === 'tr') || items[0];
       if (v) return plainText(v.description).slice(0, 4000);
@@ -2006,16 +2006,30 @@ function openFind(wish) {
 }
 const isbnOf = v => { const ids = v.industryIdentifiers || []; const a = ids.find(x => x.type === 'ISBN_13') || ids.find(x => x.type === 'ISBN_10'); return a ? isbn13(a.identifier) || '' : ''; };
 const TR_CH = /[ğşıİĞŞçÇöÖüÜ]/;
+// Google Books: our own key (restricted to this site + Books API) avoids the shared anonymous quota; keyless as fallback
+const GB_KEY = 'AIzaSyD2ZTPknzPHoihZfxAgtYsvDWs_5QcBuoU';
+function gbFetch(qs) {
+  const u = 'https://www.googleapis.com/books/v1/volumes?' + qs;
+  return fetch(u + '&key=' + GB_KEY).then(r => r.ok ? r : fetch(u)).catch(() => fetch(u));
+}
 async function findBooks(q) {
   const out = [], seen = new Set();
-  const add = b => { const k = b.isbn || fold(b.title) + '|' + fold(b.author).split(' ')[0]; if (!b.title || seen.has(k)) return; seen.add(k); b.tr = b.tr || TR_CH.test(b.title + ' ' + b.publisher); out.push(b); };
-  const gb = extra => fetch('https://www.googleapis.com/books/v1/volumes?printType=books&maxResults=40' + extra + '&q=' + encodeURIComponent(q)).then(r => r.json()).then(j => (j.items || []).map(it => {
+  const add = b => { const k = b.isbn || fold(b.title) + '|' + fold(b.author).split(' ')[0]; if (!b.title || seen.has(k)) return; seen.add(k); b.tr = b.tr || TR_CH.test(b.title); out.push(b); };
+  const gb = (extra, qq = q) => gbFetch('printType=books&maxResults=40' + extra + '&q=' + encodeURIComponent(qq)).then(r => r.json()).then(j => (j.items || []).map(it => {
     const v = it.volumeInfo || {}, cat = (v.categories || [])[0] || '', img = (v.imageLinks && (v.imageLinks.thumbnail || v.imageLinks.smallThumbnail)) || '';
     return {title: v.title + (v.subtitle ? ': ' + v.subtitle : ''), author: (v.authors || []).join(', '), publisher: v.publisher || '', year: parseInt(v.publishedDate, 10) || '', pages: v.pageCount || '', genre: GENRE[cat.toLowerCase()] || '', isbn: isbnOf(v), cover: img.replace(/^http:/, 'https:').replace('&edge=curl', ''), src: 'Google Books', tr: v.language === 'tr'};
   })).catch(() => []);
   const ol = fetch('https://openlibrary.org/search.json?limit=30&fields=title,author_name,first_publish_year,isbn,cover_i,number_of_pages_median,publisher,language&q=' + encodeURIComponent(q)).then(r => r.json()).then(j => (j.docs || []).map(d => ({title: d.title, author: (d.author_name || []).slice(0, 3).join(', '), publisher: (d.publisher || [])[0] || '', year: d.first_publish_year || '', pages: d.number_of_pages_median || '', genre: '', isbn: (d.isbn || []).map(isbn13).find(Boolean) || '', cover: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg` : '', src: 'Open Library', tr: (d.language || []).includes('tur')}))).catch(() => []);
-  const [trG, allG, olR] = await Promise.all([gb('&langRestrict=tr'), gb(''), ol]);
-  for (const b of [...trG.map(x => ({...x, tr: true})), ...allG, ...olR]) add(b);
+  const [trG0, allG, olR] = await Promise.all([gb('&langRestrict=tr'), gb(''), ol]);
+  // a Turkish edition is only "Turkish" if Google says so, and it must actually match what was typed
+  const plainT = t => fold(t).replace(/ı/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const words = t => plainT(t).split(' ').filter(w => w.length > 2);
+  const rel = (b, qs) => { const h = plainT(b.title + ' ' + b.author); return qs.some(qq => { const ws = words(qq); return ws.length && ws.filter(w => h.includes(w)).length >= Math.ceil(ws.length * 0.6); }); };
+  let trG = trG0.filter(b => b.tr && rel(b, [q]));
+  // English title typed (e.g. "dorian gray")? search again with the Turkish edition's own title ("Dorian Gray'in Portresi")
+  const bridge = trG.find(b => fold(b.title) !== fold(q));
+  if (bridge && trG.length < 8) { const base = bridge.title.split(/[:(]/)[0].trim(); trG = trG.concat((await gb('&langRestrict=tr', base)).filter(b => b.tr && rel(b, [q, base]))); }
+  for (const b of [...trG, ...allG, ...olR]) add(b);
   return [...out.filter(b => b.tr), ...out.filter(b => !b.tr)];
 }
 function haveIt(b) {
