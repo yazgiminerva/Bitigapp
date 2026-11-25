@@ -375,6 +375,8 @@ body.selecting .tabbar{display:none}
 .cage .btn{margin-left:auto;flex:none;padding:8px 11px;font-size:13px;white-space:nowrap}
 .ufarm{margin-top:14px}
 .utabs.utabs3{grid-template-columns:1fr 1fr 1fr}.selfnote{margin-top:12px;font-size:14px;text-align:center}
+.gearbtn{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--field);color:var(--ink);display:grid;place-items:center;cursor:pointer}.gearbtn svg{width:24px;height:24px}.gearbtn.ghome{margin-left:auto;align-self:flex-start}
+#tabProf .fhead{align-items:center}
 .st.fpool{--c:var(--lav)}.fmore{width:100%;margin-top:10px}.x.goback{width:38px;height:38px;display:grid;place-items:center;padding:0;background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink)}.x.goback svg{width:20px;height:20px;margin-left:-2px}.ov.full .sh-head{padding-top:calc(var(--st) + 22px)}
 .utabs{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:1fr 1fr;margin:18px -4px 12px;background:var(--paper);border-bottom:2px solid var(--line)}
 .utabs button{border:0;background:none;padding:12px 4px;font:800 16px "Nunito",sans-serif;color:var(--mute);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
@@ -688,6 +690,7 @@ a{color:var(--roseD)}
       <button class="avbtn" id="avBtn" type="button" aria-label="Avatarım"><canvas id="avMini" width="24" height="36"></canvas><b id="avPlus" hidden>+</b></button>
       <div><p class="hello" id="hello"></p><h1>Kitaplığım</h1><span class="libchip" id="libChip" hidden></span>
       <svg class="swash" viewBox="0 0 150 12" aria-hidden="true"><path d="M2 8c30-6 60-6 90-2s40 2 56-3" fill="none" stroke="#f3b9c0" stroke-width="4" stroke-linecap="round"/></svg></div>
+      <button class="gearbtn ghome" type="button" data-settings aria-label="Ayarlar"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.4a3.4 3.4 0 1 1 0-6.8 3.4 3.4 0 0 1 0 6.8z" transform="translate(-1 0)"/></svg></button>
     </div>
     <div class="pills" id="stats"></div>
     <button class="navbtn" id="toLib" type="button" style="margin:10px 0 0">Büyük kitaplık ›</button>
@@ -761,7 +764,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 63</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 64</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -791,7 +794,8 @@ a{color:var(--roseD)}
   <div class="wrap">
     <header class="band top fhead"><div><h1>Akış</h1><p class="muted" style="margin:0">Kitaplığında ve arkadaşlarında olan biten</p></div>
       <div class="ficons"><button class="ficon" id="fSearch" type="button" aria-label="Kitap ya da kişi ara"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5l5 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
-      <button class="ficon" id="fInbox" type="button" aria-label="Baykuş postası"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4l3 2.4A8 8 0 0 1 12 5.4a8 8 0 0 1 4 1L19 4v7.5c0 5-3.2 9-7 9s-7-4-7-9z" fill="currentColor" opacity=".9"/><circle cx="9.2" cy="11" r="2.3" fill="var(--paper)"/><circle cx="14.8" cy="11" r="2.3" fill="var(--paper)"/><circle cx="9.2" cy="11" r="1" fill="currentColor"/><circle cx="14.8" cy="11" r="1" fill="currentColor"/><path d="M11 13.6h2l-1 1.6z" fill="var(--butter)"/></svg><b id="inboxN" hidden></b></button></div></header>
+      <button class="ficon" id="fInbox" type="button" aria-label="Baykuş postası"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4l3 2.4A8 8 0 0 1 12 5.4a8 8 0 0 1 4 1L19 4v7.5c0 5-3.2 9-7 9s-7-4-7-9z" fill="currentColor" opacity=".9"/><circle cx="9.2" cy="11" r="2.3" fill="var(--paper)"/><circle cx="14.8" cy="11" r="2.3" fill="var(--paper)"/><circle cx="9.2" cy="11" r="1" fill="currentColor"/><circle cx="14.8" cy="11" r="1" fill="currentColor"/><path d="M11 13.6h2l-1 1.6z" fill="var(--butter)"/></svg><b id="inboxN" hidden></b></button>
+      <button class="ficon gearbtn" type="button" data-settings aria-label="Ayarlar"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.4a3.4 3.4 0 1 1 0-6.8 3.4 3.4 0 0 1 0 6.8z" transform="translate(-1 0)"/></svg></button></div></header>
     <div class="band" id="feedNow"></div>
     <div class="band" id="feed"></div>
   </div>
@@ -977,7 +981,7 @@ a{color:var(--roseD)}
 
 <div class="tabpage" id="tabProf" hidden>
   <div class="wrap prof">
-    <header class="band top"><h1>Profilim</h1></header>
+    <header class="band top fhead"><h1>Profilim</h1><button class="gearbtn" type="button" data-settings aria-label="Ayarlar"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.4a3.4 3.4 0 1 1 0-6.8 3.4 3.4 0 0 1 0 6.8z" transform="translate(-1 0)"/></svg></button></header>
     <div class="pbody">
     <div id="pView">
       <div class="phead">
@@ -1006,8 +1010,6 @@ a{color:var(--roseD)}
       <button class="btn primary" id="pShare" type="button" style="width:100%;margin-top:18px">Profil kartını paylaş</button>
       <p class="muted" id="pShareMsg" style="text-align:center;margin:8px 0 0"></p>
       <p class="muted" style="font-size:13px;text-align:center;margin:6px 0 0">Hedeflerin, rozetlerin ve başucu kitapların yalnızca sana görünür.</p>
-      <h3 class="psec">Ayarlar</h3>
-      <div id="profMore"></div>
     </div>
     <div id="pEdit" hidden>
       <label class="f">Görünen adın<input id="peName" maxlength="30" autocomplete="off" placeholder="Örn. Yazgı"></label>
@@ -1021,6 +1023,12 @@ a{color:var(--roseD)}
   </div>
 </div>
 
+<div class="ov" id="setOv" hidden style="z-index:11">
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="setTitle">
+    <div class="sh-head"><h2 id="setTitle">Ayarlar</h2><button class="x" id="setX" type="button" aria-label="Kapat">×</button></div>
+    <div id="profMore"></div>
+  </div>
+</div>
 <div class="ov" id="favOv" hidden style="z-index:10">
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="fpTitle">
     <div class="sh-head"><h2 id="fpTitle">Başucu kitabı seç</h2><button class="x" id="fpX" type="button" aria-label="Kapat">×</button></div>
@@ -1618,6 +1626,10 @@ $('tabbar').addEventListener('click', e => {
   sfx.unlock(); sfx.tick(); showTab(b.dataset.tab);
 });
 $('profMore').append($('moreBox'));
+function openSettings() { $('setOv').hidden = false; $('setOv').querySelector('.sheet').scrollTop = 0; try { drawProfile(); } catch (e) {} }
+document.addEventListener('click', e => { if (e.target.closest('[data-settings]')) openSettings(); });
+$('setX').onclick = () => { $('setOv').hidden = true; };
+$('setOv').addEventListener('click', e => { if (e.target === $('setOv')) $('setOv').hidden = true; });
 function relTime(v) {
   if (!v) return '';
   const dateOnly = /^\d{4}-\d{2}-\d{2}$/.test(v), d = new Date(dateOnly ? v + 'T12:00' : v), now = new Date();
@@ -4236,7 +4248,7 @@ function drawRead() {
   pill.textContent = `📖 ${clock(readMs(r))} · ${r.paused ? 'Duraklatıldı' : b.title}`;
   if ($('readOv').hidden) return;
   const c = colorOf(b), cu = okUrl(b.cover);
-  const live = !me ? '' : !votesOn() ? '<p class="muted rdsum">Topluluk sayılarını kapattığın için şu an okuyanları göremiyorsun; Ayarlar\'dan açabilirsin.</p>'
+  const live = !me ? '' : !votesOn() ? '<p class="muted rdsum">Topluluk sayılarını kapattığın için şu an okuyanları göremiyorsun; sağ üstteki çarktan (Ayarlar) açabilirsin.</p>'
     : liveN === -1 ? '' : liveN === null ? '<p class="rdlive"><span class="dot"></span>Şu an okuyanlara bakılıyor…</p>'
     : `<p class="rdlive"><span class="dot"></span>${liveN ? `Şu an seninle birlikte <b>${liveN}</b> kişi daha bu kitabı okuyor` : 'Şu an bu kitabı Bitigapp\'te okuyan bir tek sen varsın'}</p>`;
   const body = $('rdBody');
@@ -4533,6 +4545,7 @@ function watchKind(kind, name) {
   }, () => syncState('err'));
 }
 function leaveApp() {
+  $('setOv').hidden = true;
   if (readNow()) endReading(false, true);
   socStop(); clearTimeout(profTimer); clearTimeout(syncTimer); clearTimeout(voteTimer); clearTimeout(gameTimer);
   for (const u of [...unsubs, ...libUnsubs]) try { u && u(); } catch (e) {}
