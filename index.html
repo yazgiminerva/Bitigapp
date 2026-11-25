@@ -316,7 +316,7 @@ body.selecting .tabbar{display:none}
 .tabbar button{position:relative}.tabbar button.dot::after{content:"";position:absolute;top:8px;left:calc(50% + 12px);width:9px;height:9px;border-radius:50%;background:var(--rose);box-shadow:0 0 0 2px var(--paper)}
 .fchips{display:flex;gap:6px;margin:6px 0 2px}
 .pfoot{display:flex;align-items:center;gap:6px;margin-top:8px}
-.react{border:0;background:none;padding:4px 6px;margin-left:-6px;border-radius:12px;cursor:pointer;color:var(--mute)}
+.react{display:inline-flex;align-items:center;gap:6px;border:0;background:var(--field);padding:6px 12px 6px 8px;border-radius:99px;cursor:pointer;color:var(--mute);font:800 13px "Nunito",sans-serif;min-height:36px}.react.on{background:color-mix(in srgb,var(--rose) 22%,var(--field))}
 .rico{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round}
 .react.on,.rico.on{color:var(--rose)}.rico.on{fill:currentColor}
 .react.on .rico{animation:rpop .35s ease-out}@keyframes rpop{50%{transform:scale(1.3)}}
@@ -710,7 +710,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 48</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 49</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -1469,7 +1469,7 @@ function renderFeed() {
     const t = typeof say[e.kind] === 'function' ? say[e.kind](e) : say[e.kind], w = who(e.who), evId = `${e.kind}_${e.b.id}`;
     const bookAttr = e.who ? `data-fb="${esc(e.who)}|${esc(e.b.id)}|${e.kind === 'wish' ? 'w' : 'b'}"` : `data-${e.kind === 'wish' ? 'wish' : 'open'}="${esc(e.b.id)}"`;
     let foot = '';
-    if (e.who) { const on = reacted.has(`reactions/${e.who}/items/${evId}_${me.uid}`); foot = `<div class="pfoot"><button class="react${on ? ' on' : ''}" type="button" data-react="${esc(e.who)}|${esc(evId)}" aria-label="${REACT_NAME[myType()]} gönder">${reactIco(myType(), on)}</button></div>`; }
+    if (e.who) { const on = reacted.has(`reactions/${e.who}/items/${evId}_${me.uid}`); foot = `<div class="pfoot"><button class="react${on ? ' on' : ''}" type="button" data-react="${esc(e.who)}|${esc(evId)}" aria-label="${REACT_NAME[myType()]} bırak" data-rn="${w.name || ''}">${reactBtn(myType(), on)}</button></div>`; }
     else if (onMe.has(evId)) { const rs = onMe.get(evId); foot = `<div class="pfoot rsum">${[...new Set(rs.map(r => r.type))].map(tp => reactIco(tp, true)).join('')}<span>${esc(rs[0].name || 'Biri')}${rs.length > 1 ? ` ve ${rs.length - 1} kişi` : ''}</span></div>`; }
     html += `<article class="post"><img class="pa" src="${w.av}" alt=""${e.who ? ` data-user="${esc(e.who)}"` : ''}><div><div class="ph"${e.who ? ` data-user="${esc(e.who)}"` : ''}><b>${w.name}</b><span>${w.user ? w.user + ' · ' : ''}${esc(relTime(e.at))}</span></div><p>${t}</p><button class="pbk" type="button" ${bookAttr}>${coverEl(e.b)}<div><div class="t">${esc(e.b.title)}</div><div class="a">${esc(e.b.author || '')}</div></div></button>${foot}</div></article>`;
   }
@@ -3213,6 +3213,8 @@ const REACT_ICO = {
 };
 const REACT_NAME = {cadi: 'iksir', buyucu: 'yıldız', insan: 'kalp'};
 const reactIco = (t, on) => `<svg viewBox="0 0 24 24" class="rico${on ? ' on' : ''}" aria-hidden="true">${REACT_ICO[t] || REACT_ICO.insan}</svg>`;
+const upFirst = x => x.charAt(0).toLocaleUpperCase('tr') + x.slice(1);
+const reactBtn = (t, on) => reactIco(t, on) + `<span>${on ? upFirst(REACT_NAME[t] || 'kalp') + ' bıraktın' : upFirst(REACT_NAME[t] || 'kalp') + ' bırak'}</span>`;
 const plain = o => JSON.parse(JSON.stringify(o));
 function socProfileData(username, priv) {
   const a = avLoad() || {}, p = profLoad();
@@ -3587,7 +3589,9 @@ async function toggleReact(owner, ev, btn) {
     if (on) { await FB.deleteDoc(fd(...pth.split('/'))); list.delete(pth); }
     else { const a = avLoad() || {}; await FB.setDoc(fd(...pth.split('/')), {by: me.uid, ev, type: myType(), name: a.name || (SOC.prof && SOC.prof.username) || '', at: Date.now()}); list.add(pth); sfx.unlock(); sfx.sparkle(); }
     p.reacted = [...list].slice(-500); profSave(p);
-    btn.classList.toggle('on', !on); btn.innerHTML = reactIco(myType(), !on);
+    btn.classList.toggle('on', !on); btn.innerHTML = reactBtn(myType(), !on);
+    const nm = REACT_NAME[myType()] || 'kalp', who = btn.dataset.rn;
+    note(on ? `<span>${esc(upFirst(nm))} geri alındı.</span>` : `<span>${esc(upFirst(nm))} bıraktın!${who ? ` ${esc(who)} gönderisinde görecek.` : ''}</span>`);
   } catch (e) { note('Tepki gönderilemedi.'); }
   btn.disabled = false;
 }
