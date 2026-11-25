@@ -85,7 +85,7 @@ background:radial-gradient(circle at 12px 12px,var(--dot) 1.5px,transparent 2px)
 .slot{height:150px;display:flex;align-items:flex-end}
 .sp.mini{padding:5px 0 7px;border-radius:3px 3px 1px 1px}
 .sp.mini::before{top:4px;height:3px}.sp.mini::after{bottom:5px;height:3px}
-.sp.mini span{font-size:12px;line-height:1.1;max-height:calc(100% - 30px);white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;text-align:center;overflow-wrap:anywhere}
+.sp.mini span{position:absolute;left:50%;top:50%;writing-mode:horizontal-tb;width:calc(var(--h) - 34px);max-height:none;transform:translate(-50%,-50%) rotate(-90deg);font-size:12px;line-height:1.1;white-space:normal;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;text-align:center;overflow-wrap:anywhere;text-overflow:clip}
 .sp.mini .rib{position:absolute;top:-1px;right:3px;width:6px;height:16px;background:#e0707f;clip-path:polygon(0 0,100% 0,100% 100%,50% 75%,0 100%)}
 .libempty{padding:24px;text-align:center;color:var(--mute);font:600 17px/1.35 var(--serif);font-variation-settings:"SOFT" 100}
 .share{display:flex;gap:10px;align-items:flex-start;margin-top:8px;font-size:14px;font-weight:600;color:var(--ink)}
@@ -374,6 +374,7 @@ body.selecting .tabbar{display:none}
 .cage b{font-family:var(--serif);font-size:15px;display:block}.cage small{color:var(--mute);font-size:12.5px;display:block}
 .cage .btn{margin-left:auto;flex:none;padding:8px 11px;font-size:13px;white-space:nowrap}
 .ufarm{margin-top:14px}
+.utabs.utabs3{grid-template-columns:1fr 1fr 1fr}.selfnote{margin-top:12px;font-size:14px;text-align:center}
 .st.fpool{--c:var(--lav)}.fmore{width:100%;margin-top:10px}.x.goback{width:38px;height:38px;display:grid;place-items:center;padding:0;background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink)}.x.goback svg{width:20px;height:20px;margin-left:-2px}.ov.full .sh-head{padding-top:calc(var(--st) + 22px)}
 .utabs{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:1fr 1fr;margin:18px -4px 12px;background:var(--paper);border-bottom:2px solid var(--line)}
 .utabs button{border:0;background:none;padding:12px 4px;font:800 16px "Nunito",sans-serif;color:var(--mute);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
@@ -760,7 +761,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 62</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 63</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -985,8 +986,10 @@ a{color:var(--roseD)}
       </div>
       <div class="prow"><button class="btn" id="pEditBtn" type="button">Profili düzenle</button><button class="btn" id="pAvEdit" type="button">Avatarı değiştir</button></div>
       <div class="pstats" id="pStats"></div>
-      <h3 class="psec">Çiftliğim</h3>
-      <div id="farmBox"></div>
+      <button class="btn" id="pPreview" type="button" style="width:100%;margin-top:10px">Başkaları profilimi nasıl görüyor?</button>
+      <div id="pTabs"></div>
+      <div id="pTab"></div>
+      <h3 class="psec" style="margin-top:28px">Sadece sana görünenler</h3>
       <h3 class="psec">Okuma hedefi</h3>
       <div class="pcard" id="pGoal"></div>
       <p class="muted" id="pGoalNote" style="font-size:13px;margin:6px 2px 0">Bitirdiğin tarih bu yıl olan kitaplar sayılır. Bir kitabı "Okundu" yaptığında tarih kendiliğinden bugün olarak dolar.</p>
@@ -1389,8 +1392,8 @@ function rescue(k) {
 document.addEventListener('click', e => {
   const rb = e.target.closest('#farmBox [data-rescue]'); if (rb) return rescue(rb.dataset.rescue);
   const fp = e.target.closest('#farmBox [data-fp]'); if (fp) { farmPer = fp.dataset.fp; drawFarm(); return; }
-  const ufp = e.target.closest('#uFarm [data-ufp]');
-  if (ufp && userShelf && userShelf.farm) { ufPer = ufp.dataset.ufp; const old = $('uFarm').querySelector('.fper'); old.outerHTML = farmPerHTML(userShelf.farm, ufPer, false); }
+  const ufp = e.target.closest('#uTab [data-ufp]');
+  if (ufp && userShelf && userShelf.farm) { ufPer = ufp.dataset.ufp; const old = $('uTab').querySelector('.fper'); if (old) old.outerHTML = farmPerHTML(userShelf.farm, ufPer, false); }
 });
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let gfilter = null;
@@ -1628,7 +1631,7 @@ function dayLabel(v) {
   const days = Math.round((new Date(now.toDateString()) - new Date(d.toDateString())) / 864e5);
   return days === 0 ? 'Bugün' : days === 1 ? 'Dün' : days < 7 ? d.toLocaleDateString('tr-TR', {weekday: 'long'}) : d.toLocaleDateString('tr-TR', {day: 'numeric', month: 'long', ...(d.getFullYear() !== now.getFullYear() ? {year: 'numeric'} : {})});
 }
-let feedMax = 40, feedFilter = 'all';
+let feedMax = 15, feedFilter = 'all';
 const evKey = v => /^\d{4}-\d{2}-\d{2}$/.test(v) ? v + 'T12:00' : String(v);
 function eventsOf(bks, wsh, who) {
   const ev = [];
@@ -1685,7 +1688,7 @@ function renderFeed() {
     else if (onMe.has(evId)) { const rs = onMe.get(evId); foot = `<div class="pfoot rsum">${[...new Set(rs.map(r => r.type))].map(tp => reactIco(tp, true)).join('')}<span>${esc(rs[0].name || 'Biri')}${rs.length > 1 ? ` ve ${rs.length - 1} kişi` : ''}</span></div>`; }
     html += `<article class="post"><img class="pa" src="${w.av}" alt=""${e.who ? ` data-user="${esc(e.who)}"` : ''}><div><div class="ph"${e.who ? ` data-user="${esc(e.who)}"` : ''}><b>${w.name}</b><span>${w.user ? w.user + ' · ' : ''}${esc(relTime(e.at))}</span></div><p>${t}</p><button class="pbk" type="button" ${bookAttr}>${coverEl(e.b)}<div><div class="t">${esc(e.b.title)}</div><div class="a">${esc(e.b.author || '')}</div></div></button>${foot}</div></article>`;
   }
-  if (ev.length > feedMax) html += `<button class="btn" type="button" id="feedMore" style="width:100%;margin-top:14px">Daha eski hareketler</button>`;
+  if (ev.length > feedMax) html += `<button class="btn" type="button" id="feedMore" style="width:100%;margin-top:14px">Daha fazla göster</button>`;
   const empty = feedFilter === 'friends'
     ? (social && !SOC.following.size ? 'Henüz kimseyi takip etmiyorsun.<br><button class="btn primary" type="button" id="feedFind" style="margin-top:12px">Arkadaş ara</button>' : 'Arkadaşlarından henüz bir hareket yok.')
     : 'Akışın henüz boş. Kitap ekledikçe, bitirdikçe ve istek listene ekledikçe burada görünecek.';
@@ -1694,7 +1697,7 @@ function renderFeed() {
 }
 $('tabFeed').addEventListener('click', e => {
   const t = e.target.closest('[data-open],[data-wish],[data-done],[data-ff],[data-react],[data-fb],[data-user],#feedMore,#feedFind,#fSearch,#fInbox'); if (!t) return;
-  if (t.id === 'feedMore') { feedMax += 40; return renderFeed(); }
+  if (t.id === 'feedMore') { feedMax += 15; return renderFeed(); }
   if (t.id === 'feedFind') return openSearch('people');
   if (t.id === 'fSearch') return openSearch();
   if (t.id === 'fInbox') return openInbox();
@@ -2339,7 +2342,7 @@ function caseHTML(bks, attr) {
     return `<section class="gsec"><div class="plate"><i style="--c:${genreColor(g)}"></i>${esc(g || 'Belirtilmedi')}<small>${list.length}</small></div><div class="rows">${list.map((b, i) => {
       const orn = ant && i > 0 && i % 7 === 0 ? `<div class="slot">${ORN[SEQ[oi++ % SEQ.length]](1)}</div>` : '';
       const h = hash(b.title + b.author), long = String(b.title || '').length > 11, w = Math.max(long ? 34 : 26, Math.round(1.2 * Math.min(32, 17 + Math.round((+b.pages || 180 + h % 300) / 55))));
-      return orn + `<div class="slot"><button class="sp mini" ${attr(b)} title=""${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" style="--c:${colorOf(b)};height:${107 + h % 38}px;width:${w}px">${b.status === 'okunuyor' ? '<b class="rib"></b>' : ''}<span>${esc(b.title)}</span></button></div>`;
+      return orn + `<div class="slot"><button class="sp mini" ${attr(b)} title=""${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" style="--c:${colorOf(b)};--h:${107 + h % 38}px;height:${107 + h % 38}px;width:${w}px">${b.status === 'okunuyor' ? '<b class="rib"></b>' : ''}<span>${esc(b.title)}</span></button></div>`;
     }).join('')}${ant && list.length < 7 ? `<div class="slot">${ORN[SEQ[oi % SEQ.length]](1)}</div>` : ''}</div></section>`;
   }).join('');
 }
@@ -3305,7 +3308,7 @@ function medal(face, on) {
   return `<svg viewBox="0 0 60 62" class="medal" aria-hidden="true"><defs><linearGradient id="mg${on ? 1 : 0}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:${c1}"/><stop offset="1" style="stop-color:${c2}"/></linearGradient></defs><g fill="url(#mg${on ? 1 : 0})" style="stroke:${on ? 'var(--m2, var(--butterD))' : 'var(--line)'}" stroke-width="2">${shape}</g><text x="30" y="${t === 'cadi' ? 40 : 37}" text-anchor="middle" font-family="Fraunces, serif" font-weight="700" font-size="${face.length > 2 ? 14 : 18}" style="fill:${ink}">${esc(face)}</text></svg>`;
 }
 function drawProfile() {
-  drawFarm();
+  drawMyTab();
   const p = profLoad(), a = avLoad() || {...AV_DEFAULT}, s = profStats(), yr = YEAR(), goal = +(p.goals || {})[yr] || 0;
   $('pAv').src = avURL(a, {});
   $('pName').textContent = a.name || 'Adını ekle';
@@ -3630,24 +3633,36 @@ function addTipToWish(b) {
 // --- someone's profile ---
 let userNow = null;
 let userProf = null, userShelf = null, userTab = 'lib';
-function userTabHTML(uid, prof) {
-  const sh = userShelf || {}, bks = sh.books || [], wsh = sh.wishes || [];
-  if (userTab === 'lib') {
-    return (bks.length ? `<div class="bigcase ucase">${caseHTML(bks, b => `data-ub="${esc(b.id)}"`)}</div>` : '<p class="muted" style="text-align:center;padding:20px 0">Kitaplığı henüz boş.</p>')
-      + (wsh.length ? `<details class="pcard" style="margin-top:12px"><summary><b>İstek listesi</b> <span class="muted">(${wsh.length})</span></summary><ul class="hlist">${wsh.map(b => `<li class="item" data-uw="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div></li>`).join('')}</ul></details>` : '');
+// one renderer for a profile's tabs: a friend's (from their shared shelf) and your own (mine = can manage)
+const FEED_STEP = 15;
+let userFeedN = FEED_STEP, myTab = 'lib', myFeedN = FEED_STEP;
+function profTabHTML(uid, prof, sh, tab, mine, feedN) {
+  const bks = sh.books || [], wsh = sh.wishes || [], B = mine ? 'mb' : 'ub', W = mine ? 'mw' : 'uw';
+  if (tab === 'lib') {
+    return (bks.length ? `<div class="bigcase ucase">${caseHTML(bks, b => `data-${B}="${esc(b.id)}"`)}</div>` : `<p class="muted" style="text-align:center;padding:20px 0">${mine ? 'Kitaplığın' : 'Kitaplığı'} henüz boş.</p>`)
+      + (wsh.length ? `<details class="pcard" style="margin-top:12px"><summary><b>İstek listesi</b> <span class="muted">(${wsh.length})</span></summary><ul class="hlist">${wsh.map(b => `<li class="item" data-${W}="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div></li>`).join('')}</ul></details>` : '');
   }
-  const ev = eventsOf(bks, wsh, uid).sort((x, y) => evKey(y.at).localeCompare(evKey(x.at))).slice(0, 60);
-  if (!ev.length) return '<p class="muted" style="text-align:center;padding:20px 0">Henüz bir hareket yok.</p>';
-  const reacted = new Set(profLoad().reacted || []), av = avURL(prof.avatar || AV_DEFAULT, {}), name = esc(prof.name || prof.username);
+  if (tab === 'farm') {
+    if (mine) return '<div id="farmBox"></div>';
+    const f = sh.farm;
+    return f ? farmHTML(f.pets || [], null) + farmPerHTML(f, ufPer, false) : '<p class="muted" style="text-align:center;padding:20px 0">Çiftliği henüz kurulmamış.</p>';
+  }
+  const all = eventsOf(bks, wsh, uid).sort((x, y) => evKey(y.at).localeCompare(evKey(x.at)));
+  if (!all.length) return '<p class="muted" style="text-align:center;padding:20px 0">Henüz bir hareket yok.</p>';
+  const ev = all.slice(0, feedN);
+  const reacted = new Set(profLoad().reacted || []), av = avURL(prof.avatar || AV_DEFAULT, {}), name = esc(prof.name || prof.username || 'Sen');
   const say = {add: 'kitaplığına yeni bir kitap ekledi', buy: 'yeni bir kitap aldı', wishbuy: 'istek listesindeki kitaba sonunda kavuştu', done: 'bir kitabı bitirdi', wish: 'istek listesine bir kitap ekledi'};
   let h = '', last = '';
   for (const e of ev) {
     const dl = dayLabel(e.at); if (dl !== last) { h += `<p class="fday">${esc(dl)}</p>`; last = dl; }
-    const evId = `${e.kind}_${e.b.id}`, on = reacted.has(`reactions/${uid}/items/${evId}_${me.uid}`);
-    h += `<article class="post"><img class="pa" src="${av}" alt=""><div><div class="ph"><b>${name}</b><span>@${esc(prof.username)} · ${esc(relTime(e.at))}</span></div><p>${say[e.kind]}</p><button class="pbk" type="button" data-${e.kind === 'wish' ? 'uw' : 'ub'}="${esc(e.b.id)}">${coverEl(e.b)}<div><div class="t">${esc(e.b.title)}</div><div class="a">${esc(e.b.author || '')}</div></div></button><div class="pfoot"><button class="react${on ? ' on' : ''}" type="button" data-react="${esc(uid)}|${esc(evId)}" data-rn="${name}">${reactBtn(myType(), on)}</button></div></div></article>`;
+    const evId = `${e.kind}_${e.b.id}`, on = !mine && reacted.has(`reactions/${uid}/items/${evId}_${me.uid}`);
+    h += `<article class="post"><img class="pa" src="${av}" alt=""><div><div class="ph"><b>${name}</b><span>${prof.username ? '@' + esc(prof.username) + ' · ' : ''}${esc(relTime(e.at))}</span></div><p>${say[e.kind]}</p><button class="pbk" type="button" data-${e.kind === 'wish' ? W : B}="${esc(e.b.id)}">${coverEl(e.b)}<div><div class="t">${esc(e.b.title)}</div><div class="a">${esc(e.b.author || '')}</div></div></button>${mine || uid === me.uid ? '' : `<div class="pfoot"><button class="react${on ? ' on' : ''}" type="button" data-react="${esc(uid)}|${esc(evId)}" data-rn="${name}">${reactBtn(myType(), on)}</button></div>`}</div></article>`;
   }
+  if (all.length > feedN) h += `<button class="btn" type="button" data-more style="width:100%;margin-top:14px">Daha fazla göster</button>`;
   return h;
 }
+const tabsHTML = (attr, cur) => `<div class="utabs utabs3" role="tablist">${[['lib', 'Kitaplık'], ['feed', 'Akış'], ['farm', 'Çiftlik']].map(([k, l]) => `<button type="button" role="tab" data-${attr}="${k}" aria-selected="${cur === k}">${l}</button>`).join('')}</div>`;
+function userTabHTML(uid, prof) { return profTabHTML(uid, prof, userShelf || {}, userTab, false, userFeedN); }
 async function openUser(uid, quiet) {
   userNow = uid; $('userOv').hidden = false;
   if (!quiet) { $('uBody').innerHTML = '<p class="muted" style="padding:20px;text-align:center">Yükleniyor…</p>'; $('userOv').querySelector('.sheet').scrollTop = 0; }
@@ -3655,7 +3670,8 @@ async function openUser(uid, quiet) {
   try { const p = await FB.getDoc(fd('profiles', uid)); prof = p.exists() ? p.data() : null; } catch (e) {}
   if (userNow !== uid) return;
   if (!prof) { $('uBody').innerHTML = '<p class="muted" style="padding:20px;text-align:center">Bu profil artık yok.</p>'; return; }
-  userProf = prof; userShelf = null; if (!quiet) userTab = 'lib'; $('uTitle').textContent = prof.name || '@' + prof.username;
+  userProf = prof; userShelf = null; if (!quiet) { userTab = 'lib'; userFeedN = FEED_STEP; } $('uTitle').textContent = prof.name || '@' + prof.username;
+  const self = uid === me.uid;
   try { const s = await FB.getDoc(fd('shelves', uid)); shelf = s.exists() ? s.data() : null; } catch (e) {}
   if (userNow !== uid) return;
   const f = SOC.following.get(uid), back = SOC.followers.get(uid), blocked = SOC.blocked.has(uid);
@@ -3665,14 +3681,14 @@ async function openUser(uid, quiet) {
     : `<button class="btn" type="button" data-u="unfollow">Takip ediliyor ✓</button>`;
   const canOwl = back && back.status === 'accepted' && !blocked;
   let html = `<div class="phead"><img class="pav" src="${avURL(prof.avatar || AV_DEFAULT, {})}" alt=""><div><p class="pname">${esc(prof.name || prof.username)}${prof.private ? ' <svg class="lock" viewBox="0 0 24 24" aria-label="Gizli hesap"><path d="M7 10V7a5 5 0 0 1 10 0v3h1.5v11h-13V10zm2.4 0h5.2V7a2.6 2.6 0 0 0-5.2 0z"/></svg>' : ''}</p><p class="puser">@${esc(prof.username)}</p>${prof.bio ? `<p class="pbio">${esc(prof.bio)}</p>` : ''}${back && back.status === 'accepted' ? '<span class="tag">Seni takip ediyor</span>' : ''}</div></div>
-    <div class="prow">${fbtn}${canOwl ? `<button class="btn lav" type="button" data-u="owl">Baykuş gönder</button>` : `<button class="btn" type="button" data-u="menu">Diğer</button>`}</div>`;
-  if (canOwl) html += `<div class="umenu"><button class="btn link" type="button" data-u="menu">Diğer seçenekler</button></div>`;
-  html += `<div class="umore" id="uMore" hidden>${back ? `<button class="btn" type="button" data-u="drop">Takipçilerimden çıkar</button>` : ''}${blocked ? '' : `<button class="btn danger" type="button" data-u="block">Engelle</button>`}</div>`;
+    ${self ? '<p class="pcard muted selfnote">Profilin başkalarına böyle görünüyor. Gizli hesapta seni takip etmeyenler yalnızca bu üst kısmı görür.</p>' : `<div class="prow">${fbtn}${canOwl ? `<button class="btn lav" type="button" data-u="owl">Baykuş gönder</button>` : `<button class="btn" type="button" data-u="menu">Diğer</button>`}</div>`}`;
+  if (canOwl && !self) html += `<div class="umenu"><button class="btn link" type="button" data-u="menu">Diğer seçenekler</button></div>`;
+  if (!self) html += `<div class="umore" id="uMore" hidden>${back ? `<button class="btn" type="button" data-u="drop">Takipçilerimden çıkar</button>` : ''}${blocked ? '' : `<button class="btn danger" type="button" data-u="block">Engelle</button>`}</div>`;
   if (shelf) {
     const st = shelf.stats || {}, m = readingMatch(shelf.books || [], uid);
     userShelf = shelf;
     html += `<div class="pstats">${[[st.total || 0, 'kitap', 'rose'], [st.read || 0, 'okundu', 'sage'], [st.reading || 0, 'okunuyor', 'butter']].map(([v, l, c]) => `<div class="ptile" style="--c:var(--${c})"><b>${v}</b><span>${l}</span></div>`).join('')}</div>
-      <details class="pcard match" style="margin-top:12px"><summary><b>Uyumunuz</b> <span class="muted">· Okuma ${m.read.score === null ? '–' : '%' + m.read.score} · Kitaplık ${m.same ? 'ortak' : m.lib.score === null ? '–' : '%' + m.lib.score}</span></summary>
+      ${self ? '' : `<details class="pcard match" style="margin-top:12px"><summary><b>Uyumunuz</b> <span class="muted">· Okuma ${m.read.score === null ? '–' : '%' + m.read.score} · Kitaplık ${m.same ? 'ortak' : m.lib.score === null ? '–' : '%' + m.lib.score}</span></summary>
         <p style="margin:12px 0 0;font-weight:800">Okuma uyumu</p>${m.read.score === null ? '<p class="muted" style="margin:4px 0 0">İkinizin de okundu olarak işaretlediği en az 3 kitap olunca hesaplanır.</p>'
         : `<div class="mscore" style="margin-top:6px"><b>%${m.read.score}</b><span>${m.read.score >= 75 ? 'Ruh ikizi okurlar!' : m.read.score >= 50 ? 'Zevkleriniz çok yakın' : m.read.score >= 25 ? 'Ortak noktalarınız var' : 'Birbirinize yeni dünyalar açabilirsiniz'}</span></div>
            <p style="margin:6px 0 0">${m.read.common.length ? `İkinizin de okuduğu <b>${m.read.common.length}</b> kitap var` : 'Henüz ikinizin de okuduğu bir kitap yok'}${m.read.shared.length ? `; en çok okuduğunuz ortak türler: ${m.read.shared.map(esc).join(', ')}` : ''}.</p>`}
@@ -3680,9 +3696,8 @@ async function openUser(uid, quiet) {
         : `<div class="mscore" style="margin-top:6px"><b>%${m.lib.score}</b><span>${m.lib.score >= 75 ? 'Raflarınız neredeyse ikiz' : m.lib.score >= 50 ? 'Raflarınız birbirine benziyor' : m.lib.score >= 25 ? 'Raflarınızda ortak köşeler var' : 'Rafları bambaşka'}</span></div>
            <p style="margin:6px 0 0">${m.lib.common.length ? `İkinizde de olan <b>${m.lib.common.length}</b> kitap var` : 'Henüz ortak kitabınız yok'}${m.lib.shared.length ? `; ortak türleriniz: ${m.lib.shared.map(esc).join(', ')}` : ''}.</p>`}
         ${m.next.length ? `<p style="margin:14px 0 6px;font-weight:800">Onun okuduğu, senin henüz okumadığın</p><ul class="hlist">${m.next.map(b => `<li class="item" data-ub="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div></li>`).join('')}</ul>` : ''}
-        ${m.tips.length ? `<p style="margin:12px 0 6px;font-weight:800">Onda olup sende olmayanlar</p><ul class="hlist">${m.tips.map((b, i) => `<li class="item" data-ub="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div><button class="btn" type="button" data-tip="${i}">İstek listeme</button></li>`).join('')}</ul>` : ''}</details>
-      ${shelf && shelf.farm ? `<div class="ufarm" id="uFarm">${farmHTML(shelf.farm.pets || [], null)}${farmPerHTML(shelf.farm, ufPer, false)}</div>` : ''}
-      <div class="utabs" role="tablist"><button type="button" role="tab" data-utab="lib" aria-selected="${userTab === 'lib'}">Kitaplık</button><button type="button" role="tab" data-utab="feed" aria-selected="${userTab === 'feed'}">Akış</button></div>
+        ${m.tips.length ? `<p style="margin:12px 0 6px;font-weight:800">Onda olup sende olmayanlar</p><ul class="hlist">${m.tips.map((b, i) => `<li class="item" data-ub="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div><button class="btn" type="button" data-tip="${i}">İstek listeme</button></li>`).join('')}</ul>` : ''}</details>`}
+      ${tabsHTML('utab', userTab)}
       <div id="uTab">${userTabHTML(uid, prof)}</div>`;
     $('uBody').dataset.tips = JSON.stringify(m.tips);
   } else html += `<div class="pcard" style="text-align:center;margin-top:14px"><p class="pname" style="font-size:22px">Bu hesap gizli</p><p class="muted" style="margin:6px 0 0">${f && f.status === 'pending' ? 'Takip isteğin onaylanınca kitaplığını görebileceksin.' : 'Kitaplığını görmek için takip isteği gönder.'}</p></div>`;
@@ -3694,6 +3709,7 @@ $('userOv').addEventListener('click', e => { if (e.target === $('userOv')) { $('
 $('uBody').addEventListener('click', async e => {
   const uid = $('uBody').dataset.uid;
   const tab = e.target.closest('[data-utab]');
+  if (e.target.closest('[data-more]')) { userFeedN += FEED_STEP; $('uTab').innerHTML = userTabHTML(uid, userProf); hydrate($('uTab')); return; }
   if (tab) { userTab = tab.dataset.utab; for (const b of $('uBody').querySelectorAll('[data-utab]')) b.setAttribute('aria-selected', String(b === tab)); $('uTab').innerHTML = userTabHTML(uid, userProf); hydrate($('uTab')); return; }
   const rb = e.target.closest('[data-react]'); if (rb) { const [owner, ev] = rb.dataset.react.split('|'); return toggleReact(owner, ev, rb); }
   const bk = !e.target.closest('[data-tip]') && e.target.closest('[data-ub],[data-uw]');
@@ -4149,6 +4165,29 @@ $('authOv').addEventListener('click', e => {
   const own = e.target.closest('[data-aid]'); if (own) return openBook(own.dataset.aid);
   const aw = e.target.closest('[data-aw]'); if (aw) { const w = wishes.find(x => x.id === aw.dataset.aw); if (w) openFoundBook(w); return; }
   const li = e.target.closest('[data-i]'); if (li) { const b = authRes[+li.dataset.i]; if (!b) return; poolPick(b); if (e.target.closest('.fadd') && !haveIt(b)) { $('authOv').hidden = true; findWish = false; pickFound(b); } else openFoundBook(b); }
+});
+
+// --- Profilim: the same Kitaplık / Akış / Çiftlik view others see, but yours to manage ---
+function drawMyTab() {
+  const box = $('pTab'); if (!box) return;
+  $('pTabs').innerHTML = tabsHTML('ptab', myTab);
+  const a = avLoad() || {...AV_DEFAULT}, p = profLoad();
+  let socOn = false; try { socOn = SOC.on; } catch (e) {}
+  const prof = {avatar: a, name: a.name || '', username: socOn && p.username ? p.username : ''};
+  let uid = ''; try { uid = me ? me.uid : ''; } catch (e) {}
+  box.innerHTML = profTabHTML(uid, prof, {books, wishes}, myTab, true, myFeedN);
+  if (myTab === 'farm') drawFarm();
+  hydrate(box);
+}
+document.addEventListener('click', e => {
+  const t = e.target.closest('#pTabs [data-ptab]'); if (t) { myTab = t.dataset.ptab; myFeedN = FEED_STEP; return drawMyTab(); }
+  if (e.target.closest('#pTab [data-more]')) { myFeedN += FEED_STEP; return drawMyTab(); }
+  const mb = e.target.closest('#pTab [data-mb]'); if (mb) return openBook(mb.dataset.mb);
+  const mw = e.target.closest('#pTab [data-mw]'); if (mw) { const w = wishes.find(x => x.id === mw.dataset.mw); if (w) openFoundBook(w); return; }
+  if (e.target.closest('#pPreview')) {
+    let ok = false; try { ok = SOC.on && SOC.prof && me; } catch (er) {}
+    if (ok) openUser(me.uid); else note('<span>Arkadaş profilin hazır olunca burada önizleyebilirsin.</span>');
+  }
 });
 
 // --- Reading sessions: a timer while you read, and how many others are reading the same book right now ---
