@@ -764,7 +764,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 65</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 66</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -2127,7 +2127,23 @@ async function clearVotes() { if (!me) return; VKEY = 'kitapligim.votes:' + me.u
 
 // --- Back-cover text: fetched once from Google Books, then kept with the book ---
 const plainText = h => { const d = document.createElement('div'); d.innerHTML = String(h || '').replace(/<br\s*\/?>/gi, '\n').replace(/<\/p>/gi, '\n\n'); return (d.textContent || '').replace(/\n{3,}/g, '\n\n').trim(); };
+// descriptions are remembered on this device: found ones for good, "not found" for two weeks
+const DKEY = 'bitigapp.desc', DNONE_MS = 14 * 864e5, DMAX = 500;
+const descKey = b => b.isbn ? 'i' + String(b.isbn).replace(/[^0-9Xx]/g, '') : 't' + fold(b.title || '') + '|' + fold(String(b.author || '').split(',')[0]);
+function descCache() { try { return JSON.parse(localStorage.getItem(DKEY) || '{}') || {}; } catch (e) { return {}; } }
+function descRemember(b, d) {
+  const c = descCache(); c[descKey(b)] = {d: d || '', t: Date.now()};
+  const ks = Object.keys(c); if (ks.length > DMAX) ks.sort((x, y) => c[x].t - c[y].t).slice(0, ks.length - DMAX).forEach(k => delete c[k]);
+  try { localStorage.setItem(DKEY, JSON.stringify(c)); } catch (e) {}
+}
 async function fetchDesc(b) {
+  const hit = descCache()[descKey(b)];
+  if (hit && (hit.d || Date.now() - hit.t < DNONE_MS)) return hit.d;
+  const d = await fetchDescOnline(b);
+  if (navigator.onLine) descRemember(b, d);
+  return d;
+}
+async function fetchDescOnline(b) {
   const tries = [];
   if (b.isbn) tries.push('isbn:' + String(b.isbn).replace(/[^0-9Xx]/g, ''));
   if (b.title) tries.push('intitle:"' + String(b.title).split(':')[0] + '"' + (b.author ? ' inauthor:"' + String(b.author).split(',')[0] + '"' : ''));
@@ -2170,7 +2186,7 @@ async function openBook(id) {
   if (k && me) FB.getDoc(FB.doc(fbDb, 'stats', k)).then(s => { if (bookNow === id) $('bkStats').innerHTML = bookStatsHTML(s.exists() ? s.data() : {}); }).catch(() => { if (bookNow === id) $('bkStats').innerHTML = '<p class="muted bstat">Sayılara şu an ulaşılamadı.</p>'; });
   else $('bkStats').innerHTML = bookStatsHTML({});
   if (!b.desc) {
-    const d = navigator.onLine ? await fetchDesc(b) : '';
+    const d = await fetchDesc(b);
     if (bookNow !== id) return;
     if (d) { const x = books.find(y => y.id === id); if (x && !x.desc) { x.desc = d; x.updatedAt = new Date().toISOString(); persist(); } $('bkDesc').innerHTML = `<p class="bdesc">${esc(d)}</p><p class="muted" style="font-size:12px">Kaynak: Google Books</p>`; clampDesc(); }
     else $('bkDesc').innerHTML = '<p class="muted">Bu kitap için çevrimiçi bir açıklama bulunamadı. İstersen aşağıdaki "Kitabı düzenle"den kendin ekleyebilirsin.</p>';
@@ -2193,7 +2209,7 @@ async function openFoundBook(r) {
   const k = workKey(r);
   if (k && me) FB.getDoc(FB.doc(fbDb, 'stats', k)).then(s => { if (bookNow === key) $('bkStats').innerHTML = bookStatsHTML(s.exists() ? s.data() : {}); }).catch(() => { if (bookNow === key) $('bkStats').innerHTML = '<p class="muted bstat">Sayılara şu an ulaşılamadı.</p>'; });
   else $('bkStats').innerHTML = bookStatsHTML({});
-  const d = r.desc || (navigator.onLine ? await fetchDesc(r) : '');
+  const d = r.desc || await fetchDesc(r);
   if (bookNow !== key) return;
   r.desc = d;
   if (h && d && !h.desc) { h.desc = d; h.updatedAt = new Date().toISOString(); persistWish(); }
