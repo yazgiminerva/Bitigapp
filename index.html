@@ -336,7 +336,7 @@ body.selecting .tabbar{display:none}
 .switch{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:center;margin-top:12px;font-weight:800}.switch input{appearance:auto!important;-webkit-appearance:checkbox!important;accent-color:var(--rose);width:22px!important;height:22px;min-height:0;padding:0;margin:0;border:0;grid-row:span 2}.switch small{grid-column:2;font-weight:600}
 .thrsheet{min-height:72dvh}
 .ov.full{align-items:stretch;background:var(--paper)}.ov.full .sheet{position:fixed;inset:0;max-width:none;width:auto;height:auto;max-height:none;border-radius:0;margin:0;padding-top:calc(var(--st) + 4px);animation:none}
-.ov.full .sh-head{justify-content:flex-start;gap:10px;margin-top:calc(-1 * var(--st) - 4px);top:calc(-1 * var(--st) - 4px);padding-top:calc(var(--st) + 10px);border-radius:0}.x.goback{width:38px;height:38px;display:grid;place-items:center;padding:0;background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink)}.x.goback svg{width:20px;height:20px;margin-left:-2px}.ov.full .sh-head{padding-top:calc(var(--st) + 22px)}
+.ov.full .sh-head{justify-content:flex-start;gap:10px;margin-top:calc(-1 * var(--st) - 4px);top:calc(-1 * var(--st) - 4px);padding-top:calc(var(--st) + 10px);border-radius:0}.st.fpool{--c:var(--lav)}.fmore{width:100%;margin-top:10px}.x.goback{width:38px;height:38px;display:grid;place-items:center;padding:0;background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink)}.x.goback svg{width:20px;height:20px;margin-left:-2px}.ov.full .sh-head{padding-top:calc(var(--st) + 22px)}
 .utabs{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:1fr 1fr;margin:18px -4px 12px;background:var(--paper);border-bottom:2px solid var(--line)}
 .utabs button{border:0;background:none;padding:12px 4px;font:800 16px "Nunito",sans-serif;color:var(--mute);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
 .utabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--rose)}
@@ -719,7 +719,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 56</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 57</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -876,6 +876,7 @@ a{color:var(--roseD)}
     <ul><li>Hesabını oluşturmak, girişini sağlamak, kitaplığını saklamak ve cihazların arasında eşitlemek; e-postanı doğrulamak ve şifre sıfırlama bağlantısı göndermek: KVKK m.5/2-c, bir sözleşmenin kurulması veya ifasıyla doğrudan ilgili olması.</li><li>Hesap ve sistem güvenliğini sağlamak, kötüye kullanımı önlemek: KVKK m.5/2-f, temel hak ve özgürlüklerine zarar vermemek kaydıyla veri sorumlusunun meşru menfaati.</li><li>Başvurularını yanıtlamak, yasal yükümlülükleri yerine getirmek, aydınlatmanın yapıldığını ispat etmek: KVKK m.5/2-ç, hukuki yükümlülük ve m.5/2-e, bir hakkın tesisi, kullanılması veya korunması.</li></ul>
     <h3>5. Ortak kitap listesi</h3>
     <p>Barkodla eklediğin kitapların yalnızca künye bilgileri (başlık, yazar, çevirmen, yayınevi, basım yılı, sayfa sayısı, tür, ISBN) herkesin yararlandığı ortak listeye eklenir. Ortak listeye hesap kimliğin, e-postan ya da başka bir tanımlayıcı gönderilmez; notların, puanların, hatıraların ve ödünç kayıtların gönderilmez.</p>
+    <p>Adla aramada sonuçlar önce bu ortak listeden gelir ve en çok eklenen ve seçilen kitaplar üstte gösterilir. Bunun için arama sonuçlarından birini açtığında ya da seçtiğinde o kitabın künyesi ortak listeye eklenir ve kitabın sayacı bir artar. Sayaç yalnızca toplamı tutar; kimin seçtiği, ne aradığın ya da hesabınla ilgili hiçbir bilgi kaydedilmez.</p>
     <p>Kendi çektiğin kapak fotoğrafı ortak listeye yalnızca ilgili kutuyu her seferinde kendin işaretlersen eklenir; kutu varsayılan olarak işaretli değildir. Uygulama, fotoğrafı göndermeden önce yeniden boyutlandırır ve EXIF ile GPS konum bilgileri dahil fotoğraftaki tüm üst verileri siler. Fotoğrafta kitap sahibinin adı, imza, ithaf yazısı ya da arka planda kişisel bir görüntü olmadığından emin olmalısın. Ortak listeye eklenen fotoğraflar seninle ilişkilendirilmeden saklandığı için hesabını sildiğinde kendiliğinden silinmez; kaldırılmasını istediğin bir fotoğraf için başvurabilirsin.</p>
     <h3>6. Arkadaş profili, takip ve baykuş postası</h3>
     <p>Hesabını oluşturduğunda sana, kayıtta seçtiğin kullanıcı adıyla bir arkadaş profili açılır. Profilin <b>gizli hesap</b> olarak başlar: kitaplık özetini yalnızca senin onayladığın takipçiler görür. İstersen Profilim &gt; Arkadaşlar bölümünden hesabını herkese açık yapabilirsin.</p>
@@ -912,7 +913,7 @@ a{color:var(--roseD)}
     <h3>3. Uygulamaya eklediğin içerik</h3>
     <ul><li>Eklediğin kitaplar, notlar, hatıralar ve fotoğraflar sana aittir ve yalnızca senin hesabında saklanır.</li><li>Başkalarına ait kişisel verileri, T.C. kimlik numarası, sağlık bilgisi gibi hassas bilgileri, hukuka aykırı ya da başkalarının haklarını ihlal eden içerikleri uygulamaya eklememelisin. Ödünç verme kayıtlarında takma ad ya da baş harf kullanmanı öneririz.</li></ul>
     <h3>4. Ortak kitap listesi</h3>
-    <p>Barkodla eklediğin kitapların künye bilgileri (başlık, yazar, yayınevi, ISBN gibi) ve kendi isteğinle paylaştığın kapak fotoğrafları, diğer kullanıcıların kitap eklemesini kolaylaştırmak için ortak listeye eklenir ve tüm kullanıcıların ücretsiz kullanımına açılır. Bu katkılar seninle ilişkilendirilmez. Yalnızca kendi çektiğin ve paylaşmaya hakkın olan kapak fotoğraflarını paylaşmalısın.</p>
+    <p>Barkodla eklediğin kitapların künye bilgileri (başlık, yazar, yayınevi, ISBN gibi) ve kendi isteğinle paylaştığın kapak fotoğrafları, diğer kullanıcıların kitap eklemesini kolaylaştırmak için ortak listeye eklenir ve tüm kullanıcıların ücretsiz kullanımına açılır. Bu katkılar seninle ilişkilendirilmez. Arama sonuçlarında açtığın ya da seçtiğin kitapların künyesi de, kimin seçtiği tutulmadan, bu listeye eklenir ve kitabın seçilme sayısı artar. Yalnızca kendi çektiğin ve paylaşmaya hakkın olan kapak fotoğraflarını paylaşmalısın.</p>
     <h3>5. Arkadaşlar ve baykuş postası</h3>
     <ul><li>Her hesabın, gizli olarak başlayan bir arkadaş profili vardır; aydınlatma metninin 6. bölümündeki bilgiler bu profil üzerinden diğer kullanıcılara görünür.</li><li>Baykuş yalnızca seni takip eden kişilere gönderilebilir. Kullanıcı adında, "hakkımda" yazında, baykuş notlarında ve yazışmalarda başkasını taklit eden, hakaret, taciz ya da reklam içeren ifadeler kullanmamalısın; başkalarının kişisel bilgilerini paylaşmamalısın.</li><li>Ortak kitaplığa yalnızca seni takip eden kişileri davet edebilirsin. Ortak kitaplıktaki herkes kitap kayıtlarını değiştirebilir ve silebilir; yalnızca güvendiğin kişileri ekle.</li><li>Seni rahatsız eden kişiyi engelleyebilirsin; engellenen kişi profilini ve kitaplığını göremez, sana baykuş gönderemez. Kurallara aykırı profilleri bildirebilirsin; geliştirici bu profilleri kaldırabilir.</li></ul>
     <h3>6. Üçüncü taraf hizmetler</h3>
@@ -2012,7 +2013,31 @@ function gbFetch(qs) {
   const u = 'https://www.googleapis.com/books/v1/volumes?' + qs;
   return fetch(u + '&key=' + GB_KEY).then(r => r.ok ? r : fetch(u)).catch(() => fetch(u));
 }
-async function findBooks(q) {
+// our own shared list first: books Bitigapp readers saved or opened, most popular first
+async function poolSearch(q) {
+  try {
+    const j = await (await fetch(WORKER + '/search?q=' + encodeURIComponent(q))).json();
+    return (j && j.books || []).map(v => ({title: v.title, author: v.author || '', translator: v.translator || '', publisher: v.publisher || '', year: v.year || '', pages: v.pages || '', genre: v.genre || '', isbn: v.isbn, cover: okUrl(v.cover) || '', src: 'Bitigapp', pool: true, n: (v.saves || 0) + (v.picks || 0), tr: true}));
+  } catch (e) { return []; }
+}
+// a search result someone opened or picked: count it, and add it to the shared list if it isn't there yet
+const picked = new Set();
+function poolPick(b) {
+  const isbn = String(b && b.isbn || '');
+  if (!b || !b.title || !/^(97[89]\d{10}|\d{9}[\dXx])$/.test(isbn) || picked.has(isbn) || b.src === 'friend') return;
+  picked.add(isbn);
+  fetch(WORKER + '/pick', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({isbn, title: b.title, author: b.author || '', translator: b.translator || '', publisher: b.publisher || '', year: b.year || null, pages: b.pages || null, genre: b.genre || '', cover: okUrl(b.cover) || ''})}).catch(() => {});
+}
+async function findBooks(q, deep) {
+  const plainT = t => fold(t).replace(/ı/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const words = t => plainT(t).split(' ').filter(w => w.length > 2);
+  const rel = (b, qs) => { const h = plainT(b.title + ' ' + b.author); return qs.some(qq => { const ws = words(qq); return ws.length && ws.filter(w => h.includes(w)).length >= Math.ceil(ws.length * 0.6); }); };
+  const poolP = poolSearch(q);
+  if (!deep) {
+    // enough found among Bitigapp's own books? don't spend a Google search; offer "other editions" instead
+    const pool = await poolP;
+    if (pool.some(b => rel(b, [q]) || b.isbn === isbn13(q))) { const r = pool.slice(); r.more = true; return r; }
+  }
   const out = [], seen = new Set();
   const add = b => { const k = b.isbn || fold(b.title) + '|' + fold(b.author).split(' ')[0]; if (!b.title || seen.has(k)) return; seen.add(k); b.tr = b.tr || TR_CH.test(b.title); out.push(b); };
   const gb = (extra, qq = q) => gbFetch('printType=books&maxResults=40' + extra + '&q=' + encodeURIComponent(qq)).then(r => r.json()).then(j => (j.items || []).map(it => {
@@ -2020,16 +2045,13 @@ async function findBooks(q) {
     return {title: v.title + (v.subtitle ? ': ' + v.subtitle : ''), author: (v.authors || []).join(', '), publisher: v.publisher || '', year: parseInt(v.publishedDate, 10) || '', pages: v.pageCount || '', genre: GENRE[cat.toLowerCase()] || '', isbn: isbnOf(v), cover: img.replace(/^http:/, 'https:').replace('&edge=curl', ''), src: 'Google Books', tr: v.language === 'tr'};
   })).catch(() => []);
   const ol = fetch('https://openlibrary.org/search.json?limit=30&fields=title,author_name,first_publish_year,isbn,cover_i,number_of_pages_median,publisher,language&q=' + encodeURIComponent(q)).then(r => r.json()).then(j => (j.docs || []).map(d => ({title: d.title, author: (d.author_name || []).slice(0, 3).join(', '), publisher: (d.publisher || [])[0] || '', year: d.first_publish_year || '', pages: d.number_of_pages_median || '', genre: '', isbn: (d.isbn || []).map(isbn13).find(Boolean) || '', cover: d.cover_i ? `https://covers.openlibrary.org/b/id/${d.cover_i}-M.jpg` : '', src: 'Open Library', tr: (d.language || []).includes('tur')}))).catch(() => []);
-  const [trG0, allG, olR] = await Promise.all([gb('&langRestrict=tr'), gb(''), ol]);
+  const [poolR, trG0, allG, olR] = await Promise.all([poolP, gb('&langRestrict=tr'), gb(''), ol]);
   // a Turkish edition is only "Turkish" if Google says so, and it must actually match what was typed
-  const plainT = t => fold(t).replace(/ı/g, 'i').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-  const words = t => plainT(t).split(' ').filter(w => w.length > 2);
-  const rel = (b, qs) => { const h = plainT(b.title + ' ' + b.author); return qs.some(qq => { const ws = words(qq); return ws.length && ws.filter(w => h.includes(w)).length >= Math.ceil(ws.length * 0.6); }); };
   let trG = trG0.filter(b => b.tr && rel(b, [q]));
   // English title typed (e.g. "dorian gray")? search again with the Turkish edition's own title ("Dorian Gray'in Portresi")
   const bridge = trG.find(b => fold(b.title) !== fold(q));
   if (bridge && trG.length < 8) { const base = bridge.title.split(/[:(]/)[0].trim(); trG = trG.concat((await gb('&langRestrict=tr', base)).filter(b => b.tr && rel(b, [q, base]))); }
-  for (const b of [...trG, ...allG, ...olR]) add(b);
+  for (const b of [...poolR, ...trG, ...allG, ...olR]) add(b);
   return [...out.filter(b => b.tr), ...out.filter(b => !b.tr)];
 }
 function haveIt(b) {
@@ -2038,26 +2060,27 @@ function haveIt(b) {
 }
 const FIND_PER = 10;
 let findPage = 0;
-async function runFind() {
+async function runFind(deep) {
   const q = $('fQ').value.trim(), seq = ++findSeq, box = $('fRes');
   if (q.length < 2) { box.innerHTML = ''; $('fHint').hidden = false; return; }
   $('fHint').hidden = true;
   if (!navigator.onLine) { box.innerHTML = '<p class="muted">İnternet yok. Bağlanınca tekrar dene ya da elle ekle.</p>'; return; }
-  box.innerHTML = '<p class="muted">Aranıyor…</p>';
-  const list = await findBooks(q);
+  if (deep) $('fMore') && ($('fMore').disabled = true, $('fMore').textContent = 'Aranıyor…'); else box.innerHTML = '<p class="muted">Aranıyor…</p>';
+  const list = await findBooks(q, deep);
   if (seq !== findSeq) return;
-  findRes = list; findPage = 0; drawFind();
+  findRes = list; if (!deep) findPage = 0; drawFind();
 }
 function drawFind() {
   const box = $('fRes'), list = findRes, pages = Math.ceil(list.length / FIND_PER), from = findPage * FIND_PER;
   const nav = pagerHTML(findPage, pages);
   box.innerHTML = (list.length ? `<p class="muted fcount">${list.length} sonuç${list.some(b => b.tr) ? ' · Türkçe baskılar önce' : ''}</p><ul class="hlist">${list.slice(from, from + FIND_PER).map((b, k) => findItem(b, from + k)).join('')}</ul>${nav}` : '<p class="muted">Bu adla bir kitap bulunamadı. Yazarın adını da ekleyerek dene.</p>')
+    + (list.more ? '<button class="btn fmore" type="button" id="fMore">Diğer baskıları da ara</button>' : '')
     + '<button class="btn link" type="button" id="fManual" style="width:100%;margin-top:6px">Bulamadın mı? Elle ekle</button>';
 }
 const pagerHTML = (page, pages) => pages > 1 ? `<div class="fpager"><button class="btn" type="button" data-pg="-1"${page ? '' : ' disabled'}>‹ Önceki</button><span>${page + 1} / ${pages}</span><button class="btn" type="button" data-pg="1"${page < pages - 1 ? '' : ' disabled'}>Sonraki ›</button></div>` : '';
 function findItem(b, i) {
     const h = haveIt(b), c = colorOf(b);
-    return `<li class="item fitem" data-i="${i}">${okUrl(b.cover) ? `<img class="cv" style="--c:${c}" src="${esc(b.cover)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'cv',textContent:'${esc(initial(b.title))}'}))">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || 'Yazar bilinmiyor')}</div><div class="a muted">${esc([b.publisher, b.year].filter(Boolean).join(' · '))}</div>${h ? `<span class="st" style="--c:var(--sage)">${wishes.includes(h) ? 'İstek listende' : 'Kitaplığında var'}</span>` : ''}${b.tr ? '' : '<span class="st flang">Yabancı baskı</span>'}</div><span class="fadd" aria-hidden="true">+</span></li>`;
+    return `<li class="item fitem" data-i="${i}">${okUrl(b.cover) ? `<img class="cv" style="--c:${c}" src="${esc(b.cover)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'cv',textContent:'${esc(initial(b.title))}'}))">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || 'Yazar bilinmiyor')}</div><div class="a muted">${esc([b.publisher, b.year].filter(Boolean).join(' · '))}</div>${h ? `<span class="st" style="--c:var(--sage)">${wishes.includes(h) ? 'İstek listende' : 'Kitaplığında var'}</span>` : ''}${b.pool ? `<span class="st fpool">Bitigapp'te${b.n > 1 ? ' · ' + b.n + ' kez seçildi' : ''}</span>` : b.tr ? '' : '<span class="st flang">Yabancı baskı</span>'}</div><span class="fadd" aria-hidden="true">+</span></li>`;
 }
 function pickFound(b) {
   $('findOv').hidden = true;
@@ -2079,7 +2102,8 @@ $('fQ').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDef
 $('fRes').addEventListener('click', e => {
   if (e.target.closest('#fManual')) { $('findOv').hidden = true; wishNext = findWish; openSheet(null, false); f.elements.title.value = $('fQ').value.trim(); setTimeout(() => f.elements.author.focus(), 60); return; }
   const pg = e.target.closest('[data-pg]'); if (pg) { findPage = Math.max(0, findPage + +pg.dataset.pg); drawFind(); $('findOv').querySelector('.sheet').scrollTop = 0; return; }
-  const li = e.target.closest('[data-i]'); if (li) pickFound(findRes[+li.dataset.i]);
+  if (e.target.closest('#fMore')) { runFind(true); return; }
+  const li = e.target.closest('[data-i]'); if (li) { const b = findRes[+li.dataset.i]; poolPick(b); pickFound(b); }
 });
 $('manual').onclick = () => { wishNext = false; openSheet(null, false); setTimeout(() => f.elements.title.focus(), 60); };
 $('x').onclick = closeSheet;
@@ -3486,18 +3510,18 @@ function setSMode(m) {
   $('sQ').placeholder = m === 'books' ? 'Kitabın adı ya da yazarı' : 'Kullanıcı adı ya da isim';
   runSearch(); $('sQ').focus();
 }
-async function runBookSearch() {
+async function runBookSearch(deep) {
   const q = $('sQ').value.trim(), seq = ++searchSeq, box = $('sRes');
   if (q.length < 2) { box.innerHTML = '<p class="muted" style="padding:8px 2px">Kitabın adını ya da yazarını yaz. Bir kitaba dokunup arka kapağını, Bitigapp okurlarının sayılarını görebilir, kitaplığına ya da istek listene ekleyebilirsin.</p>'; return; }
   if (!navigator.onLine) { box.innerHTML = '<p class="muted" style="padding:8px 2px">İnternet yok.</p>'; return; }
-  box.innerHTML = '<p class="muted" style="padding:8px 2px">Aranıyor…</p>';
-  const list = await findBooks(q);
+  if (deep) $('sMore') && ($('sMore').disabled = true, $('sMore').textContent = 'Aranıyor…'); else box.innerHTML = '<p class="muted" style="padding:8px 2px">Aranıyor…</p>';
+  const list = await findBooks(q, deep);
   if (seq !== searchSeq) return;
-  sBooks = list; sPage = 0; drawBookSearch();
+  sBooks = list; if (!deep) sPage = 0; drawBookSearch();
 }
 function drawBookSearch() {
   const pages = Math.ceil(sBooks.length / FIND_PER), from = sPage * FIND_PER;
-  $('sRes').innerHTML = sBooks.length ? `<p class="muted fcount">${sBooks.length} sonuç${sBooks.some(b => b.tr) ? ' · Türkçe baskılar önce' : ''}</p><ul class="hlist">${sBooks.slice(from, from + FIND_PER).map((b, k) => findItem(b, from + k)).join('')}</ul>${pagerHTML(sPage, pages)}` : '<p class="muted" style="padding:8px 2px">Bu adla bir kitap bulunamadı.</p>';
+  $('sRes').innerHTML = sBooks.length ? `<p class="muted fcount">${sBooks.length} sonuç${sBooks.some(b => b.tr) ? ' · Türkçe baskılar önce' : ''}</p><ul class="hlist">${sBooks.slice(from, from + FIND_PER).map((b, k) => findItem(b, from + k)).join('')}</ul>${pagerHTML(sPage, pages)}${sBooks.more ? '<button class="btn fmore" type="button" id="sMore">Diğer baskıları da ara</button>' : ''}` : '<p class="muted" style="padding:8px 2px">Bu adla bir kitap bulunamadı.</p>';
 }
 async function runSearch() {
   if (sMode === 'books') return runBookSearch();
@@ -3521,7 +3545,8 @@ $('sX').onclick = () => { $('searchOv').hidden = true; };
 $('sRes').addEventListener('click', e => {
   const li = e.target.closest('[data-user]'); if (li) return openUser(li.dataset.user);
   const pg = e.target.closest('[data-pg]'); if (pg) { sPage = Math.max(0, sPage + +pg.dataset.pg); drawBookSearch(); $('searchOv').querySelector('.sheet').scrollTop = 0; return; }
-  const bi = e.target.closest('[data-i]'); if (bi) openFoundBook(sBooks[+bi.dataset.i]);
+  if (e.target.closest('#sMore')) { runBookSearch(true); return; }
+  const bi = e.target.closest('[data-i]'); if (bi) { const b = sBooks[+bi.dataset.i]; poolPick(b); openFoundBook(b); }
 });
 function openSearch(mode) {
   $('searchOv').hidden = false; $('sQ').value = ''; sBooks = []; setSMode(mode || sMode); setTimeout(() => $('sQ').focus(), 80);

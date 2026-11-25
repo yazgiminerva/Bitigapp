@@ -1,17 +1,19 @@
-// Kitaplığım ortak kitap listesi.
+// Bitigapp ortak kitap listesi.
 // Uygulama bir kitabı kaydettiğinde yalnızca künye bilgilerini (ISBN, başlık, yazar,
 // çevirmen, yayınevi, yıl, sayfa, tür, kapak adresi) buraya gönderir. Okuma durumu,
-// puan, notlar, ödünç bilgisi gibi kişisel alanlar asla gönderilmez.
-// Barkod okutulduğunda uygulama önce burada arar.
+// puan, notlar, ödünç bilgisi gibi kişisel alanlar ve kimin gönderdiği asla tutulmaz.
+// Barkod okutulduğunda ve adla arandığında uygulama önce burada arar.
 //
 // GET  /book?isbn=978...   -> {ok, found, book}
-// POST /book  {isbn, title, ...} -> {ok, created}
+// POST /book  {isbn, title, ...} -> a book saved to someone's library (saves + 1)
+// GET  /search?q=dorian gray -> {ok, books: [...]} most saved / picked first
+// POST /pick  {isbn, title, ...} -> a search result someone opened or picked (picks + 1);
+//                                   unknown books join the list so the next search finds them here
 // GET  /cover?isbn=978...  -> the shared cover image (404 if none); &check=1 -> {ok, exists}
 // POST /cover {isbn, mime, data(base64)} -> a cover a user chose to share; the first one stays
 // Var olan bir kaydın dolu alanları değiştirilmez, yalnızca boş alanları doldurulur.
 
 const ALLOWED = ['https://yazgiminerva.github.io'];
-const FIELDS = ['title', 'author', 'translator', 'publisher', 'genre', 'cover'];
 
 function cors(req) {
   const o = req.headers.get('Origin') || '';
@@ -48,6 +50,10 @@ function normIsbn(v) {
 }
 const clean = (v, max) => typeof v === 'string' ? v.replace(/[\u0000-\u001f<>]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, max) : '';
 const int = (v, lo, hi) => { const n = parseInt(v, 10); return Number.isFinite(n) && n >= lo && n <= hi ? n : null; };
+// arama anahtarı: küçük harf, Türkçe harfler sadeleşir (ı→i, ş→s ...), noktalama boşluk olur
+const norm = s => String(s || '').toLocaleLowerCase('tr').replace(/ı/g, 'i').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+const skOf = r => ' ' + norm([r.title, r.author, r.translator, r.publisher].join(' ')) + ' ';
+const COLS = 'isbn, title, author, translator, publisher, year, pages, genre, cover, saves, picks';
 
 export default {
   async fetch(req, env) {
@@ -56,13 +62,84 @@ export default {
   },
 };
 
+function readRec(b) {
+  const isbn = normIsbn(b && b.isbn);
+  const title = clean(b && b.title, 300);
+  if (!isbn || !title) return null;
+  const cover = clean(b.cover, 500);
+  const rec = {
+    isbn, title, author: clean(b.author, 200), translator: clean(b.translator, 200), publisher: clean(b.publisher, 200),
+    genre: clean(b.genre, 60), cover: /^https:\/\//.test(cover) ? cover : '',
+    year: int(b.year, 1450, 2100), pages: int(b.pages, 1, 20000),
+  };
+  rec.sk = skOf(rec);
+  return rec;
+}
+async function readBody(req) {
+  const raw = await req.text();
+  if (raw.length > 4000) return {err: 'Çok büyük'};
+  try { return {b: JSON.parse(raw)}; } catch (e) { return {err: 'Geçersiz veri'}; }
+}
+// Yeni kayıt ekle; varsa yalnızca boş alanları doldur ve sayacı artır
+function upsert(env, rec, kind) {
+  const now = new Date().toISOString();
+  const s0 = kind === 'save' ? 1 : 0, p0 = kind === 'pick' ? 1 : 0;
+  return env.DB.prepare(`INSERT INTO books (isbn, title, author, translator, publisher, year, pages, genre, cover, saves, picks, sk, created_at, updated_at)
+      VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?11, ?12, ?13, ?10, ?10)
+      ON CONFLICT(isbn) DO UPDATE SET
+        author = CASE WHEN IFNULL(author, '') = '' THEN excluded.author ELSE author END,
+        translator = CASE WHEN IFNULL(translator, '') = '' THEN excluded.translator ELSE translator END,
+        publisher = CASE WHEN IFNULL(publisher, '') = '' THEN excluded.publisher ELSE publisher END,
+        genre = CASE WHEN IFNULL(genre, '') = '' THEN excluded.genre ELSE genre END,
+        cover = CASE WHEN IFNULL(cover, '') = '' THEN excluded.cover ELSE cover END,
+        year = IFNULL(year, excluded.year),
+        pages = IFNULL(pages, excluded.pages),
+        saves = saves + ?11,
+        picks = picks + ?12,
+        sk = '',
+        updated_at = ?10`)
+    .bind(rec.isbn, rec.title, rec.author, rec.translator, rec.publisher, rec.year, rec.pages, rec.genre, rec.cover, now, s0, p0, rec.sk).run();
+}
+// eski ya da güncellenmiş kayıtların arama anahtarını doldur
+async function fillKeys(env) {
+  const {results} = await env.DB.prepare("SELECT isbn, title, author, translator, publisher FROM books WHERE sk = '' LIMIT 400").all();
+  if (!results || !results.length) return;
+  await env.DB.batch(results.map(r => env.DB.prepare('UPDATE books SET sk = ? WHERE isbn = ?').bind(skOf(r), r.isbn)));
+}
+
+async function search(req, env, url) {
+  const q = norm(url.searchParams.get('q')).slice(0, 100);
+  const words = [...new Set(q.split(' ').filter(w => w.length >= 2))].slice(0, 6);
+  const isbn = normIsbn(q.replace(/ /g, ''));
+  if (!words.length && !isbn) return json(req, {ok: true, books: []});
+  await fillKeys(env);
+  let rows;
+  if (isbn) rows = (await env.DB.prepare(`SELECT ${COLS} FROM books WHERE isbn = ?`).bind(isbn).all()).results || [];
+  else {
+    const where = words.map((_, i) => `sk LIKE ?${i + 1}`).join(' AND ');
+    rows = (await env.DB.prepare(`SELECT ${COLS} FROM books WHERE ${where} ORDER BY (saves * 3 + picks) DESC LIMIT 60`)
+      .bind(...words.map(w => '%' + w + '%')).all()).results || [];
+  }
+  // başlığında geçenler önce, sonra en çok kaydedilen ve açılanlar
+  const score = r => { const t = ' ' + norm(r.title) + ' '; return words.filter(w => t.includes(w)).length * 1000 + (r.saves || 0) * 3 + (r.picks || 0); };
+  rows.sort((a, b) => score(b) - score(a));
+  return json(req, {ok: true, books: rows.slice(0, 30)}, {'Cache-Control': 'no-store'});
+}
+
 async function handle(req, env) {
   if (req.method === 'OPTIONS') return new Response(null, {headers: cors(req)});
   const url = new URL(req.url);
-  if (url.searchParams.get('ping')) return json(req, {ok: true, version: 11});
+  if (url.searchParams.get('ping')) return json(req, {ok: true, version: 12});
   // writes only from the app's own page
   if (req.method === 'POST' && !ALLOWED.includes(req.headers.get('Origin') || '')) return json(req, {ok: false, error: 'İzin yok'});
   if (url.pathname === '/cover') return cover(req, env, url);
+  if (url.pathname === '/search' && req.method === 'GET') return search(req, env, url);
+  if (url.pathname === '/pick' && req.method === 'POST') {
+    const {b, err} = await readBody(req); if (err) return json(req, {ok: false, error: err});
+    const rec = readRec(b); if (!rec) return json(req, {ok: false, error: 'ISBN ve başlık gerekli'});
+    await upsert(env, rec, 'pick');
+    return json(req, {ok: true, isbn: rec.isbn});
+  }
   if (url.pathname !== '/book') return json(req, {ok: false, error: 'Bilinmeyen adres'});
 
   if (req.method === 'GET') {
@@ -76,34 +153,10 @@ async function handle(req, env) {
   }
 
   if (req.method === 'POST') {
-    const raw = await req.text();
-    if (raw.length > 4000) return json(req, {ok: false, error: 'Çok büyük'});
-    let b; try { b = JSON.parse(raw); } catch (e) { return json(req, {ok: false, error: 'Geçersiz veri'}); }
-    const isbn = normIsbn(b && b.isbn);
-    const title = clean(b && b.title, 300);
-    if (!isbn || !title) return json(req, {ok: false, error: 'ISBN ve başlık gerekli'});
-    const cover = clean(b.cover, 500);
-    const rec = {
-      title, author: clean(b.author, 200), translator: clean(b.translator, 200), publisher: clean(b.publisher, 200),
-      genre: clean(b.genre, 60), cover: /^https:\/\//.test(cover) ? cover : '',
-      year: int(b.year, 1450, 2100), pages: int(b.pages, 1, 20000),
-    };
-    const now = new Date().toISOString();
-    // Yeni kayıt ekle; varsa yalnızca boş alanları doldur ve kaydetme sayısını artır
-    const r = await env.DB.prepare(`INSERT INTO books (isbn, title, author, translator, publisher, year, pages, genre, cover, saves, created_at, updated_at)
-      VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, 1, ?10, ?10)
-      ON CONFLICT(isbn) DO UPDATE SET
-        author = CASE WHEN IFNULL(author, '') = '' THEN excluded.author ELSE author END,
-        translator = CASE WHEN IFNULL(translator, '') = '' THEN excluded.translator ELSE translator END,
-        publisher = CASE WHEN IFNULL(publisher, '') = '' THEN excluded.publisher ELSE publisher END,
-        genre = CASE WHEN IFNULL(genre, '') = '' THEN excluded.genre ELSE genre END,
-        cover = CASE WHEN IFNULL(cover, '') = '' THEN excluded.cover ELSE cover END,
-        year = IFNULL(year, excluded.year),
-        pages = IFNULL(pages, excluded.pages),
-        saves = saves + 1,
-        updated_at = ?10`)
-      .bind(isbn, rec.title, rec.author, rec.translator, rec.publisher, rec.year, rec.pages, rec.genre, rec.cover, now).run();
-    return json(req, {ok: true, isbn, changes: r.meta && r.meta.changes});
+    const {b, err} = await readBody(req); if (err) return json(req, {ok: false, error: err});
+    const rec = readRec(b); if (!rec) return json(req, {ok: false, error: 'ISBN ve başlık gerekli'});
+    const r = await upsert(env, rec, 'save');
+    return json(req, {ok: true, isbn: rec.isbn, changes: r.meta && r.meta.changes});
   }
   return json(req, {ok: false, error: 'Desteklenmeyen istek'});
 }
@@ -127,7 +180,6 @@ async function cover(req, env, url) {
     if (raw.length > 420000) return json(req, {ok: false, error: 'Fotoğraf çok büyük'});
     let b; try { b = JSON.parse(raw); } catch (e) { return json(req, {ok: false, error: 'Geçersiz veri'}); }
     const isbn = normIsbn(b && b.isbn);
-    const mime = b && b.mime === 'image/png' ? 'image/png' : 'image/jpeg';
     const data = typeof (b && b.data) === 'string' ? b.data : '';
     if (!isbn) return json(req, {ok: false, error: 'Geçersiz ISBN'});
     if (data.length < 2000 || !/^[A-Za-z0-9+/]+={0,2}$/.test(data)) return json(req, {ok: false, error: 'Geçersiz fotoğraf'});
