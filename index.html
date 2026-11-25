@@ -148,7 +148,7 @@ textarea{min-height:80px;resize:vertical}
 .chips{display:flex;gap:6px;overflow-x:auto;padding:10px 0 4px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;border:2px solid var(--line);background:var(--field);color:var(--mute);border-radius:99px;padding:6px 14px;min-height:40px;font:700 14px "Nunito",sans-serif}
-.chip[aria-pressed=true]{background:var(--ink);color:var(--chipOn);border-color:var(--ink)}
+.chip[aria-pressed=true],.chip[aria-selected=true]{background:var(--ink);color:var(--chipOn);border-color:var(--ink)}
 ul{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:10px}
 .item{display:grid;grid-template-columns:46px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 12px 10px 10px;background:var(--paper);border-radius:18px;box-shadow:0 2px 0 var(--line),0 8px 18px var(--shadow);cursor:pointer}
 .cv{width:46px;height:64px;border-radius:4px 8px 8px 4px;background:linear-gradient(90deg,#00000018 0 4px,#0000 4px),var(--c);display:grid;place-items:center;font:600 22px var(--serif);font-variation-settings:"SOFT" 100;color:color-mix(in srgb,var(--c) 45%,#3b2b38);object-fit:cover;box-shadow:inset 0 0 0 1px #0000000a}
@@ -704,7 +704,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 46</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 47</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -733,7 +733,7 @@ a{color:var(--roseD)}
 <div class="tabpage" id="tabFeed" hidden>
   <div class="wrap">
     <header class="band top fhead"><div><h1>Akış</h1><p class="muted" style="margin:0">Kitaplığında ve arkadaşlarında olan biten</p></div>
-      <div class="ficons"><button class="ficon" id="fSearch" type="button" aria-label="Kişi ara"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5l5 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
+      <div class="ficons"><button class="ficon" id="fSearch" type="button" aria-label="Kitap ya da kişi ara"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2.2"/><path d="M15.5 15.5l5 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg></button>
       <button class="ficon" id="fInbox" type="button" aria-label="Baykuş postası"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4l3 2.4A8 8 0 0 1 12 5.4a8 8 0 0 1 4 1L19 4v7.5c0 5-3.2 9-7 9s-7-4-7-9z" fill="currentColor" opacity=".9"/><circle cx="9.2" cy="11" r="2.3" fill="var(--paper)"/><circle cx="14.8" cy="11" r="2.3" fill="var(--paper)"/><circle cx="9.2" cy="11" r="1" fill="currentColor"/><circle cx="14.8" cy="11" r="1" fill="currentColor"/><path d="M11 13.6h2l-1 1.6z" fill="var(--butter)"/></svg><b id="inboxN" hidden></b></button></div></header>
     <div class="band" id="feedNow"></div>
     <div class="band" id="feed"></div>
@@ -965,8 +965,9 @@ a{color:var(--roseD)}
 
 <div class="ov" id="searchOv" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle">
-    <div class="sh-head"><h2 id="sTitle">Arkadaş ara</h2><button class="x" id="sX" type="button" aria-label="Kapat">×</button></div>
-    <input type="search" id="sQ" placeholder="Kullanıcı adı ya da isim" autocomplete="off" autocapitalize="off" spellcheck="false">
+    <div class="sh-head"><h2 id="sTitle">Ara</h2><button class="x" id="sX" type="button" aria-label="Kapat">×</button></div>
+    <div class="fchips" id="sMode" role="tablist"><button class="chip" type="button" role="tab" data-sm="books" aria-selected="true">Kitaplar</button><button class="chip" type="button" role="tab" data-sm="people" aria-selected="false">Kişiler</button></div>
+    <input type="search" id="sQ" placeholder="Kitabın adı ya da yazarı" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="search">
     <div id="sRes"></div>
   </div>
 </div>
@@ -1469,7 +1470,8 @@ function renderFeed() {
 $('tabFeed').addEventListener('click', e => {
   const t = e.target.closest('[data-open],[data-wish],[data-done],[data-ff],[data-react],[data-fb],[data-user],#feedMore,#feedFind,#fSearch,#fInbox'); if (!t) return;
   if (t.id === 'feedMore') { feedMax += 40; return renderFeed(); }
-  if (t.id === 'feedFind' || t.id === 'fSearch') return openSearch();
+  if (t.id === 'feedFind') return openSearch('people');
+  if (t.id === 'fSearch') return openSearch();
   if (t.id === 'fInbox') return openInbox();
   if (t.dataset.ff) { feedFilter = t.dataset.ff; return renderFeed(); }
   if (t.dataset.user) return openUser(t.dataset.user);
@@ -1937,6 +1939,28 @@ async function openBook(id) {
     else $('bkDesc').innerHTML = '<p class="muted">Bu kitap için çevrimiçi bir açıklama bulunamadı. İstersen "Düzenle"den kendin ekleyebilirsin.</p>';
   }
 }
+async function openFoundBook(r) {
+  const h = haveIt(r);
+  if (h && books.includes(h)) return openBook(h.id);
+  const key = 'x:' + (r.isbn || workKey(r)); bookNow = key;
+  const c = colorOf(r), cu = okUrl(r.cover);
+  $('bkBody').innerHTML = `<div class="bhead">${cu ? `<img class="bcv" src="${esc(cu)}" alt="">` : `<div class="bcv" style="--c:${c}">${esc(initial(r.title))}</div>`}
+    <div><h2 class="bt">${esc(r.title)}</h2><p class="ba">${esc(r.author || 'Yazar bilinmiyor')}</p><p class="muted bm">${esc([r.publisher, r.year, r.pages ? r.pages + ' sayfa' : ''].filter(Boolean).join(' · '))}</p>${h ? '<p class="bm"><span class="st" style="--c:var(--sage)">İstek listende</span></p>' : ''}</div></div>
+    <h3 class="psec">Bitigapp okurları</h3><div id="bkStats">${bookStatsHTML(null)}</div>
+    <h3 class="psec">Arka kapak</h3><div id="bkDesc"><p class="muted">Açıklama aranıyor…</p></div>
+    <div class="bk" style="margin-top:14px"><button class="btn primary" type="button" id="bkAddLib">Kitaplığıma ekle</button>${h ? '' : '<button class="btn" type="button" id="bkAddWish">İstek listeme ekle</button>'}</div>`;
+  $('bookOv').hidden = false; $('bookOv').querySelector('.sheet').scrollTop = 0;
+  bookFound = r;
+  const k = workKey(r);
+  if (k && me) FB.getDoc(FB.doc(fbDb, 'stats', k)).then(s => { if (bookNow === key) $('bkStats').innerHTML = bookStatsHTML(s.exists() ? s.data() : {}); }).catch(() => { if (bookNow === key) $('bkStats').innerHTML = '<p class="muted bstat">Sayılara şu an ulaşılamadı.</p>'; });
+  else $('bkStats').innerHTML = bookStatsHTML({});
+  const d = navigator.onLine ? await fetchDesc(r) : '';
+  if (bookNow !== key) return;
+  r.desc = d;
+  $('bkDesc').innerHTML = d ? `<p class="bdesc">${esc(d)}</p><p class="muted" style="font-size:12px">Kaynak: Google Books</p>` : '<p class="muted">Bu kitap için çevrimiçi bir açıklama bulunamadı.</p>';
+  clampDesc();
+}
+let bookFound = null;
 function clampDesc() {
   const p = $('bkDesc').querySelector('.bdesc'); if (!p || p.scrollHeight <= p.clientHeight + 4) return;
   p.insertAdjacentHTML('afterend', '<button class="btn link" type="button" id="bkMore">Devamını oku</button>');
@@ -1944,6 +1968,7 @@ function clampDesc() {
 $('bookOv').addEventListener('click', e => {
   if (e.target === $('bookOv') || e.target.closest('#bkX')) { $('bookOv').hidden = true; bookNow = null; return; }
   if (e.target.closest('#bkMore')) { $('bkDesc').querySelector('.bdesc').classList.add('open'); e.target.remove(); return; }
+  if (e.target.closest('#bkAddLib,#bkAddWish') && bookFound) { const w = !!e.target.closest('#bkAddWish'), r = bookFound; $('bookOv').hidden = true; $('searchOv').hidden = true; bookNow = null; findWish = w; pickFound(r); return; }
   if (e.target.closest('#bkEdit')) { const id = bookNow; $('bookOv').hidden = true; bookNow = null; return openSheet(id); }
   if (e.target.closest('#bkDone')) { const b = books.find(x => x.id === bookNow); if (!b) return; b.status = 'okundu'; b.finishedAt = b.finishedAt || today(); b.updatedAt = new Date().toISOString(); persist(); render(); sfx.unlock(); sfx.sparkle(); openBook(b.id); }
 });
@@ -1987,12 +2012,14 @@ async function runFind() {
 }
 function drawFind() {
   const box = $('fRes'), list = findRes, pages = Math.ceil(list.length / FIND_PER), from = findPage * FIND_PER;
-  const nav = pages > 1 ? `<div class="fpager"><button class="btn" type="button" data-pg="-1"${findPage ? '' : ' disabled'}>‹ Önceki</button><span>${findPage + 1} / ${pages}</span><button class="btn" type="button" data-pg="1"${findPage < pages - 1 ? '' : ' disabled'}>Sonraki ›</button></div>` : '';
-  box.innerHTML = (list.length ? `<p class="muted fcount">${list.length} sonuç${list.some(b => b.tr) ? ' · Türkçe baskılar önce' : ''}</p><ul class="hlist">${list.slice(from, from + FIND_PER).map((b, k) => {
-    const i = from + k, h = haveIt(b), c = colorOf(b);
-    return `<li class="item fitem" data-i="${i}">${okUrl(b.cover) ? `<img class="cv" style="--c:${c}" src="${esc(b.cover)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'cv',textContent:'${esc(initial(b.title))}'}))">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || 'Yazar bilinmiyor')}</div><div class="a muted">${esc([b.publisher, b.year].filter(Boolean).join(' · '))}</div>${h ? `<span class="st" style="--c:var(--sage)">${wishes.includes(h) ? 'İstek listende' : 'Kitaplığında var'}</span>` : ''}${b.tr ? '' : '<span class="st flang">Yabancı baskı</span>'}</div><span class="fadd" aria-hidden="true">+</span></li>`;
-  }).join('')}</ul>${nav}` : '<p class="muted">Bu adla bir kitap bulunamadı. Yazarın adını da ekleyerek dene.</p>')
+  const nav = pagerHTML(findPage, pages);
+  box.innerHTML = (list.length ? `<p class="muted fcount">${list.length} sonuç${list.some(b => b.tr) ? ' · Türkçe baskılar önce' : ''}</p><ul class="hlist">${list.slice(from, from + FIND_PER).map((b, k) => findItem(b, from + k)).join('')}</ul>${nav}` : '<p class="muted">Bu adla bir kitap bulunamadı. Yazarın adını da ekleyerek dene.</p>')
     + '<button class="btn link" type="button" id="fManual" style="width:100%;margin-top:6px">Bulamadın mı? Elle ekle</button>';
+}
+const pagerHTML = (page, pages) => pages > 1 ? `<div class="fpager"><button class="btn" type="button" data-pg="-1"${page ? '' : ' disabled'}>‹ Önceki</button><span>${page + 1} / ${pages}</span><button class="btn" type="button" data-pg="1"${page < pages - 1 ? '' : ' disabled'}>Sonraki ›</button></div>` : '';
+function findItem(b, i) {
+    const h = haveIt(b), c = colorOf(b);
+    return `<li class="item fitem" data-i="${i}">${okUrl(b.cover) ? `<img class="cv" style="--c:${c}" src="${esc(b.cover)}" alt="" loading="lazy" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'cv',textContent:'${esc(initial(b.title))}'}))">` : `<div class="cv" style="--c:${c}">${esc(initial(b.title))}</div>`}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || 'Yazar bilinmiyor')}</div><div class="a muted">${esc([b.publisher, b.year].filter(Boolean).join(' · '))}</div>${h ? `<span class="st" style="--c:var(--sage)">${wishes.includes(h) ? 'İstek listende' : 'Kitaplığında var'}</span>` : ''}${b.tr ? '' : '<span class="st flang">Yabancı baskı</span>'}</div><span class="fadd" aria-hidden="true">+</span></li>`;
 }
 function pickFound(b) {
   $('findOv').hidden = true;
@@ -3369,10 +3396,30 @@ $('uBody').addEventListener('click', async e => {
   openUser(uid, true);
 });
 
-// --- search ---
-let searchSeq = 0;
+// --- search: books or people ---
+let searchSeq = 0, sMode = 'books', sBooks = [], sPage = 0;
+function setSMode(m) {
+  sMode = m; for (const c of $('sMode').children) c.setAttribute('aria-selected', String(c.dataset.sm === m));
+  $('sQ').placeholder = m === 'books' ? 'Kitabın adı ya da yazarı' : 'Kullanıcı adı ya da isim';
+  runSearch(); $('sQ').focus();
+}
+async function runBookSearch() {
+  const q = $('sQ').value.trim(), seq = ++searchSeq, box = $('sRes');
+  if (q.length < 2) { box.innerHTML = '<p class="muted" style="padding:8px 2px">Kitabın adını ya da yazarını yaz. Bir kitaba dokunup arka kapağını, Bitigapp okurlarının sayılarını görebilir, kitaplığına ya da istek listene ekleyebilirsin.</p>'; return; }
+  if (!navigator.onLine) { box.innerHTML = '<p class="muted" style="padding:8px 2px">İnternet yok.</p>'; return; }
+  box.innerHTML = '<p class="muted" style="padding:8px 2px">Aranıyor…</p>';
+  const list = await findBooks(q);
+  if (seq !== searchSeq) return;
+  sBooks = list; sPage = 0; drawBookSearch();
+}
+function drawBookSearch() {
+  const pages = Math.ceil(sBooks.length / FIND_PER), from = sPage * FIND_PER;
+  $('sRes').innerHTML = sBooks.length ? `<p class="muted fcount">${sBooks.length} sonuç${sBooks.some(b => b.tr) ? ' · Türkçe baskılar önce' : ''}</p><ul class="hlist">${sBooks.slice(from, from + FIND_PER).map((b, k) => findItem(b, from + k)).join('')}</ul>${pagerHTML(sPage, pages)}` : '<p class="muted" style="padding:8px 2px">Bu adla bir kitap bulunamadı.</p>';
+}
 async function runSearch() {
+  if (sMode === 'books') return runBookSearch();
   const q = fold($('sQ').value).replace(/^@/, ''), seq = ++searchSeq, box = $('sRes');
+  if (!SOC.on) { box.innerHTML = '<p class="muted" style="padding:8px 2px">Arkadaş profilin henüz hazır değil; internet bağlantını kontrol edip Profilim\'de "Tekrar dene"ye dokun.</p>'; return; }
   if (q.length < 2) { box.innerHTML = '<p class="muted" style="padding:8px 2px">Kullanıcı adının ya da ismin ilk harflerini yaz.</p>'; return; }
   box.innerHTML = '<p class="muted" style="padding:8px 2px">Aranıyor…</p>';
   try {
@@ -3384,12 +3431,17 @@ async function runSearch() {
   } catch (e) { if (seq === searchSeq) box.innerHTML = '<p class="muted" style="padding:8px 2px">Arama yapılamadı. İnternetini kontrol et.</p>'; }
 }
 let sT = 0;
-$('sQ').addEventListener('input', () => { clearTimeout(sT); sT = setTimeout(runSearch, 300); });
+$('sQ').addEventListener('input', () => { clearTimeout(sT); sT = setTimeout(runSearch, sMode === 'books' ? 450 : 300); });
+$('sQ').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); clearTimeout(sT); runSearch(); $('sQ').blur(); } });
+$('sMode').addEventListener('click', e => { const c = e.target.closest('[data-sm]'); if (c && c.dataset.sm !== sMode) setSMode(c.dataset.sm); });
 $('sX').onclick = () => { $('searchOv').hidden = true; };
-$('sRes').addEventListener('click', e => { const li = e.target.closest('[data-user]'); if (li) openUser(li.dataset.user); });
-function openSearch() {
-  if (!SOC.on) { showTab('prof'); setTimeout(() => $('socBox').scrollIntoView({behavior: 'smooth', block: 'center'}), 120); note('Arkadaş profilin henüz hazır değil; internet bağlantını kontrol edip Profilim\'de "Tekrar dene"ye dokun.'); return; }
-  $('searchOv').hidden = false; $('sQ').value = ''; runSearch(); setTimeout(() => $('sQ').focus(), 80);
+$('sRes').addEventListener('click', e => {
+  const li = e.target.closest('[data-user]'); if (li) return openUser(li.dataset.user);
+  const pg = e.target.closest('[data-pg]'); if (pg) { sPage = Math.max(0, sPage + +pg.dataset.pg); drawBookSearch(); $('searchOv').querySelector('.sheet').scrollTop = 0; return; }
+  const bi = e.target.closest('[data-i]'); if (bi) openFoundBook(sBooks[+bi.dataset.i]);
+});
+function openSearch(mode) {
+  $('searchOv').hidden = false; $('sQ').value = ''; sBooks = []; setSMode(mode || sMode); setTimeout(() => $('sQ').focus(), 80);
 }
 
 // --- follower lists ---
@@ -3444,7 +3496,7 @@ function drawInbox() {
   hydrate(box);
 }
 async function openInbox() {
-  if (!SOC.on) return openSearch();
+  if (!SOC.on) return openSearch('people');
   $('inboxOv').hidden = false; drawInbox();
   const unread = SOC.mail.filter(m => !m.read);
   if (unread.length) { const b = FB.writeBatch(fbDb); unread.forEach(m => b.set(fd('mail', me.uid, 'items', m.id), {read: true}, {merge: true})); b.commit().catch(() => {}); }
@@ -3489,7 +3541,7 @@ function drawSocial() {
 $('socBox').addEventListener('click', async e => {
   const t = e.target.closest('#socGo,#socFind,[data-l]'); if (!t) return;
   if (t.dataset.l) return drawList(t.dataset.l);
-  if (t.id === 'socFind') return openSearch();
+  if (t.id === 'socFind') return openSearch('people');
   if (t.id === 'socGo') { t.disabled = true; await socStart(); }
 });
 $('socBox').addEventListener('change', async e => {
