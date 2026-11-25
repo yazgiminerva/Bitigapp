@@ -336,7 +336,13 @@ body.selecting .tabbar{display:none}
 .switch{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:center;margin-top:12px;font-weight:800}.switch input{appearance:auto!important;-webkit-appearance:checkbox!important;accent-color:var(--rose);width:22px!important;height:22px;min-height:0;padding:0;margin:0;border:0;grid-row:span 2}.switch small{grid-column:2;font-weight:600}
 .thrsheet{min-height:72dvh}
 .ov.full{align-items:stretch;background:var(--paper)}.ov.full .sheet{position:fixed;inset:0;max-width:none;width:auto;height:auto;max-height:none;border-radius:0;margin:0;padding-top:calc(var(--st) + 4px);animation:none}
-.ov.full .sh-head{justify-content:flex-start;gap:10px;margin-top:calc(-1 * var(--st) - 4px);top:calc(-1 * var(--st) - 4px);padding-top:calc(var(--st) + 10px);border-radius:0}.st.fpool{--c:var(--lav)}.fmore{width:100%;margin-top:10px}.x.goback{width:38px;height:38px;display:grid;place-items:center;padding:0;background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink)}.x.goback svg{width:20px;height:20px;margin-left:-2px}.ov.full .sh-head{padding-top:calc(var(--st) + 22px)}
+.ov.full .sh-head{justify-content:flex-start;gap:10px;margin-top:calc(-1 * var(--st) - 4px);top:calc(-1 * var(--st) - 4px);padding-top:calc(var(--st) + 10px);border-radius:0}.rdsheet{display:flex;flex-direction:column}#rdBody{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:10px 4px 30px}
+#rdBody .bcv{width:120px;height:180px;margin:6px auto 8px;font-size:40px}#rdBody .rdt{margin:0;font-family:var(--serif);font-size:24px;line-height:1.2}#rdBody .rda{margin:0;color:var(--mute)}
+.rdclock{font-family:var(--serif);font-size:64px;font-weight:700;letter-spacing:1px;margin:18px 0 2px;font-variant-numeric:tabular-nums}.rdclock.paused{opacity:.45}
+.rdlive{margin:8px 0 0;padding:10px 16px;border-radius:16px;background:color-mix(in srgb,var(--lav) 22%,transparent);font-weight:700;max-width:340px}.rdlive .dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--sageD);margin-right:7px;animation:rdpulse 1.6s infinite}
+@keyframes rdpulse{50%{opacity:.25}}.rdbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:360px;margin-top:22px}.rdsum{margin:6px 0 0;font-size:13px}
+.rdpill{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(70px + var(--sb));z-index:8;border:0;border-radius:999px;padding:9px 16px;font:inherit;font-weight:800;background:var(--lavD);color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.3);max-width:calc(100% - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.st.fpool{--c:var(--lav)}.fmore{width:100%;margin-top:10px}.x.goback{width:38px;height:38px;display:grid;place-items:center;padding:0;background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink)}.x.goback svg{width:20px;height:20px;margin-left:-2px}.ov.full .sh-head{padding-top:calc(var(--st) + 22px)}
 .utabs{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:1fr 1fr;margin:18px -4px 12px;background:var(--paper);border-bottom:2px solid var(--line)}
 .utabs button{border:0;background:none;padding:12px 4px;font:800 16px "Nunito",sans-serif;color:var(--mute);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
 .utabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--rose)}
@@ -719,7 +725,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 57</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 58</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -876,6 +882,7 @@ a{color:var(--roseD)}
     <ul><li>Hesabını oluşturmak, girişini sağlamak, kitaplığını saklamak ve cihazların arasında eşitlemek; e-postanı doğrulamak ve şifre sıfırlama bağlantısı göndermek: KVKK m.5/2-c, bir sözleşmenin kurulması veya ifasıyla doğrudan ilgili olması.</li><li>Hesap ve sistem güvenliğini sağlamak, kötüye kullanımı önlemek: KVKK m.5/2-f, temel hak ve özgürlüklerine zarar vermemek kaydıyla veri sorumlusunun meşru menfaati.</li><li>Başvurularını yanıtlamak, yasal yükümlülükleri yerine getirmek, aydınlatmanın yapıldığını ispat etmek: KVKK m.5/2-ç, hukuki yükümlülük ve m.5/2-e, bir hakkın tesisi, kullanılması veya korunması.</li></ul>
     <h3>5. Ortak kitap listesi</h3>
     <p>Barkodla eklediğin kitapların yalnızca künye bilgileri (başlık, yazar, çevirmen, yayınevi, basım yılı, sayfa sayısı, tür, ISBN) herkesin yararlandığı ortak listeye eklenir. Ortak listeye hesap kimliğin, e-postan ya da başka bir tanımlayıcı gönderilmez; notların, puanların, hatıraların ve ödünç kayıtların gönderilmez.</p>
+    <p>Bir kitapta "Okumaya başla"ya dokunduğunda, okuma süren yalnızca kendi kitaplığına kaydedilir ve arkadaşlarınla paylaşılmaz. "Şu an okuyanlar" sayısı için oturum boyunca rastgele bir oturum numarası ve bir zaman damgası tutulur. Bu kayıtta hesabın, adın ya da kullanıcı adın bulunmaz; okumayı bıraktığında silinir, bırakmayı unutursan en geç 20 dakika sonra sayımdan düşer. Okur sayılarına katılmayı kapattıysan bu sayıma da katılmazsın.</p>
     <p>Adla aramada sonuçlar önce bu ortak listeden gelir ve en çok eklenen ve seçilen kitaplar üstte gösterilir. Bunun için arama sonuçlarından birini açtığında ya da seçtiğinde o kitabın künyesi ortak listeye eklenir ve kitabın sayacı bir artar. Sayaç yalnızca toplamı tutar; kimin seçtiği, ne aradığın ya da hesabınla ilgili hiçbir bilgi kaydedilmez.</p>
     <p>Kendi çektiğin kapak fotoğrafı ortak listeye yalnızca ilgili kutuyu her seferinde kendin işaretlersen eklenir; kutu varsayılan olarak işaretli değildir. Uygulama, fotoğrafı göndermeden önce yeniden boyutlandırır ve EXIF ile GPS konum bilgileri dahil fotoğraftaki tüm üst verileri siler. Fotoğrafta kitap sahibinin adı, imza, ithaf yazısı ya da arka planda kişisel bir görüntü olmadığından emin olmalısın. Ortak listeye eklenen fotoğraflar seninle ilişkilendirilmeden saklandığı için hesabını sildiğinde kendiliğinden silinmez; kaldırılmasını istediğin bir fotoğraf için başvurabilirsin.</p>
     <h3>6. Arkadaş profili, takip ve baykuş postası</h3>
@@ -1026,6 +1033,8 @@ a{color:var(--roseD)}
   </div>
 </div>
 
+<div class="ov full" id="readOv" hidden style="z-index:13"><div class="sheet rdsheet" role="dialog" aria-modal="true" aria-label="Okuma"><div class="sh-head"><button class="x goback" id="rdX" type="button" aria-label="Küçült"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button><h2>Okuyorsun</h2></div><div id="rdBody"></div></div></div>
+<button class="rdpill" id="readPill" type="button" hidden></button>
 <div class="ov" id="bookOv" hidden style="z-index:12">
   <div class="sheet" role="dialog" aria-modal="true" aria-label="Kitap">
     <div class="sh-head"><h2>Kitap</h2><button class="x" id="bkX" type="button" aria-label="Kapat">×</button></div>
@@ -1950,7 +1959,8 @@ async function openBook(id) {
     <h3 class="psec">Arka kapak</h3><div id="bkDesc">${b.desc ? `<p class="bdesc">${esc(b.desc)}</p>` : '<p class="muted">Açıklama aranıyor…</p>'}</div>
     ${b.notes ? `<h3 class="psec">Notlarım</h3><p class="bdesc">${esc(b.notes)}</p>` : ''}
     ${b.lentTo ? `<p class="muted">Ödünç: ${esc(b.lentTo)}</p>` : ''}
-    <div class="bk" style="margin-top:14px">${b.status !== 'okundu' ? '<button class="btn primary" type="button" id="bkDone">Bitirdim</button>' : ''}<button class="btn" type="button" id="bkEdit">Düzenle</button></div>`;
+    ${b.readSecs >= 60 ? `<p class="muted" style="margin:10px 0 0">Bu kitabı Bitigapp'le toplam <b>${fmtDur(b.readSecs)}</b> okudun.</p>` : ''}
+    <div class="bk" style="margin-top:14px"><button class="btn primary" type="button" id="bkRead">${readNow() && readNow().id === b.id ? 'Okuma ekranına dön' : b.status === 'okunuyor' ? 'Okumaya devam et' : b.status === 'okundu' ? 'Yeniden oku' : 'Okumaya başla'}</button>${b.status !== 'okundu' ? '<button class="btn" type="button" id="bkDone">Bitirdim</button>' : ''}<button class="btn" type="button" id="bkEdit">Düzenle</button></div>`;
   $('bookOv').hidden = false; $('bookOv').querySelector('.sheet').scrollTop = 0;
   hydrate($('bkBody'));
   clampDesc();
@@ -1995,6 +2005,7 @@ $('bookOv').addEventListener('click', e => {
   if (e.target.closest('#bkMore')) { $('bkDesc').querySelector('.bdesc').classList.add('open'); e.target.remove(); return; }
   if (e.target.closest('#bkAddLib,#bkAddWish') && bookFound) { const w = !!e.target.closest('#bkAddWish'), r = bookFound; $('bookOv').hidden = true; $('searchOv').hidden = true; $('userOv').hidden = true; userNow = null; bookNow = null; findWish = w; pickFound(r); return; }
   if (e.target.closest('#bkEdit')) { const id = bookNow; $('bookOv').hidden = true; bookNow = null; return openSheet(id); }
+  if (e.target.closest('#bkRead')) { startReading(bookNow); return; }
   if (e.target.closest('#bkDone')) { const b = books.find(x => x.id === bookNow); if (!b) return; b.status = 'okundu'; b.finishedAt = b.finishedAt || today(); b.updatedAt = new Date().toISOString(); persist(); render(); sfx.unlock(); sfx.sparkle(); openBook(b.id); }
 });
 
@@ -3716,7 +3727,7 @@ $('socBox').addEventListener('change', async e => {
 });
 
 // --- Shared library: one book collection (users/{owner}/books), personal reading state per member in book.per[uid] ---
-const PERSONAL = ['status', 'rating', 'notes', 'finishedAt', 'startedAt'];
+const PERSONAL = ['status', 'rating', 'notes', 'finishedAt', 'startedAt', 'readSecs', 'lastReadAt'];
 let LIB = '', libMine = null, libOther = null, libInvites = [], libUnsubs = [], libBusy = false;
 const ownerShared = () => !!(libMine && Object.values(libMine.members || {}).some(m => m.state === 'joined'));
 const pickP = o => { const p = {}; for (const k of PERSONAL) if (o[k] !== undefined && o[k] !== null && o[k] !== '') p[k] = o[k]; return p; };
@@ -3878,6 +3889,105 @@ $('libBox').addEventListener('click', async e => {
     else if (t.dataset.ld) await declineLib(t.dataset.ld);
   } catch (er) { note('İşlem yapılamadı. İnternetini kontrol edip tekrar dene.'); t.disabled = false; }
 });
+
+// --- Reading sessions: a timer while you read, and how many others are reading the same book right now ---
+// "Right now" is anonymous: each session writes only {at} under a random id to live/{book}/s/{id}; no account id, no name.
+const LIVE_WIN = 20 * 60e3, rkey = () => 'bitigapp.read.' + (me ? me.uid : '');
+const readNow = () => { try { return JSON.parse(localStorage.getItem(rkey()) || 'null'); } catch (e) { return null; } };
+const readSave = r => { try { r ? localStorage.setItem(rkey(), JSON.stringify(r)) : localStorage.removeItem(rkey()); } catch (e) {} };
+const readMs = r => r ? r.acc + (r.paused ? 0 : Date.now() - r.start) : 0;
+function fmtDur(sec) { sec = Math.round(sec); const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60); return h ? `${h} sa${m ? ' ' + m + ' dk' : ''}` : `${Math.max(1, m)} dk`; }
+const clock = ms => { const t = Math.floor(ms / 1000), h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), x = t % 60; return (h ? h + ':' + String(m).padStart(2, '0') : String(m)) + ':' + String(x).padStart(2, '0'); };
+let readTick = 0, liveTick = 0, liveN = null;
+const liveRef = r => r && r.key && me ? FB.doc(fbDb, 'live', r.key, 's', r.sid) : null;
+function livePing() {
+  const r = readNow(), ref = liveRef(r);
+  if (!ref || r.paused || !votesOn() || !navigator.onLine || document.hidden) return;
+  FB.setDoc(ref, {at: Date.now()}).catch(() => {});
+}
+function liveDrop(r) { const ref = liveRef(r); if (ref) FB.deleteDoc(ref).catch(() => {}); }
+async function liveCount() {
+  const r = readNow(); if (!r || !r.key || !me || !navigator.onLine) return;
+  try {
+    const q = await FB.getDocs(FB.query(FB.collection(fbDb, 'live', r.key, 's'), FB.where('at', '>', Date.now() - LIVE_WIN)));
+    const cur = readNow(); if (!cur || cur.sid !== r.sid) return;
+    liveN = q.docs.filter(d => d.id !== r.sid).length; drawRead();
+  } catch (e) { if (liveN === null) { liveN = -1; drawRead(); } }
+}
+function startReading(id) {
+  const b = books.find(x => x.id === id); if (!b) return;
+  let r = readNow();
+  if (r && r.id !== id) endReading(false, true);
+  r = readNow();
+  if (!r) {
+    r = {id, key: workKey(b) || '', sid: (crypto.randomUUID ? crypto.randomUUID() : String(Math.random()).slice(2) + Date.now()).replace(/-/g, '').slice(0, 24), start: Date.now(), acc: 0, paused: false, title: b.title || ''};
+    readSave(r); liveN = null;
+    if (!b.status || b.status === 'okunacak') { b.status = 'okunuyor'; b.startedAt = b.startedAt || today(); b.updatedAt = new Date().toISOString(); persist(); render(); }
+  }
+  $('bookOv').hidden = true;
+  $('readOv').hidden = false; drawRead(); readLoop(); livePing(); liveCount();
+}
+function drawRead() {
+  const r = readNow(), pill = $('readPill');
+  if (!r) { pill.hidden = true; $('readOv').hidden = true; return; }
+  const b = books.find(x => x.id === r.id);
+  if (!b) { pill.hidden = true; $('readOv').hidden = true; return; }
+  pill.hidden = !$('readOv').hidden;
+  pill.textContent = `📖 ${clock(readMs(r))} · ${r.paused ? 'Duraklatıldı' : b.title}`;
+  if ($('readOv').hidden) return;
+  const c = colorOf(b), cu = okUrl(b.cover);
+  const live = !me ? '' : !votesOn() ? '<p class="muted rdsum">Topluluk sayılarını kapattığın için şu an okuyanları göremiyorsun; Ayarlar\'dan açabilirsin.</p>'
+    : liveN === -1 ? '' : liveN === null ? '<p class="rdlive"><span class="dot"></span>Şu an okuyanlara bakılıyor…</p>'
+    : `<p class="rdlive"><span class="dot"></span>${liveN ? `Şu an seninle birlikte <b>${liveN}</b> kişi daha bu kitabı okuyor` : 'Şu an bu kitabı Bitigapp\'te okuyan bir tek sen varsın'}</p>`;
+  const body = $('rdBody');
+  if (body.dataset.id !== r.id) {
+    body.dataset.id = r.id;
+    body.innerHTML = `${b.coverLocal ? `<img class="bcv" data-local="${esc(b.id)}" alt="">` : cu ? `<img class="bcv" src="${esc(cu)}" alt="">` : `<div class="bcv" style="--c:${c}">${esc(initial(b.title))}</div>`}
+      <h3 class="rdt">${esc(b.title)}</h3><p class="rda">${esc(b.author || '')}</p>
+      <div class="rdclock" id="rdClock"></div><p class="muted rdsum" id="rdSum"></p><div id="rdLive"></div>
+      <div class="rdbtns"><button class="btn" type="button" id="rdPause"></button><button class="btn primary" type="button" id="rdEnd">Okumayı bırak</button></div>
+      <button class="btn link" type="button" id="rdFinish" style="margin-top:12px">Kitabı bitirdim</button>`;
+    hydrate(body);
+  }
+  $('rdClock').textContent = clock(readMs(r)); $('rdClock').classList.toggle('paused', !!r.paused);
+  $('rdSum').textContent = b.readSecs >= 60 ? `Bu kitaptaki toplam süren: ${fmtDur(b.readSecs + readMs(r) / 1000)}` : '';
+  $('rdPause').textContent = r.paused ? 'Devam et' : 'Duraklat';
+  $('rdFinish').hidden = b.status === 'okundu';
+  if ($('rdLive').innerHTML !== live) $('rdLive').innerHTML = live;
+}
+function readLoop() {
+  clearInterval(readTick); clearInterval(liveTick);
+  if (!readNow()) return;
+  readTick = setInterval(drawRead, 1000);
+  liveTick = setInterval(() => { livePing(); if (!$('readOv').hidden) liveCount(); }, 90e3);
+}
+function endReading(finished, quiet) {
+  const r = readNow(); if (!r) return;
+  clearInterval(readTick); clearInterval(liveTick);
+  liveDrop(r); readSave(null); liveN = null; $('rdBody').dataset.id = '';
+  const sec = readMs(r) / 1000, b = books.find(x => x.id === r.id);
+  if (b) {
+    if (sec >= 30) { b.readSecs = Math.round((b.readSecs || 0) + sec); b.lastReadAt = today(); }
+    if (finished) { b.status = 'okundu'; b.finishedAt = b.finishedAt || today(); }
+    b.updatedAt = new Date().toISOString(); persist(); render();
+  }
+  $('readOv').hidden = true; $('readPill').hidden = true;
+  if (quiet || !b) return;
+  if (finished) { sfx.unlock(); sfx.sparkle(); }
+  note(sec >= 30 ? `${finished ? 'Tebrikler, bitirdin! ' : ''}Bu oturumda <b>${fmtDur(sec)}</b> okudun${b.readSecs >= 60 ? ` · bu kitapta toplam ${fmtDur(b.readSecs)}` : ''}.` : finished ? 'Tebrikler, bitirdin!' : 'Okuma oturumu kapatıldı.');
+}
+$('rdX').onclick = () => { $('readOv').hidden = true; drawRead(); };
+$('readPill').onclick = () => { $('readOv').hidden = false; drawRead(); liveCount(); };
+$('readOv').addEventListener('click', e => {
+  const r = readNow(); if (!r) return;
+  if (e.target.closest('#rdPause')) {
+    if (r.paused) { r.start = Date.now(); r.paused = false; readSave(r); livePing(); liveCount(); }
+    else { r.acc = readMs(r); r.paused = true; readSave(r); liveDrop(r); }
+    drawRead();
+  } else if (e.target.closest('#rdEnd')) endReading(false);
+  else if (e.target.closest('#rdFinish')) endReading(true);
+});
+document.addEventListener('visibilitychange', () => { if (!document.hidden && readNow()) { drawRead(); livePing(); if (!$('readOv').hidden) liveCount(); } });
 
 // --- Accounts: sign-in with Firebase; each person's books live in their own corner of the database ---
 const FB_CFG = {apiKey: 'AIzaSyDIc6YSDyZ2TB4Rb93qHsce30AjSmjwBMQ', authDomain: 'kitapligim-80e6a.firebaseapp.com', projectId: 'kitapligim-80e6a', storageBucket: 'kitapligim-80e6a.firebasestorage.app', messagingSenderId: '127488815555', appId: '1:127488815555:web:219d14ef48ea3151eb0d76'};
@@ -4092,6 +4202,7 @@ function enterApp(user) {
   if (me && me.uid === user.uid) { $('auth').hidden = true; return; }
   me = user; profileReady = false; remote = {b: null, w: null};
   setUserKeys(user.uid); load(); render();
+  if (readNow()) { readLoop(); drawRead(); }
   $('auth').hidden = true; $('acctMail').textContent = user.email || '';
   syncState(navigator.onLine ? 'wait' : 'off');
   loadProfile().then(() => { $('statsOn').checked = votesOn(); votesDirty(); socStart(); });
@@ -4109,6 +4220,7 @@ function watchKind(kind, name) {
   }, () => syncState('err'));
 }
 function leaveApp() {
+  if (readNow()) endReading(false, true);
   socStop(); clearTimeout(profTimer); clearTimeout(syncTimer); clearTimeout(voteTimer);
   for (const u of [...unsubs, ...libUnsubs]) try { u && u(); } catch (e) {}
   unsubs = []; libUnsubs = []; LIB = ''; libMine = null; libOther = null; libInvites = []; me = null; remote = {b: null, w: null}; profileReady = false;

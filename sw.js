@@ -1,4 +1,4 @@
-const CACHE = 'kitapligim-v57';
+const CACHE = 'kitapligim-v58';
 const SHELL = ['./', './index.html', './zxing.min.js', './fonts/fraunces-latin-full-normal.woff2', './fonts/fraunces-latin-ext-full-normal.woff2', './fonts/nunito-latin-wght-normal.woff2', './fonts/nunito-latin-ext-wght-normal.woff2', './firebase.js', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png', './icon-maskable.png', './cornice.jpg', './cabinet.jpg', './stone.jpg', './wood-v.jpg', './wood-h-light.jpg', './leather.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(CACHE).then(c => c.addAll(SHELL.map(u => new Request(u, {cache: 'reload'})))).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim())); });

@@ -144,6 +144,15 @@ service cloud.firestore {
         && a.rSum == o.rSum + n.r - p.r
         && a.rCount == o.rCount + n01(n.r > 0) - n01(p.r > 0);
     }
+    // "right now reading": anonymous sessions, a random id and a timestamp only, never an account id
+    match /live/{key}/s/{sid} {
+      allow read: if signedIn();
+      allow create, update: if signedIn() && key.size() <= 200 && sid.size() <= 40
+        && request.resource.data.keys().hasOnly(['at']) && request.resource.data.at is int
+        && request.resource.data.at > request.time.toMillis() - 300000
+        && request.resource.data.at < request.time.toMillis() + 300000;
+      allow delete: if signedIn();
+    }
     match /stats/{key} {
       function vPath() { return /databases/$(database)/documents/stats/$(key)/v/$(request.auth.uid); }
       allow read: if signedIn();
