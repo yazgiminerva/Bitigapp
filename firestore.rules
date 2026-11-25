@@ -68,15 +68,32 @@ service cloud.firestore {
       allow delete: if signedIn() && (resource.data.by == me() || owner == me());
     }
 
-    // owl post: book recommendations, only from approved followers
-    match /mail/{to}/items/{mid} {
-      allow read, update, delete: if signedIn() && me() == to;
+    // owl post: a book recommendation opens a two-person thread; only people who follow you can receive one
+    function otherOf(m) { return m[0] == me() ? m[1] : m[0]; }
+    match /owls/{tid} {
+      allow read: if signedIn() && me() in resource.data.members;
       allow create: if signedIn()
         && request.resource.data.from == me()
-        && follows(me(), to)
-        && !blocked(to, me())
-        && request.resource.data.note.size() <= 200;
+        && request.resource.data.to != me()
+        && request.resource.data.members == [me(), request.resource.data.to]
+        && follows(request.resource.data.to, me())
+        && !blocked(request.resource.data.to, me())
+        && request.resource.data.note is string && request.resource.data.note.size() <= 200;
+      allow update: if signedIn() && me() in resource.data.members
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['lastAt', 'lastFrom', 'lastText', 'seen'])
+        && (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['lastAt', 'lastFrom', 'lastText'])
+            || (request.resource.data.lastFrom == me() && !blocked(otherOf(resource.data.members), me())));
+      allow delete: if signedIn() && me() in resource.data.members;
+      match /msgs/{mid} {
+        function thread() { return get(/databases/$(database)/documents/owls/$(tid)).data; }
+        allow read, delete: if signedIn() && me() in thread().members;
+        allow create: if signedIn() && me() in thread().members
+          && request.resource.data.from == me()
+          && request.resource.data.text is string && request.resource.data.text.size() > 0 && request.resource.data.text.size() <= 500
+          && !blocked(otherOf(thread().members), me());
+      }
     }
+
     // community numbers: totals only; each account's own vote stays private
     function n01(x) { return x ? 1 : 0; }
     function zeroV() { return {'own': false, 'read': false, 'r': 0}; }
@@ -98,6 +115,7 @@ service cloud.firestore {
       match /v/{uid} {
         function sPath() { return /databases/$(database)/documents/stats/$(key); }
         allow read: if signedIn() && me() == uid;
+        allow delete: if signedIn() && me() == uid && resource.data.own == false && resource.data.read == false && resource.data.r == 0;
         allow create, update: if signedIn() && me() == uid
           && request.resource.data.keys().hasOnly(['own', 'read', 'r'])
           && request.resource.data.own is bool && request.resource.data.read is bool
