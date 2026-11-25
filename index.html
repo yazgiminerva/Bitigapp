@@ -302,7 +302,7 @@ body.selecting .tabbar{display:none}
 .pbk .cv{width:40px;height:58px;flex:none}.pbk .t{font:600 16px/1.2 var(--serif);font-variation-settings:"SOFT" 100}.pbk .a{color:var(--mute);font-size:13px}
 .fday{margin:18px 2px 0;font:800 12px "Nunito",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
 .nowrow{display:flex;gap:10px;overflow-x:auto;padding:4px 2px 10px;scrollbar-width:none}.nowrow::-webkit-scrollbar{display:none}
-.nowc{flex:none;width:150px;background:var(--field);border-radius:18px;padding:10px;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center}
+.nowc{cursor:pointer;flex:none;width:150px;background:var(--field);border-radius:18px;padding:10px;display:flex;flex-direction:column;gap:6px;align-items:center;text-align:center}
 .nowc .cv{width:64px;height:94px}.nowc b{font:600 14px/1.2 var(--serif);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .nowc .btn{min-height:36px;padding:4px 10px;font-size:13px;width:100%}
 .fgoal{display:flex;align-items:center;gap:12px;background:var(--field);border-radius:18px;padding:12px 14px;margin-top:6px}
@@ -725,7 +725,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 58</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 59</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -1401,7 +1401,7 @@ $('hRes').addEventListener('click', e => {
   const t = e.target.closest('[data-open],[data-buy],[data-wish],[data-add],[data-again]'); if (!t) return;
   if (t.dataset.again !== undefined) { $('hRes').innerHTML = ''; $('haveOv').hidden = true; checkNext = true; startScan(); return; }
   $('haveOv').hidden = true;
-  if (t.dataset.open) return openSheet(t.dataset.open);
+  if (t.dataset.open) return openBook(t.dataset.open);
   if (t.dataset.buy) return buyWish(t.dataset.buy);
   if (t.dataset.wish) { wishNext = true; return onIsbn(t.dataset.wish); }
   if (t.dataset.add) { wishNext = false; openSheet(null, true); setAcq('new'); f.elements.isbn.value = t.dataset.add; fillFrom(t.dataset.add); }
@@ -1464,7 +1464,7 @@ function renderFeed() {
   const now = books.filter(b => b.status === 'okunuyor');
   const goal = +(p.goals || {})[YEAR()] || 0, s = profStats();
   $('feedNow').innerHTML = (social ? `<div class="fchips">${[['all', 'Herkes'], ['friends', 'Arkadaşlar'], ['me', 'Ben']].map(([k, l]) => `<button class="chip" type="button" data-ff="${k}" aria-pressed="${feedFilter === k}">${l}</button>`).join('')}</div>` : '')
-    + (feedFilter !== 'friends' && now.length ? `<p class="fday">Şu an okuduğun</p><div class="nowrow">${now.map(b => `<div class="nowc">${coverEl(b)}<b>${esc(b.title)}</b><button class="btn primary" type="button" data-done="${esc(b.id)}">Bitirdim</button></div>`).join('')}</div>` : '')
+    + (feedFilter !== 'friends' && now.length ? `<p class="fday">Şu an okuduğun</p><div class="nowrow">${now.map(b => `<div class="nowc" data-open="${esc(b.id)}" role="button" tabindex="0" aria-label="${esc(b.title)} sayfasını aç">${coverEl(b)}<b>${esc(b.title)}</b><button class="btn primary" type="button" data-done="${esc(b.id)}">Bitirdim</button></div>`).join('')}</div>` : '')
     + (feedFilter !== 'friends' && goal ? `<div class="fgoal"><b>${YEAR()} hedefi</b><div class="gbar"><i style="width:${Math.min(100, Math.round(s.thisYear / goal * 100))}%"></i></div><b>${s.thisYear}/${goal}</b></div>` : '');
   const mine = {av: avURL(a, {}), name: esc(a.name || 'Sen'), user: p.username && social ? '@' + esc(p.username) : ''};
   const whoCache = new Map();
@@ -1514,14 +1514,14 @@ $('tabFeed').addEventListener('click', e => {
     const [owner, id, kind] = t.dataset.fb.split('|'), f = SOC.friends.get(owner); if (!f) return;
     const b = ((kind === 'w' ? f.shelf.wishes : f.shelf.books) || []).find(x => x.id === id); if (!b) return;
     const mineB = books.find(x => bkey(x) === bkey(b));
-    if (mineB) return openSheet(mineB.id);
+    if (mineB) return openBook(mineB.id);
     const inWish = wishes.some(x => bkey(x) === bkey(b));
     note(`<span><b>${esc(b.title)}</b> ${inWish ? 'zaten istek listende.' : 'sende yok.'}</span>${inWish ? '' : '<button class="btn primary" type="button" id="fbWish">İstek listeme ekle</button>'}`);
     if (!inWish) $('fbWish').onclick = () => { addTipToWish(b); $('note').hidden = true; sfx.unlock(); sfx.tick(); };
     $('note').scrollIntoView({behavior: 'smooth', block: 'center'});
     return;
   }
-  if (t.dataset.open) return openSheet(t.dataset.open);
+  if (t.dataset.open) return openBook(t.dataset.open);
   if (t.dataset.wish) return openSheet(t.dataset.wish);
   if (t.dataset.done) {
     const b = books.find(x => x.id === t.dataset.done); if (!b) return;
@@ -1960,7 +1960,7 @@ async function openBook(id) {
     ${b.notes ? `<h3 class="psec">Notlarım</h3><p class="bdesc">${esc(b.notes)}</p>` : ''}
     ${b.lentTo ? `<p class="muted">Ödünç: ${esc(b.lentTo)}</p>` : ''}
     ${b.readSecs >= 60 ? `<p class="muted" style="margin:10px 0 0">Bu kitabı Bitigapp'le toplam <b>${fmtDur(b.readSecs)}</b> okudun.</p>` : ''}
-    <div class="bk" style="margin-top:14px"><button class="btn primary" type="button" id="bkRead">${readNow() && readNow().id === b.id ? 'Okuma ekranına dön' : b.status === 'okunuyor' ? 'Okumaya devam et' : b.status === 'okundu' ? 'Yeniden oku' : 'Okumaya başla'}</button>${b.status !== 'okundu' ? '<button class="btn" type="button" id="bkDone">Bitirdim</button>' : ''}<button class="btn" type="button" id="bkEdit">Düzenle</button></div>`;
+    <div class="bk" style="margin-top:14px"><button class="btn primary" type="button" id="bkRead">${readNow() && readNow().id === b.id ? 'Okuma ekranına dön' : b.status === 'okunuyor' ? 'Okumaya devam et' : b.status === 'okundu' ? 'Yeniden oku' : 'Okumaya başla'}</button>${b.status !== 'okundu' ? '<button class="btn" type="button" id="bkDone">Bitirdim</button>' : ''}</div><button class="btn link" type="button" id="bkEdit" style="width:100%;margin-top:10px">Kitabı düzenle</button>`;
   $('bookOv').hidden = false; $('bookOv').querySelector('.sheet').scrollTop = 0;
   hydrate($('bkBody'));
   clampDesc();
@@ -1971,7 +1971,7 @@ async function openBook(id) {
     const d = navigator.onLine ? await fetchDesc(b) : '';
     if (bookNow !== id) return;
     if (d) { const x = books.find(y => y.id === id); if (x && !x.desc) { x.desc = d; x.updatedAt = new Date().toISOString(); persist(); } $('bkDesc').innerHTML = `<p class="bdesc">${esc(d)}</p><p class="muted" style="font-size:12px">Kaynak: Google Books</p>`; clampDesc(); }
-    else $('bkDesc').innerHTML = '<p class="muted">Bu kitap için çevrimiçi bir açıklama bulunamadı. İstersen "Düzenle"den kendin ekleyebilirsin.</p>';
+    else $('bkDesc').innerHTML = '<p class="muted">Bu kitap için çevrimiçi bir açıklama bulunamadı. İstersen aşağıdaki "Kitabı düzenle"den kendin ekleyebilirsin.</p>';
   }
 }
 async function openFoundBook(r) {
