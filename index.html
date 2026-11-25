@@ -377,6 +377,7 @@ body.selecting .tabbar{display:none}
 .utabs.utabs3{grid-template-columns:1fr 1fr 1fr}.selfnote{margin-top:12px;font-size:14px;text-align:center}
 .gearbtn{flex:none;width:44px;height:44px;border-radius:50%;border:0;background:var(--field);color:var(--ink);display:grid;place-items:center;cursor:pointer}.gearbtn svg{width:24px;height:24px}.gearbtn.ghome{margin-left:auto;align-self:flex-start}
 #tabProf .fhead{align-items:center}
+.ordrow{margin:14px 0 4px}.ordrow .fchips{margin-top:6px;flex-wrap:wrap}
 .st.fpool{--c:var(--lav)}.fmore{width:100%;margin-top:10px}.x.goback{width:38px;height:38px;display:grid;place-items:center;padding:0;background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink)}.x.goback svg{width:20px;height:20px;margin-left:-2px}.ov.full .sh-head{padding-top:calc(var(--st) + 22px)}
 .utabs{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:1fr 1fr;margin:18px -4px 12px;background:var(--paper);border-bottom:2px solid var(--line)}
 .utabs button{border:0;background:none;padding:12px 4px;font:800 16px "Nunito",sans-serif;color:var(--mute);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
@@ -764,7 +765,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 66</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 67</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -2359,18 +2360,40 @@ function renderLib() {
   $('libSub').textContent = books.length ? `${books.length} kitap, ${keys.length} tür rafında` : '';
   $('bigcase').innerHTML = books.length ? caseHTML(books, b => `data-id="${esc(b.id)}"`) : '<p class="libempty">Kitaplığın henüz boş. Ana ekrandan ilk kitabını ekle, burada türlerine göre dizilsin.</p>';
 }
-function caseHTML(bks, attr) {
-  const groups = new Map();
-  for (const b of bks) { const g = normGenre(b.genre) || ''; if (!groups.has(g)) groups.set(g, []); groups.get(g).push(b); }
-  const keys = [...groups.keys()].sort((a, b) => genreIdx(a) - genreIdx(b));
+// how a shelf can be arranged: by genre (default), author, title, recently added, or colour
+const ORDERS = [['genre', 'Türe göre'], ['author', 'Yazara göre'], ['title', 'Ada göre'], ['recent', 'Son eklenen'], ['color', 'Renk renk']];
+const surname = a => { const w = String(a || '').split(',')[0].trim().split(/\s+/); return w[w.length - 1] || ''; };
+const initialOf = t => { const c = String(t || '').trim().charAt(0).toLocaleUpperCase('tr'); return /\p{L}/u.test(c) ? c : '#'; };
+const MONTHS = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+function hueOf(c) { const m = /hsl\((\d+)/.exec(c); if (m) return +m[1]; const h = /^#?([0-9a-f]{6})$/i.exec(c); if (!h) return 0; const n = parseInt(h[1], 16), r = (n >> 16) / 255, g = (n >> 8 & 255) / 255, b = (n & 255) / 255, mx = Math.max(r, g, b), mn = Math.min(r, g, b), d = mx - mn; if (!d) return 0; const x = mx === r ? ((g - b) / d) % 6 : mx === g ? (b - r) / d + 2 : (r - g) / d + 4; return (x * 60 + 360) % 360; }
+function orderBooks(bks, order) {
+  const a = bks.slice(), t = (x, y) => coll.compare(x.title || '', y.title || '');
+  if (order === 'author') return a.sort((x, y) => coll.compare(surname(x.author), surname(y.author)) || coll.compare(x.author || '', y.author || '') || t(x, y));
+  if (order === 'title') return a.sort(t);
+  if (order === 'recent') return a.sort((x, y) => String(y.addedAt || '').localeCompare(String(x.addedAt || '')));
+  if (order === 'color') return a.sort((x, y) => hueOf(colorOf(x)) - hueOf(colorOf(y)) || t(x, y));
+  return a.sort((x, y) => genreIdx(normGenre(x.genre) || '') - genreIdx(normGenre(y.genre) || '') || coll.compare(x.author || '', y.author || '') || t(x, y));
+}
+function groupOf(b, order) {
+  if (order === 'author') return initialOf(surname(b.author));
+  if (order === 'title') return initialOf(b.title);
+  if (order === 'recent') { const d = String(b.addedAt || ''); return /^\d{4}-\d{2}/.test(d) ? `${MONTHS[+d.slice(5, 7) - 1]} ${d.slice(0, 4)}` : 'Eskiler'; }
+  if (order === 'color') return 'Renk renk';
+  return normGenre(b.genre) || '';
+}
+function caseHTML(bks, attr, order = 'genre') {
+  // books arrive already in order; keep that order, just cut them into labelled shelves
+  const groups = new Map(), sorted = order === 'genre' ? orderBooks(bks, 'genre') : bks;
+  for (const b of sorted) { const g = groupOf(b, order); if (!groups.has(g)) groups.set(g, []); groups.get(g).push(b); }
+  const keys = [...groups.keys()];
   return keys.map(g => {
-    const list = groups.get(g).sort((a, b) => coll.compare(a.author || '', b.author || '') || coll.compare(a.title || '', b.title || ''));
+    const list = groups.get(g);
     const ant = RICH(themeNow()), SEQ = ORN_SEQS[themeNow()] || ORN_SEQ;
     let oi = hash(g) % SEQ.length;
-    return `<section class="gsec"><div class="plate"><i style="--c:${genreColor(g)}"></i>${esc(g || 'Belirtilmedi')}<small>${list.length}</small></div><div class="rows">${list.map((b, i) => {
+    return `<section class="gsec"><div class="plate"><i style="--c:${order === 'genre' ? genreColor(g) : 'var(--lavD)'}"></i>${esc(g || 'Belirtilmedi')}<small>${list.length}</small></div><div class="rows">${list.map((b, i) => {
       const orn = ant && i > 0 && i % 7 === 0 ? `<div class="slot">${ORN[SEQ[oi++ % SEQ.length]](1)}</div>` : '';
       const h = hash(b.title + b.author), long = String(b.title || '').length > 11, w = Math.max(long ? 34 : 26, Math.round(1.2 * Math.min(32, 17 + Math.round((+b.pages || 180 + h % 300) / 55))));
-      return orn + `<div class="slot"><button class="sp mini" ${attr(b)} title=""${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" style="--c:${colorOf(b)};--h:${107 + h % 38}px;height:${107 + h % 38}px;width:${w}px">${b.status === 'okunuyor' ? '<b class="rib"></b>' : ''}<span>${esc(b.title)}</span></button></div>`;
+      return orn + `<div class="slot"><button class="sp mini" ${attr(b)} title="${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" style="--c:${colorOf(b)};--h:${107 + h % 38}px;height:${107 + h % 38}px;width:${w}px">${b.status === 'okunuyor' ? '<b class="rib"></b>' : ''}<span>${esc(b.title)}</span></button></div>`;
     }).join('')}${ant && list.length < 7 ? `<div class="slot">${ORN[SEQ[oi % SEQ.length]](1)}</div>` : ''}</div></section>`;
   }).join('');
 }
@@ -3514,7 +3537,7 @@ function shelfData() {
   return {
     books: books.map(b => ({id: b.id, title: b.title || '', author: b.author || '', isbn: b.isbn || '', genre: normGenre(b.genre) || '', status: b.status || '', pages: +b.pages || 0, addedAt: b.addedAt || '', finishedAt: b.finishedAt || '', acquisition: b.acquisition || '', fromWish: !!b.fromWish, cover: okUrl(b.cover) || ''})),
     wishes: wishes.map(w => ({id: w.id, title: w.title || '', author: w.author || '', isbn: w.isbn || '', genre: normGenre(w.genre) || '', wishedAt: w.wishedAt || '', cover: okUrl(w.cover) || ''})),
-    stats: {total: s.total, read: s.read, reading: s.reading, toRead: s.toRead, wish: s.wish, pages: s.pages}, farm: farmPublic(), updatedAt: Date.now(),
+    stats: {total: s.total, read: s.read, reading: s.reading, toRead: s.toRead, wish: s.wish, pages: s.pages}, farm: farmPublic(), order: profLoad().shelfOrder || 'genre', updatedAt: Date.now(),
   };
 }
 let shelfTimer = 0, sprofTimer = 0;
@@ -3663,11 +3686,15 @@ let userNow = null;
 let userProf = null, userShelf = null, userTab = 'lib';
 // one renderer for a profile's tabs: a friend's (from their shared shelf) and your own (mine = can manage)
 const FEED_STEP = 15;
-let userFeedN = FEED_STEP, myTab = 'lib', myFeedN = FEED_STEP;
+let userFeedN = FEED_STEP, myTab = 'lib', myFeedN = FEED_STEP, userLibPage = 0, myLibPage = 0;
+const LIB_PER = 40;
 function profTabHTML(uid, prof, sh, tab, mine, feedN) {
   const bks = sh.books || [], wsh = sh.wishes || [], B = mine ? 'mb' : 'ub', W = mine ? 'mw' : 'uw';
   if (tab === 'lib') {
-    return (bks.length ? `<div class="bigcase ucase">${caseHTML(bks, b => `data-${B}="${esc(b.id)}"`)}</div>` : `<p class="muted" style="text-align:center;padding:20px 0">${mine ? 'Kitaplığın' : 'Kitaplığı'} henüz boş.</p>`)
+    const order = ORDERS.some(o => o[0] === sh.order) ? sh.order : 'genre', pages = Math.max(1, Math.ceil(bks.length / LIB_PER));
+    const pg = Math.min(mine ? myLibPage : userLibPage, pages - 1), slice = orderBooks(bks, order).slice(pg * LIB_PER, pg * LIB_PER + LIB_PER);
+    const ctl = mine && bks.length ? `<div class="ordrow"><span class="muted">Profilindeki dizilim:</span><div class="fchips">${ORDERS.map(([k, l]) => `<button class="chip" type="button" data-ord="${k}" aria-selected="${order === k}">${l}</button>`).join('')}</div></div>` : '';
+    return ctl + (bks.length ? `<div class="bigcase ucase">${caseHTML(slice, b => `data-${B}="${esc(b.id)}"`, order)}</div>${pagerHTML(pg, pages)}` : `<p class="muted" style="text-align:center;padding:20px 0">${mine ? 'Kitaplığın' : 'Kitaplığı'} henüz boş.</p>`)
       + (wsh.length ? `<details class="pcard" style="margin-top:12px"><summary><b>İstek listesi</b> <span class="muted">(${wsh.length})</span></summary><ul class="hlist">${wsh.map(b => `<li class="item" data-${W}="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div></li>`).join('')}</ul></details>` : '');
   }
   if (tab === 'farm') {
@@ -3698,7 +3725,7 @@ async function openUser(uid, quiet) {
   try { const p = await FB.getDoc(fd('profiles', uid)); prof = p.exists() ? p.data() : null; } catch (e) {}
   if (userNow !== uid) return;
   if (!prof) { $('uBody').innerHTML = '<p class="muted" style="padding:20px;text-align:center">Bu profil artık yok.</p>'; return; }
-  userProf = prof; userShelf = null; if (!quiet) { userTab = 'lib'; userFeedN = FEED_STEP; } $('uTitle').textContent = prof.name || '@' + prof.username;
+  userProf = prof; userShelf = null; if (!quiet) { userTab = 'lib'; userFeedN = FEED_STEP; userLibPage = 0; } $('uTitle').textContent = prof.name || '@' + prof.username;
   const self = uid === me.uid;
   try { const s = await FB.getDoc(fd('shelves', uid)); shelf = s.exists() ? s.data() : null; } catch (e) {}
   if (userNow !== uid) return;
@@ -3737,8 +3764,9 @@ $('userOv').addEventListener('click', e => { if (e.target === $('userOv')) { $('
 $('uBody').addEventListener('click', async e => {
   const uid = $('uBody').dataset.uid;
   const tab = e.target.closest('[data-utab]');
+  const upg = e.target.closest('#uTab [data-pg]'); if (upg) { userLibPage = Math.max(0, userLibPage + +upg.dataset.pg); $('uTab').innerHTML = userTabHTML(uid, userProf); hydrate($('uTab')); $('uTab').scrollIntoView({block: 'start', behavior: 'smooth'}); return; }
   if (e.target.closest('[data-more]')) { userFeedN += FEED_STEP; $('uTab').innerHTML = userTabHTML(uid, userProf); hydrate($('uTab')); return; }
-  if (tab) { userTab = tab.dataset.utab; for (const b of $('uBody').querySelectorAll('[data-utab]')) b.setAttribute('aria-selected', String(b === tab)); $('uTab').innerHTML = userTabHTML(uid, userProf); hydrate($('uTab')); return; }
+  if (tab) { userTab = tab.dataset.utab; userLibPage = 0; for (const b of $('uBody').querySelectorAll('[data-utab]')) b.setAttribute('aria-selected', String(b === tab)); $('uTab').innerHTML = userTabHTML(uid, userProf); hydrate($('uTab')); return; }
   const rb = e.target.closest('[data-react]'); if (rb) { const [owner, ev] = rb.dataset.react.split('|'); return toggleReact(owner, ev, rb); }
   const bk = !e.target.closest('[data-tip]') && e.target.closest('[data-ub],[data-uw]');
   if (bk && userShelf) { const id = bk.dataset.ub || bk.dataset.uw, b = (bk.dataset.ub ? userShelf.books : userShelf.wishes || []).find(x => x.id === id); if (b) openFoundBook({...b, src: 'friend'}); return; }
@@ -4203,12 +4231,14 @@ function drawMyTab() {
   let socOn = false; try { socOn = SOC.on; } catch (e) {}
   const prof = {avatar: a, name: a.name || '', username: socOn && p.username ? p.username : ''};
   let uid = ''; try { uid = me ? me.uid : ''; } catch (e) {}
-  box.innerHTML = profTabHTML(uid, prof, {books, wishes}, myTab, true, myFeedN);
+  box.innerHTML = profTabHTML(uid, prof, {books, wishes, order: p.shelfOrder}, myTab, true, myFeedN);
   if (myTab === 'farm') drawFarm();
   hydrate(box);
 }
 document.addEventListener('click', e => {
-  const t = e.target.closest('#pTabs [data-ptab]'); if (t) { myTab = t.dataset.ptab; myFeedN = FEED_STEP; return drawMyTab(); }
+  const t = e.target.closest('#pTabs [data-ptab]'); if (t) { myTab = t.dataset.ptab; myFeedN = FEED_STEP; myLibPage = 0; return drawMyTab(); }
+  const od = e.target.closest('#pTab [data-ord]'); if (od) { const p = profLoad(); p.shelfOrder = od.dataset.ord; profSave(p); myLibPage = 0; socShelfDirty(); return drawMyTab(); }
+  const pgb = e.target.closest('#pTab [data-pg]'); if (pgb) { myLibPage = Math.max(0, myLibPage + +pgb.dataset.pg); drawMyTab(); $('pTabs').scrollIntoView({block: 'start', behavior: 'smooth'}); return; }
   if (e.target.closest('#pTab [data-more]')) { myFeedN += FEED_STEP; return drawMyTab(); }
   const mb = e.target.closest('#pTab [data-mb]'); if (mb) return openBook(mb.dataset.mb);
   const mw = e.target.closest('#pTab [data-mw]'); if (mw) { const w = wishes.find(x => x.id === mw.dataset.mw); if (w) openFoundBook(w); return; }
