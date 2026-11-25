@@ -343,6 +343,37 @@ body.selecting .tabbar{display:none}
 @keyframes rdpulse{50%{opacity:.25}}.rdbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:360px;margin-top:22px}.rdsum{margin:6px 0 0;font-size:13px}
 .rdpill{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(70px + var(--sb));z-index:8;border:0;border-radius:999px;padding:9px 16px;font:inherit;font-weight:800;background:var(--lavD);color:#fff;box-shadow:0 6px 18px rgba(0,0,0,.3);max-width:calc(100% - 32px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ba .alink{all:unset;cursor:pointer;color:inherit;font:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb,currentColor 40%,transparent);text-underline-offset:3px}.ba .alink:focus-visible{outline:2px solid var(--lavD);border-radius:4px}
+/* reading screen at night: dark, quiet, cauldron */
+#readOv .rdsheet{background:radial-gradient(ellipse at 50% 42%,#1d1430 0,#0a0710 64%);color:#eadcff}#readOv .sh-head h2{color:#8d7fa6;font-size:15px;font-family:"Nunito",sans-serif;font-weight:800}
+#readOv .x.goback{background:#ffffff10;color:#cbbbe6}#readOv .muted{color:#8d7fa6}
+#rdBody .bcv{width:72px;height:108px;margin:2px auto 6px;font-size:28px;box-shadow:0 10px 24px #000c}#rdBody .rdt{font-size:21px;color:#f3eaff}#rdBody .rda{color:#8d7fa6}
+#readOv .rdclock{font-size:56px;margin:12px 0 2px;color:#f3eaff}
+.rdcauld{margin:4px auto 0;width:140px;transition:filter .4s}.rdcauld.off{filter:saturate(.35) brightness(.75)}.rdcauld svg{display:block}
+.rdcauld .cbub{animation:cbub 2.4s ease-in-out infinite}.rdcauld .cbub:nth-of-type(2n){animation-delay:.8s}.rdcauld .cbub:nth-of-type(3n){animation-delay:1.6s}
+@keyframes cbub{0%,100%{opacity:1}50%{opacity:.3}}
+.rdbrew{width:100%;max-width:260px;margin:8px auto 0}.rdbar{height:10px;border-radius:99px;background:#241b33;overflow:hidden;box-shadow:inset 0 0 0 1px #ffffff12}.rdbar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#7b4fd0,#c49bff);border-radius:99px;transition:width .9s linear}
+.rdbrew p{margin:7px 0 0;font-size:13.5px;color:#b9a8d6}.rdpots{display:flex;justify-content:center;gap:5px;margin-top:10px;flex-wrap:wrap}
+.rdtip{margin:12px 8px 0;font-size:12.5px;color:#7f7296;line-height:1.4;max-width:340px}
+#readOv .btn{background:#ffffff12;color:#eadcff;box-shadow:none}#readOv .btn.primary{background:#8f63d9;color:#fff}#readOv .rdlive{background:#ffffff0c}
+/* farm */
+.farm{position:relative;height:250px;border-radius:20px;overflow:hidden;background:linear-gradient(#1b1430 0,#241a3c 46%,#1d2a22 46%,#152019 100%);box-shadow:inset 0 0 0 1px #ffffff14}
+.farm .moon{position:absolute;right:26px;top:16px;width:36px;height:36px;border-radius:50%;background:#f3e6b8;box-shadow:0 0 26px #f3e6b866,inset -8px -3px 0 #d9c98f}
+.farm .fst{position:absolute;width:2px;height:2px;background:#fff9;border-radius:50%}
+.farm .fence{position:absolute;left:0;right:0;top:100px;height:20px;background:repeating-linear-gradient(90deg,#6b4a30 0 5px,transparent 5px 26px),linear-gradient(transparent 5px,#6b4a30 5px 8px,transparent 8px 12px,#6b4a30 12px 15px,transparent 15px)}
+.farm .pet{position:absolute;text-align:center;transform:translateX(-50%);animation:petIdle 3.2s ease-in-out infinite}.farm .pet svg{display:block;margin:auto;filter:drop-shadow(0 3px 0 #0005)}
+.farm .pet:nth-child(2n){animation-delay:-1.1s}.farm .pet:nth-child(3n){animation-delay:-2.2s}.farm .pet.new{animation:petNew .9s cubic-bezier(.3,1.6,.5,1) both}
+@keyframes petIdle{0%,100%{translate:0 0}50%{translate:0 -3px}}@keyframes petNew{from{scale:0;opacity:0}to{scale:1;opacity:1}}
+.farm .bank{position:absolute;left:12px;top:12px;display:flex;align-items:center;gap:5px;background:#0006;border-radius:99px;padding:4px 11px 4px 6px;font-weight:900;color:#f3eaff;font-size:15px}
+.farm .empty{position:absolute;left:16px;right:16px;top:146px;text-align:center;color:#cfe6c6;font-size:13.5px;font-weight:700;text-shadow:0 1px 2px #000}
+.farm .more{position:absolute;right:12px;bottom:10px;background:#0006;color:#e6f5df;border-radius:99px;padding:3px 9px;font-weight:900;font-size:12px}
+.fper{margin-top:10px}.fper .chips{margin:0 0 6px}.fper p{margin:0;font-size:14.5px}
+.cages{margin-top:12px}.cages h4{margin:0 0 8px;font-family:var(--serif);font-size:17px}
+.cage{display:flex;align-items:center;gap:12px;background:var(--card);border-radius:16px;padding:9px 12px;margin-bottom:8px;box-shadow:inset 0 0 0 1px #ffffff10}
+.cbox{width:58px;height:52px;flex:none;border-radius:10px;display:grid;place-items:center;position:relative;background:#0004}
+.cbox::after{content:"";position:absolute;inset:0;border-radius:10px;background:repeating-linear-gradient(90deg,#b9a98a 0 3px,transparent 3px 10px);opacity:.85}
+.cage b{font-family:var(--serif);font-size:15px;display:block}.cage small{color:var(--mute);font-size:12.5px;display:block}
+.cage .btn{margin-left:auto;flex:none;padding:8px 11px;font-size:13px;white-space:nowrap}
+.ufarm{margin-top:14px}
 .st.fpool{--c:var(--lav)}.fmore{width:100%;margin-top:10px}.x.goback{width:38px;height:38px;display:grid;place-items:center;padding:0;background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink)}.x.goback svg{width:20px;height:20px;margin-left:-2px}.ov.full .sh-head{padding-top:calc(var(--st) + 22px)}
 .utabs{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:1fr 1fr;margin:18px -4px 12px;background:var(--paper);border-bottom:2px solid var(--line)}
 .utabs button{border:0;background:none;padding:12px 4px;font:800 16px "Nunito",sans-serif;color:var(--mute);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
@@ -729,7 +760,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 61</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 62</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -887,6 +918,7 @@ a{color:var(--roseD)}
     <h3>5. Ortak kitap listesi</h3>
     <p>Barkodla eklediğin kitapların yalnızca künye bilgileri (başlık, yazar, çevirmen, yayınevi, basım yılı, sayfa sayısı, tür, ISBN) herkesin yararlandığı ortak listeye eklenir. Ortak listeye hesap kimliğin, e-postan ya da başka bir tanımlayıcı gönderilmez; notların, puanların, hatıraların ve ödünç kayıtların gönderilmez.</p>
     <p>Bir kitapta "Okumaya başla"ya dokunduğunda, okuma süren yalnızca kendi kitaplığına kaydedilir ve arkadaşlarınla paylaşılmaz. "Şu an okuyanlar" sayısı için oturum boyunca rastgele bir oturum numarası ve bir zaman damgası tutulur. Bu kayıtta hesabın, adın ya da kullanıcı adın bulunmaz; okumayı bıraktığında silinir, bırakmayı unutursan en geç 20 dakika sonra sayımdan düşer. Okur sayılarına katılmayı kapattıysan bu sayıma da katılmazsın.</p>
+    <p>Okuma ekranında topladığın iksirler, kurtardığın hayvanlar ve günlük okuma dakikaların hesabında saklanır. Çiftliğin ile bu haftanın ve bu ayın toplamları (okuma süresi, iksir ve kurtarılan hayvan sayısı) profilini görebilen kişilere görünür. Hangi kitabı hangi saatte okuduğun paylaşılmaz.</p>
     <p>Adla aramada sonuçlar önce bu ortak listeden gelir ve en çok eklenen ve seçilen kitaplar üstte gösterilir. Bunun için arama sonuçlarından birini açtığında ya da seçtiğinde o kitabın künyesi ortak listeye eklenir ve kitabın sayacı bir artar. Sayaç yalnızca toplamı tutar; kimin seçtiği, ne aradığın ya da hesabınla ilgili hiçbir bilgi kaydedilmez.</p>
     <p>Kendi çektiğin kapak fotoğrafı ortak listeye yalnızca ilgili kutuyu her seferinde kendin işaretlersen eklenir; kutu varsayılan olarak işaretli değildir. Uygulama, fotoğrafı göndermeden önce yeniden boyutlandırır ve EXIF ile GPS konum bilgileri dahil fotoğraftaki tüm üst verileri siler. Fotoğrafta kitap sahibinin adı, imza, ithaf yazısı ya da arka planda kişisel bir görüntü olmadığından emin olmalısın. Ortak listeye eklenen fotoğraflar seninle ilişkilendirilmeden saklandığı için hesabını sildiğinde kendiliğinden silinmez; kaldırılmasını istediğin bir fotoğraf için başvurabilirsin.</p>
     <h3>6. Arkadaş profili, takip ve baykuş postası</h3>
@@ -953,6 +985,8 @@ a{color:var(--roseD)}
       </div>
       <div class="prow"><button class="btn" id="pEditBtn" type="button">Profili düzenle</button><button class="btn" id="pAvEdit" type="button">Avatarı değiştir</button></div>
       <div class="pstats" id="pStats"></div>
+      <h3 class="psec">Çiftliğim</h3>
+      <div id="farmBox"></div>
       <h3 class="psec">Okuma hedefi</h3>
       <div class="pcard" id="pGoal"></div>
       <p class="muted" id="pGoalNote" style="font-size:13px;margin:6px 2px 0">Bitirdiğin tarih bu yıl olan kitaplar sayılır. Bir kitabı "Okundu" yaptığında tarih kendiliğinden bugün olarak dolar.</p>
@@ -1208,6 +1242,156 @@ const coll = new Intl.Collator('tr');
 const okUrl = u => typeof u === 'string' && /^https:\/\//.test(u) ? u : '';
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
 const today = () => { const d = new Date(); return new Date(d - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10); };
+
+// --- Pixel sprites for the farm and the reading cauldron ---
+const SPR = {
+  frog: {pal: {g: '#5fae4e', d: '#3b7a32', l: '#9ad37c', w: '#fff', k: '#1a1a1a', p: '#e88aa0'}, px: ['..gg....gg..', '.gwwg..gwwg.', '.gwkg..gkwg.', 'gggggggggggg', 'gllllllllllg', 'glllpllplllg', 'gggllllllggg', '.ggggggggggg', 'dd.gggggg.dd', 'ddd.dd.dd.dd']},
+  bat: {pal: {k: '#3a2a4a', d: '#22182d', r: '#ff5d73', w: '#fff'}, px: ['....k..k....', '....kkkk....', 'd..krkkrk..d', 'dd.kkkkkk.dd', 'ddddkwwkdddd', 'ddddkkkkdddd', 'dd.dkkkkd.dd', 'd...kkkk...d', '.....kk.....']},
+  owl: {pal: {b: '#8a5a3c', d: '#5e3b26', c: '#e9d2a8', y: '#f4c542', k: '#1a1a1a', o: '#e0912f'}, px: ['.b........b.', '.bb......bb.', '.bbbbbbbbbb.', 'bbyyybbyyybb', 'bbykybbykybb', 'bbyyyboyyybb', 'bbbbbbobbbbb', 'bbcccccccbbb', 'bdcdcdcdcdbb', 'bbcccccccbbb', '.bbbbbbbbbb.', '..oo....oo..']},
+  cat: {pal: {k: '#1d1b26', y: '#f2d24b', p: '#e88aa0'}, px: ['k..........k', 'kk........kk', 'kkkkkkkkkkkk', 'kkyykkkkyykk', 'kkykkkkkkykk', 'kkkkkppkkkkk', '.kkkkkkkkkk.', '..kkkkkkkk..', '..kkkkkkkk.k', '..kkkkkkkk.k', '..kk.kk.kkkk']},
+  hedgehog: {pal: {b: '#7b5b45', s: '#4a3627', f: '#e6c9a2', k: '#1a1a1a'}, px: ['...s.s.s....', '..sbsbsbs...', '.sbsbsbsbs..', 'sbsbsbsbsbff', 'bsbsbsbsbfkf', 'sbsbsbsbffff', 'bbbbbbbbfffk', '.ff.ff.ff...']},
+  dragon: {pal: {g: '#8b6fd6', d: '#5a43a0', y: '#f4c542', k: '#1a1a1a', w: '#fff', o: '#f08a3c'}, px: ['..d.......d.', '..dd.....dd.', '..ggggggggg.', '.ggwkggwkggd', '.ggggggggggd', '.ggyyyyyygg.', 'ddgyyyyyyggd', 'dddgggggggdd', '..gg.gg.gg..', '..oo.......o']},
+};
+function sprite(name, size = 48, shadow = false) {
+  const sp = SPR[name]; if (!sp) return '';
+  const w = sp.px[0].length, h = sp.px.length; let r = '';
+  sp.px.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== '.' && sp.pal[ch]) r += `<rect x="${x}" y="${y}" width="1.02" height="1.02" fill="${shadow ? '#0d0a14' : sp.pal[ch]}"/>`; }));
+  return `<svg width="${size}" height="${Math.round(size * h / w)}" viewBox="0 0 ${w} ${h}" shape-rendering="crispEdges" aria-hidden="true">${r}</svg>`;
+}
+function CAULDRON() {
+  const px = ['....b...b.......', '..b...bb...b....', '.....b....b..b..', '.kkkkkkkkkkkkkk.', 'kkpppppppppppppk', 'kkkkkkkkkkkkkkkk', '.kkkkkkkkkkkkkk.', '.kkkkkkkkkkkkkk.', '.kkkkkkkkkkkkkk.', '..kkkkkkkkkkkk..', '..kkkkkkkkkkkk..', '...kkkkkkkkkk...', '...k........k...', '..ooo.oooo.ooo..', '.oyyoooyyooyyoo.'];
+  const pal = {k: '#2b2433', p: '#9b6cf0', b: '#c9a8ff', o: '#e0602f', y: '#ffd166'}; let r = '';
+  px.forEach((row, y) => [...row].forEach((ch, x) => { if (ch !== '.') r += `<rect${ch === 'b' ? ' class="cbub"' : ''} x="${x}" y="${y}" width="1.02" height="1.02" fill="${pal[ch]}"/>`; }));
+  return `<svg width="140" height="131" viewBox="0 0 16 15" shape-rendering="crispEdges" aria-hidden="true">${r}</svg>`;
+}
+const POTION = (full, size = 22) => `<svg width="${size}" height="${Math.round(size * 8 / 6)}" viewBox="0 0 6 8" shape-rendering="crispEdges" aria-hidden="true"><rect x="2" y="0" width="2" height="1" fill="#a0703c"/><rect x="2" y="1" width="2" height="1" fill="${full ? '#d9c7f5' : '#3a3346'}"/><rect x="1" y="2" width="4" height="1" fill="${full ? '#d9c7f5' : '#3a3346'}"/><rect x="0" y="3" width="6" height="4" fill="${full ? '#9b6cf0' : '#2a2433'}"/><rect x="1" y="7" width="4" height="1" fill="${full ? '#7b4fd0' : '#2a2433'}"/>${full ? '<rect x="1" y="4" width="1" height="1" fill="#e6d6ff"/>' : ''}</svg>`;
+
+// --- Brewing and the farm ---
+// While the reading screen stays open and in front, the cauldron brews: every 10 minutes one bottle of potion.
+// Leaving the app for more than 15 seconds spills the bottle in progress (bottles already made are kept).
+// Potions free magical animals from cruel wizards; they live on your farm. Nothing here is ever taken away.
+const BREW_MS = 10 * 60e3, DAY_CAP = 18, GRACE = 15e3;
+const PETS = [
+  {k: 'frog', n: 'Kurbağa', cost: 5, d: 'Bataklıkların neşeli şarkıcısı'},
+  {k: 'bat', n: 'Yarasa', cost: 8, d: 'Gece okurlarının dostu'},
+  {k: 'owl', n: 'Baykuş', cost: 10, d: 'Mektupları o taşır'},
+  {k: 'cat', n: 'Kara kedi', cost: 12, d: 'Her cadının yoldaşı'},
+  {k: 'hedgehog', n: 'Kirpi', cost: 20, d: 'Sabırlı okurları sever'},
+  {k: 'dragon', n: 'Ejderha yavrusu', cost: 30, d: 'Nadir', need: () => books.some(b => b.status === 'okundu' && normGenre(b.genre) === 'Fantastik'), needTxt: 'Bir fantastik kitap bitirince kafesi açılır'},
+];
+const petName = k => (PETS.find(p => p.k === k) || {}).n || '';
+const gkey = () => { let id = ''; try { id = me ? me.uid : ''; } catch (e) {} return 'bitigapp.game.' + id; };
+function gameLoad() {
+  try { const g = JSON.parse(localStorage.getItem(gkey()) || 'null'); if (g && typeof g === 'object') return {pots: +g.pots || 0, total: +g.total || 0, pets: Array.isArray(g.pets) ? g.pets : [], days: g.days && typeof g.days === 'object' ? g.days : {}, up: +g.up || 0}; } catch (e) {}
+  return {pots: 0, total: 0, pets: [], days: {}, up: 0};
+}
+let gameTimer = 0;
+function gameSave(g) {
+  g.up = Date.now();
+  const ks = Object.keys(g.days).sort(); while (ks.length > 70) delete g.days[ks.shift()];
+  try { localStorage.setItem(gkey(), JSON.stringify(g)); } catch (e) {}
+  let who = null; try { who = me; } catch (e) {}
+  if (!who) return;
+  clearTimeout(gameTimer);
+  gameTimer = setTimeout(() => { if (me) FB.setDoc(FB.doc(fbDb, 'users', me.uid), {game: gameLoad()}, {merge: true}).catch(() => {}); }, 1500);
+  socShelfDirty();
+}
+const gameDay = g => g.days[today()] || (g.days[today()] = {m: 0, p: 0, r: 0});
+const ymdOf = d => new Date(d - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
+function periodFrom(kind) { const d = new Date(); if (kind === 'w') { d.setDate(d.getDate() - (d.getDay() + 6) % 7); return ymdOf(d); } return today().slice(0, 8) + '01'; }
+function periodSum(g, kind) { const from = periodFrom(kind), s = {m: 0, p: 0, r: 0, from}; for (const [d, v] of Object.entries(g.days)) if (d >= from) { s.m += +v.m || 0; s.p += +v.p || 0; s.r += +v.r || 0; } return s; }
+// what friends see: the animals and this week's / this month's totals (no book titles, no times of day)
+function farmPublic() { const g = gameLoad(); return {pets: g.pets.slice(-60).map(p => p.k), w: periodSum(g, 'w'), mo: periodSum(g, 'm')}; }
+
+// cauldron
+function brewResume() {
+  const r = readNow(); if (!r || !r.hid) return;
+  const gap = Date.now() - r.hid; r.hid = 0; r.bt = 0;
+  if (gap > GRACE && (r.bms || 0) > 0) { r.spill = true; r.bms = 0; }
+  readSave(r);
+}
+function brewTick() {
+  const r = readNow(); if (!r) return;
+  const active = !$('readOv').hidden && !r.paused && !r.spill && !document.hidden, now = Date.now();
+  if (!active) { if (r.bt) { r.bt = 0; readSave(r); } return; }
+  const g = gameLoad(), day = gameDay(g);
+  if (day.p >= DAY_CAP) { if (r.bt) { r.bt = 0; readSave(r); } return; }
+  if (r.bt) r.bms = (r.bms || 0) + Math.min(5000, Math.max(0, now - r.bt));
+  r.bt = now;
+  if (r.bms >= BREW_MS) {
+    r.bms -= BREW_MS; g.pots++; g.total++; day.p++; gameSave(g);
+    note(`<span>Bir şişe iksir doldu! Toplam <b>${g.pots}</b> iksirin var.</span>`);
+    try { sfx.unlock(); sfx.sparkle(); } catch (e) {}
+  }
+  readSave(r);
+}
+function drawBrew(r) {
+  const g = gameLoad(), day = g.days[today()] || {p: 0}, cap = day.p >= DAY_CAP;
+  const off = r.paused || r.spill || cap;
+  $('rdCauld').classList.toggle('off', off);
+  $('rdBar').style.width = (r.spill || cap ? 0 : Math.min(100, (r.bms || 0) / BREW_MS * 100)) + '%';
+  const left = Math.max(1, Math.ceil((BREW_MS - (r.bms || 0)) / 60e3));
+  $('rdBrew').innerHTML = r.spill ? `Kazan taştı, bu tur boşa gitti.<br>Kazandığın <b>${g.pots}</b> şişe güvende.`
+    : cap ? `Bugünkü kazan doldu (<b>${DAY_CAP}</b> şişe). Okumaya devam edebilirsin; kazan yarın yeniden kaynar.`
+    : r.paused ? 'Kazan duraklatıldı.' : `Bir sonraki şişe <b>${left} dk</b> sonra hazır`;
+  const n = day.p, slots = Math.max(6, Math.min(n, 12));
+  const pots = Array.from({length: slots}, (_, i) => POTION(i < n)).join('');
+  if ($('rdPots').dataset.n !== String(n)) { $('rdPots').innerHTML = pots + (n > 12 ? `<b style="align-self:center;margin-left:4px">+${n - 12}</b>` : ''); $('rdPots').dataset.n = String(n); }
+  $('rdRelight').hidden = !r.spill;
+}
+// keep the screen awake while brewing (where the browser allows it)
+let wake = null, wakeBusy = false;
+async function wakeOn() {
+  const r = readNow();
+  if (!r || $('readOv').hidden || r.paused || document.hidden || wake || wakeBusy || !navigator.wakeLock) return;
+  wakeBusy = true;
+  try { wake = await navigator.wakeLock.request('screen'); wake.addEventListener('release', () => { wake = null; }); } catch (e) {}
+  wakeBusy = false;
+}
+function wakeOff() { if (wake) { wake.release().catch(() => {}); wake = null; } }
+
+// farm
+let farmPer = 'w', ufPer = 'w';
+function farmHTML(keys, newIdx) {
+  const show = keys.slice(-24), more = keys.length - show.length;
+  const stars = Array.from({length: 14}, (_, i) => `<i class="fst" style="left:${(i * 53 + 11) % 96}%;top:${(i * 37 + 7) % 82}px"></i>`).join('');
+  const pets = show.map((k, i) => { const h = hash(k + i), row = i % 3, x = 8 + ((i * 29 + h % 17) % 84), y = 116 + row * 38 + (h % 14); return `<div class="pet${i === newIdx ? ' new' : ''}" style="left:${x}%;top:${y}px;z-index:${y}" title="${esc(petName(k))}">${sprite(k, k === 'dragon' ? 46 : 40)}</div>`; }).join('');
+  return `<div class="farm"><div class="moon"></div>${stars}<div class="fence"></div>${pets}${keys.length ? '' : '<p class="empty">Henüz kurtarılan hayvan yok.</p>'}${more > 0 ? `<span class="more">+${more}</span>` : ''}</div>`;
+}
+const durTxt = m => m >= 60 ? `${Math.floor(m / 60)} sa${m % 60 ? ' ' + (m % 60) + ' dk' : ''}` : `${m} dk`;
+function farmPerHTML(f, per, mine) {
+  const cur = per === 'w' ? f.w : f.mo, from = periodFrom(per === 'w' ? 'w' : 'm');
+  const s = cur && cur.from === from ? cur : {m: 0, p: 0, r: 0};
+  const parts = [s.m ? `<b>${durTxt(s.m)}</b> okuma` : '', s.p ? `<b>${s.p}</b> iksir` : '', s.r ? `<b>${s.r}</b> hayvan kurtarıldı` : ''].filter(Boolean);
+  return `<div class="fper"><div class="chips" role="tablist"><button class="chip" type="button" role="tab" data-${mine ? 'fp' : 'ufp'}="w" aria-selected="${per === 'w'}">Bu hafta</button><button class="chip" type="button" role="tab" data-${mine ? 'fp' : 'ufp'}="m" aria-selected="${per === 'm'}">Bu ay</button></div><p>${parts.length ? parts.join(' · ') : `<span class="muted">${per === 'w' ? 'Bu hafta' : 'Bu ay'} henüz okuma ekranında iksir toplanmadı.</span>`}</p></div>`;
+}
+function drawFarm(newIdx) {
+  const box = $('farmBox'); if (!box) return;
+  const g = gameLoad();
+  const cages = PETS.map(p => {
+    const locked = p.need && !p.need(), can = !locked && g.pots >= p.cost;
+    return `<div class="cage"><div class="cbox">${sprite(p.k, 40, locked)}</div><div><b>${esc(p.n)}</b><small>${esc(locked ? p.needTxt : p.d)}</small></div><button class="btn${can ? ' primary' : ''}" type="button" data-rescue="${p.k}" ${can ? '' : 'disabled'}>${locked ? '🔒' : can ? `${p.cost} iksir · Kurtar` : `${p.cost} iksir`}</button></div>`;
+  }).join('');
+  box.innerHTML = `<div style="position:relative">${farmHTML(g.pets.map(p => p.k), newIdx)}<div class="bank" style="position:absolute;left:12px;top:12px">${POTION(true, 18)} ${g.pots}</div></div>
+    ${farmPerHTML({w: periodSum(g, 'w'), mo: periodSum(g, 'm')}, farmPer, true)}
+    <p class="muted" style="font-size:13px;margin:8px 2px 0">Bir kitapta "Okumaya başla"ya dokun. Okuma ekranı açık kaldıkça her 10 dakikada bir şişe iksir dolar. Çiftliğin ve haftalık, aylık özetin seni takip edenlere profilinde görünür.</p>
+    <div class="cages"><h4>Zalim büyücülerin elindekiler</h4>${cages}</div>`;
+}
+function rescue(k) {
+  const p = PETS.find(x => x.k === k), g = gameLoad();
+  if (!p || (p.need && !p.need()) || g.pots < p.cost) return;
+  g.pots -= p.cost; g.pets.push({k, at: today()}); gameDay(g).r++; gameSave(g);
+  const shown = Math.min(g.pets.length, 24) - 1;
+  drawFarm(shown);
+  note(`<span><b>${esc(p.n)}</b> zalim büyücüden kurtuldu ve çiftliğine geldi!</span>`);
+  try { sfx.unlock(); sfx.sparkle(); } catch (e) {}
+}
+document.addEventListener('click', e => {
+  const rb = e.target.closest('#farmBox [data-rescue]'); if (rb) return rescue(rb.dataset.rescue);
+  const fp = e.target.closest('#farmBox [data-fp]'); if (fp) { farmPer = fp.dataset.fp; drawFarm(); return; }
+  const ufp = e.target.closest('#uFarm [data-ufp]');
+  if (ufp && userShelf && userShelf.farm) { ufPer = ufp.dataset.ufp; const old = $('uFarm').querySelector('.fper'); old.outerHTML = farmPerHTML(userShelf.farm, ufPer, false); }
+});
 const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 let gfilter = null;
 let books = [], filter = 'all', editId = null, rating = 0, fromScan = false, acq = 'existing';
@@ -3121,6 +3305,7 @@ function medal(face, on) {
   return `<svg viewBox="0 0 60 62" class="medal" aria-hidden="true"><defs><linearGradient id="mg${on ? 1 : 0}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" style="stop-color:${c1}"/><stop offset="1" style="stop-color:${c2}"/></linearGradient></defs><g fill="url(#mg${on ? 1 : 0})" style="stroke:${on ? 'var(--m2, var(--butterD))' : 'var(--line)'}" stroke-width="2">${shape}</g><text x="30" y="${t === 'cadi' ? 40 : 37}" text-anchor="middle" font-family="Fraunces, serif" font-weight="700" font-size="${face.length > 2 ? 14 : 18}" style="fill:${ink}">${esc(face)}</text></svg>`;
 }
 function drawProfile() {
+  drawFarm();
   const p = profLoad(), a = avLoad() || {...AV_DEFAULT}, s = profStats(), yr = YEAR(), goal = +(p.goals || {})[yr] || 0;
   $('pAv').src = avURL(a, {});
   $('pName').textContent = a.name || 'Adını ekle';
@@ -3298,7 +3483,7 @@ function shelfData() {
   return {
     books: books.map(b => ({id: b.id, title: b.title || '', author: b.author || '', isbn: b.isbn || '', genre: normGenre(b.genre) || '', status: b.status || '', pages: +b.pages || 0, addedAt: b.addedAt || '', finishedAt: b.finishedAt || '', acquisition: b.acquisition || '', fromWish: !!b.fromWish, cover: okUrl(b.cover) || ''})),
     wishes: wishes.map(w => ({id: w.id, title: w.title || '', author: w.author || '', isbn: w.isbn || '', genre: normGenre(w.genre) || '', wishedAt: w.wishedAt || '', cover: okUrl(w.cover) || ''})),
-    stats: {total: s.total, read: s.read, reading: s.reading, toRead: s.toRead, wish: s.wish, pages: s.pages}, updatedAt: Date.now(),
+    stats: {total: s.total, read: s.read, reading: s.reading, toRead: s.toRead, wish: s.wish, pages: s.pages}, farm: farmPublic(), updatedAt: Date.now(),
   };
 }
 let shelfTimer = 0, sprofTimer = 0;
@@ -3496,6 +3681,7 @@ async function openUser(uid, quiet) {
            <p style="margin:6px 0 0">${m.lib.common.length ? `İkinizde de olan <b>${m.lib.common.length}</b> kitap var` : 'Henüz ortak kitabınız yok'}${m.lib.shared.length ? `; ortak türleriniz: ${m.lib.shared.map(esc).join(', ')}` : ''}.</p>`}
         ${m.next.length ? `<p style="margin:14px 0 6px;font-weight:800">Onun okuduğu, senin henüz okumadığın</p><ul class="hlist">${m.next.map(b => `<li class="item" data-ub="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div></li>`).join('')}</ul>` : ''}
         ${m.tips.length ? `<p style="margin:12px 0 6px;font-weight:800">Onda olup sende olmayanlar</p><ul class="hlist">${m.tips.map((b, i) => `<li class="item" data-ub="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div><button class="btn" type="button" data-tip="${i}">İstek listeme</button></li>`).join('')}</ul>` : ''}</details>
+      ${shelf && shelf.farm ? `<div class="ufarm" id="uFarm">${farmHTML(shelf.farm.pets || [], null)}${farmPerHTML(shelf.farm, ufPer, false)}</div>` : ''}
       <div class="utabs" role="tablist"><button type="button" role="tab" data-utab="lib" aria-selected="${userTab === 'lib'}">Kitaplık</button><button type="button" role="tab" data-utab="feed" aria-selected="${userTab === 'feed'}">Akış</button></div>
       <div id="uTab">${userTabHTML(uid, prof)}</div>`;
     $('uBody').dataset.tips = JSON.stringify(m.tips);
@@ -4000,7 +4186,7 @@ function startReading(id) {
     if (!b.status || b.status === 'okunacak') { b.status = 'okunuyor'; b.startedAt = b.startedAt || today(); b.updatedAt = new Date().toISOString(); persist(); render(); }
   }
   $('bookOv').hidden = true;
-  $('readOv').hidden = false; drawRead(); readLoop(); livePing(); liveCount();
+  $('readOv').hidden = false; brewResume(); drawRead(); readLoop(); livePing(); liveCount(); wakeOn();
 }
 function drawRead() {
   const r = readNow(), pill = $('readPill');
@@ -4019,8 +4205,14 @@ function drawRead() {
     body.dataset.id = r.id;
     body.innerHTML = `${b.coverLocal ? `<img class="bcv" data-local="${esc(b.id)}" alt="">` : cu ? `<img class="bcv" src="${esc(cu)}" alt="">` : `<div class="bcv" style="--c:${c}">${esc(initial(b.title))}</div>`}
       <h3 class="rdt">${esc(b.title)}</h3><p class="rda">${esc(b.author || '')}</p>
-      <div class="rdclock" id="rdClock"></div><p class="muted rdsum" id="rdSum"></p><div id="rdLive"></div>
+      <div class="rdclock" id="rdClock"></div>
+      <div class="rdcauld" id="rdCauld">${CAULDRON()}</div>
+      <div class="rdbrew"><div class="rdbar"><i id="rdBar"></i></div><p id="rdBrew"></p></div>
+      <div class="rdpots" id="rdPots"></div>
+      <p class="muted rdsum" id="rdSum"></p><div id="rdLive"></div>
+      <p class="rdtip">Telefonu ters çevir, kilitleme. Okuma ekranı açık kaldıkça kazan kaynar; başka uygulamaya geçersen bu turun iksiri taşar.</p>
       <div class="rdbtns"><button class="btn" type="button" id="rdPause"></button><button class="btn primary" type="button" id="rdEnd">Okumayı bırak</button></div>
+      <button class="btn primary" type="button" id="rdRelight" style="width:100%;max-width:360px;margin-top:10px" hidden>Kazanı yeniden yak</button>
       <button class="btn link" type="button" id="rdFinish" style="margin-top:12px">Kitabı bitirdim</button>`;
     hydrate(body);
   }
@@ -4028,21 +4220,22 @@ function drawRead() {
   $('rdSum').textContent = b.readSecs >= 60 ? `Bu kitaptaki toplam süren: ${fmtDur(b.readSecs + readMs(r) / 1000)}` : '';
   $('rdPause').textContent = r.paused ? 'Devam et' : 'Duraklat';
   $('rdFinish').hidden = b.status === 'okundu';
+  drawBrew(r);
   if ($('rdLive').innerHTML !== live) $('rdLive').innerHTML = live;
 }
 function readLoop() {
   clearInterval(readTick); clearInterval(liveTick);
   if (!readNow()) return;
-  readTick = setInterval(drawRead, 1000);
+  readTick = setInterval(() => { brewTick(); drawRead(); }, 1000);
   liveTick = setInterval(() => { livePing(); if (!$('readOv').hidden) liveCount(); }, 90e3);
 }
 function endReading(finished, quiet) {
   const r = readNow(); if (!r) return;
   clearInterval(readTick); clearInterval(liveTick);
-  liveDrop(r); readSave(null); liveN = null; $('rdBody').dataset.id = '';
+  liveDrop(r); readSave(null); liveN = null; $('rdBody').dataset.id = ''; wakeOff();
   const sec = readMs(r) / 1000, b = books.find(x => x.id === r.id);
   if (b) {
-    if (sec >= 30) { b.readSecs = Math.round((b.readSecs || 0) + sec); b.lastReadAt = today(); }
+    if (sec >= 30) { b.readSecs = Math.round((b.readSecs || 0) + sec); b.lastReadAt = today(); const g = gameLoad(); gameDay(g).m += Math.round(sec / 60); gameSave(g); }
     if (finished) { b.status = 'okundu'; b.finishedAt = b.finishedAt || today(); }
     b.updatedAt = new Date().toISOString(); persist(); render();
   }
@@ -4051,18 +4244,23 @@ function endReading(finished, quiet) {
   if (finished) { sfx.unlock(); sfx.sparkle(); }
   note(sec >= 30 ? `${finished ? 'Tebrikler, bitirdin! ' : ''}Bu oturumda <b>${fmtDur(sec)}</b> okudun${b.readSecs >= 60 ? ` · bu kitapta toplam ${fmtDur(b.readSecs)}` : ''}.` : finished ? 'Tebrikler, bitirdin!' : 'Okuma oturumu kapatıldı.');
 }
-$('rdX').onclick = () => { $('readOv').hidden = true; drawRead(); };
-$('readPill').onclick = () => { $('readOv').hidden = false; drawRead(); liveCount(); };
+$('rdX').onclick = () => { $('readOv').hidden = true; const r = readNow(); if (r) { r.bt = 0; readSave(r); } wakeOff(); drawRead(); };
+$('readPill').onclick = () => { $('readOv').hidden = false; drawRead(); liveCount(); wakeOn(); };
 $('readOv').addEventListener('click', e => {
   const r = readNow(); if (!r) return;
   if (e.target.closest('#rdPause')) {
     if (r.paused) { r.start = Date.now(); r.paused = false; readSave(r); livePing(); liveCount(); }
-    else { r.acc = readMs(r); r.paused = true; readSave(r); liveDrop(r); }
+    else { r.acc = readMs(r); r.paused = true; r.bt = 0; readSave(r); liveDrop(r); }
     drawRead();
   } else if (e.target.closest('#rdEnd')) endReading(false);
   else if (e.target.closest('#rdFinish')) endReading(true);
+  else if (e.target.closest('#rdRelight')) { r.spill = false; r.bt = 0; readSave(r); drawRead(); wakeOn(); }
 });
-document.addEventListener('visibilitychange', () => { if (!document.hidden && readNow()) { drawRead(); livePing(); if (!$('readOv').hidden) liveCount(); } });
+document.addEventListener('visibilitychange', () => {
+  const r = readNow(); if (!r) return;
+  if (document.hidden) { if (!$('readOv').hidden && !r.paused && !r.spill) { r.hid = Date.now(); r.bt = 0; readSave(r); } return; }
+  brewResume(); drawRead(); livePing(); if (!$('readOv').hidden) { liveCount(); wakeOn(); }
+});
 
 // --- Accounts: sign-in with Firebase; each person's books live in their own corner of the database ---
 const FB_CFG = {apiKey: 'AIzaSyDIc6YSDyZ2TB4Rb93qHsce30AjSmjwBMQ', authDomain: 'kitapligim-80e6a.firebaseapp.com', projectId: 'kitapligim-80e6a', storageBucket: 'kitapligim-80e6a.firebasestorage.app', messagingSenderId: '127488815555', appId: '1:127488815555:web:219d14ef48ea3151eb0d76'};
@@ -4191,6 +4389,7 @@ async function loadProfile() {
     if (p.avatar && typeof p.avatar === 'object') { avSave(p.avatar); renderAvatarHead(); }
     if (p.theme && THEMES.includes(p.theme) && p.theme !== themeNow()) setTheme(p.theme);
     if (p.prof && typeof p.prof === 'object') try { localStorage.setItem(PROF_KEY, JSON.stringify(p.prof)); } catch (e) {}
+    if (p.game && typeof p.game === 'object' && (+p.game.up || 0) > (+gameLoad().up || 0)) { try { localStorage.setItem(gkey(), JSON.stringify(p.game)); } catch (e) {} drawFarm(); }
     profileReady = true;
     if (!s.exists() || !p.avatar) profileDirty();
     const ack = localStorage.getItem('kitapligim.ack');
@@ -4277,7 +4476,7 @@ function enterApp(user) {
   if (me && me.uid === user.uid) { $('auth').hidden = true; return; }
   me = user; profileReady = false; remote = {b: null, w: null};
   setUserKeys(user.uid); load(); render();
-  if (readNow()) { readLoop(); drawRead(); }
+  if (readNow()) { brewResume(); readLoop(); drawRead(); }
   $('auth').hidden = true; $('acctMail').textContent = user.email || '';
   syncState(navigator.onLine ? 'wait' : 'off');
   loadProfile().then(() => { $('statsOn').checked = votesOn(); votesDirty(); socStart(); });
@@ -4296,7 +4495,7 @@ function watchKind(kind, name) {
 }
 function leaveApp() {
   if (readNow()) endReading(false, true);
-  socStop(); clearTimeout(profTimer); clearTimeout(syncTimer); clearTimeout(voteTimer);
+  socStop(); clearTimeout(profTimer); clearTimeout(syncTimer); clearTimeout(voteTimer); clearTimeout(gameTimer);
   for (const u of [...unsubs, ...libUnsubs]) try { u && u(); } catch (e) {}
   unsubs = []; libUnsubs = []; LIB = ''; libMine = null; libOther = null; libInvites = []; me = null; remote = {b: null, w: null}; profileReady = false;
   books = []; wishes = []; render();
