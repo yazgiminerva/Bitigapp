@@ -335,6 +335,12 @@ body.selecting .tabbar{display:none}
 .socnums .hot{box-shadow:inset 0 0 0 2px var(--rose)}
 .switch{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:center;margin-top:12px;font-weight:800}.switch input{appearance:auto!important;-webkit-appearance:checkbox!important;accent-color:var(--rose);width:22px!important;height:22px;min-height:0;padding:0;margin:0;border:0;grid-row:span 2}.switch small{grid-column:2;font-weight:600}
 .thrsheet{min-height:72dvh}
+.ov.full{align-items:stretch;background:var(--paper)}.ov.full .sheet{max-width:none;width:100%;height:100dvh;max-height:none;border-radius:0;margin:0;padding-top:calc(var(--st) + 4px);animation:none}
+.ov.full .sh-head{justify-content:flex-start;gap:10px;margin-top:calc(-1 * var(--st) - 4px);top:calc(-1 * var(--st) - 4px);padding-top:calc(var(--st) + 10px);border-radius:0}.x.back{font-size:30px;line-height:1;padding-bottom:3px}.ov.full .sh-head{padding-top:calc(var(--st) + 22px)}
+.utabs{position:sticky;top:0;z-index:2;display:grid;grid-template-columns:1fr 1fr;margin:18px -4px 12px;background:var(--paper);border-bottom:2px solid var(--line)}
+.utabs button{border:0;background:none;padding:12px 4px;font:800 16px "Nunito",sans-serif;color:var(--mute);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px}
+.utabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--rose)}
+.ucase{margin:0 -6px}.ucase .gsec{margin-bottom:6px}
 .libchip{display:inline-block;margin-top:6px;padding:3px 10px;border-radius:99px;background:color-mix(in srgb,var(--sage) 35%,transparent);font-size:12px;font-weight:800;color:var(--ink)}
 .libinv{box-shadow:inset 0 0 0 2px var(--rose)}
 #libBox .uitem{grid-template-columns:40px minmax(0,1fr) auto}
@@ -713,7 +719,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 51</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 52</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -982,9 +988,9 @@ a{color:var(--roseD)}
     <div id="sRes"></div>
   </div>
 </div>
-<div class="ov" id="userOv" hidden style="z-index:10">
+<div class="ov full" id="userOv" hidden style="z-index:10">
   <div class="sheet" role="dialog" aria-modal="true" aria-label="Profil">
-    <div class="sh-head"><h2>Profil</h2><button class="x" id="uX" type="button" aria-label="Kapat">×</button></div>
+    <div class="sh-head"><button class="x back" id="uX" type="button" aria-label="Geri">‹</button><h2 id="uTitle">Profil</h2></div>
     <div id="uBody"></div>
   </div>
 </div>
@@ -1019,7 +1025,7 @@ a{color:var(--roseD)}
   </div>
 </div>
 
-<div class="ov" id="bookOv" hidden>
+<div class="ov" id="bookOv" hidden style="z-index:12">
   <div class="sheet" role="dialog" aria-modal="true" aria-label="Kitap">
     <div class="sh-head"><h2>Kitap</h2><button class="x" id="bkX" type="button" aria-label="Kapat">×</button></div>
     <div id="bkBody"></div>
@@ -1986,7 +1992,7 @@ function clampDesc() {
 $('bookOv').addEventListener('click', e => {
   if (e.target === $('bookOv') || e.target.closest('#bkX')) { $('bookOv').hidden = true; bookNow = null; return; }
   if (e.target.closest('#bkMore')) { $('bkDesc').querySelector('.bdesc').classList.add('open'); e.target.remove(); return; }
-  if (e.target.closest('#bkAddLib,#bkAddWish') && bookFound) { const w = !!e.target.closest('#bkAddWish'), r = bookFound; $('bookOv').hidden = true; $('searchOv').hidden = true; bookNow = null; findWish = w; pickFound(r); return; }
+  if (e.target.closest('#bkAddLib,#bkAddWish') && bookFound) { const w = !!e.target.closest('#bkAddWish'), r = bookFound; $('bookOv').hidden = true; $('searchOv').hidden = true; $('userOv').hidden = true; userNow = null; bookNow = null; findWish = w; pickFound(r); return; }
   if (e.target.closest('#bkEdit')) { const id = bookNow; $('bookOv').hidden = true; bookNow = null; return openSheet(id); }
   if (e.target.closest('#bkDone')) { const b = books.find(x => x.id === bookNow); if (!b) return; b.status = 'okundu'; b.finishedAt = b.finishedAt || today(); b.updatedAt = new Date().toISOString(); persist(); render(); sfx.unlock(); sfx.sparkle(); openBook(b.id); }
 });
@@ -2047,7 +2053,7 @@ function pickFound(b) {
   if (b.isbn) { f.elements.isbn.value = b.isbn; checkDup(b.isbn); }
   if (okUrl(b.cover)) addTile({key: b.cover, kind: 'web', url: okUrl(b.cover)}, true);
   searchCovers(false);
-  $('scanBox').hidden = false; $('scanMsg').textContent = `Bilgiler ${b.src}'tan geldi. Kontrol edip kaydet.`;
+  $('scanBox').hidden = false; $('scanMsg').textContent = b.src === 'friend' ? 'Bilgiler arkadaşının rafından geldi. Kontrol edip kaydet.' : `Bilgiler ${b.src}'tan geldi. Kontrol edip kaydet.`;
   $('shTitle').textContent = findWish ? 'İstek listesine ekle' : 'Adıyla ekle';
 }
 $('findBtn').onclick = () => openFind(false);
@@ -2074,16 +2080,22 @@ function renderLib() {
   for (const b of books) { const g = normGenre(b.genre) || ''; if (!groups.has(g)) groups.set(g, []); groups.get(g).push(b); }
   const keys = [...groups.keys()].sort((a, b) => genreIdx(a) - genreIdx(b));
   $('libSub').textContent = books.length ? `${books.length} kitap, ${keys.length} tür rafında` : '';
-  $('bigcase').innerHTML = books.length ? keys.map(g => {
+  $('bigcase').innerHTML = books.length ? caseHTML(books, b => `data-id="${esc(b.id)}"`) : '<p class="libempty">Kitaplığın henüz boş. Ana ekrandan ilk kitabını ekle, burada türlerine göre dizilsin.</p>';
+}
+function caseHTML(bks, attr) {
+  const groups = new Map();
+  for (const b of bks) { const g = normGenre(b.genre) || ''; if (!groups.has(g)) groups.set(g, []); groups.get(g).push(b); }
+  const keys = [...groups.keys()].sort((a, b) => genreIdx(a) - genreIdx(b));
+  return keys.map(g => {
     const list = groups.get(g).sort((a, b) => coll.compare(a.author || '', b.author || '') || coll.compare(a.title || '', b.title || ''));
     const ant = RICH(themeNow()), SEQ = ORN_SEQS[themeNow()] || ORN_SEQ;
     let oi = hash(g) % SEQ.length;
     return `<section class="gsec"><div class="plate"><i style="--c:${genreColor(g)}"></i>${esc(g || 'Belirtilmedi')}<small>${list.length}</small></div><div class="rows">${list.map((b, i) => {
       const orn = ant && i > 0 && i % 7 === 0 ? `<div class="slot">${ORN[SEQ[oi++ % SEQ.length]](1)}</div>` : '';
       const h = hash(b.title + b.author), w = Math.min(32, 17 + Math.round((+b.pages || 180 + h % 300) / 55));
-      return orn + `<div class="slot"><button class="sp mini" data-id="${esc(b.id)}" title="${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" style="--c:${colorOf(b)};height:${82 + h % 30}px;width:${w}px">${b.status === 'okunuyor' ? '<b class="rib"></b>' : ''}<span>${esc(b.title)}</span></button></div>`;
+      return orn + `<div class="slot"><button class="sp mini" ${attr(b)} title=""${esc(b.title)}${b.author ? ' · ' + esc(b.author) : ''}" style="--c:${colorOf(b)};height:${82 + h % 30}px;width:${w}px">${b.status === 'okunuyor' ? '<b class="rib"></b>' : ''}<span>${esc(b.title)}</span></button></div>`;
     }).join('')}${ant && list.length < 7 ? `<div class="slot">${ORN[SEQ[oi % SEQ.length]](1)}</div>` : ''}</div></section>`;
-  }).join('') : '<p class="libempty">Kitaplığın henüz boş. Ana ekrandan ilk kitabını ekle, burada türlerine göre dizilsin.</p>';
+  }).join('');
 }
 const pager = $('pager');
 function goPage(i) { pager.scrollTo({left: i * pager.clientWidth, behavior: calm ? 'auto' : 'smooth'}); }
@@ -3360,7 +3372,25 @@ function addTipToWish(b) {
 
 // --- someone's profile ---
 let userNow = null;
-let userProf = null;
+let userProf = null, userShelf = null, userTab = 'lib';
+function userTabHTML(uid, prof) {
+  const sh = userShelf || {}, bks = sh.books || [], wsh = sh.wishes || [];
+  if (userTab === 'lib') {
+    return (bks.length ? `<div class="bigcase ucase">${caseHTML(bks, b => `data-ub="${esc(b.id)}"`)}</div>` : '<p class="muted" style="text-align:center;padding:20px 0">Kitaplığı henüz boş.</p>')
+      + (wsh.length ? `<details class="pcard" style="margin-top:12px"><summary><b>İstek listesi</b> <span class="muted">(${wsh.length})</span></summary><ul class="hlist">${wsh.map(b => `<li class="item" data-uw="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div></li>`).join('')}</ul></details>` : '');
+  }
+  const ev = eventsOf(bks, wsh, uid).sort((x, y) => evKey(y.at).localeCompare(evKey(x.at))).slice(0, 60);
+  if (!ev.length) return '<p class="muted" style="text-align:center;padding:20px 0">Henüz bir hareket yok.</p>';
+  const reacted = new Set(profLoad().reacted || []), av = avURL(prof.avatar || AV_DEFAULT, {}), name = esc(prof.name || prof.username);
+  const say = {add: 'kitaplığına yeni bir kitap ekledi', buy: 'yeni bir kitap aldı', wishbuy: 'istek listesindeki kitaba sonunda kavuştu', done: 'bir kitabı bitirdi', wish: 'istek listesine bir kitap ekledi'};
+  let h = '', last = '';
+  for (const e of ev) {
+    const dl = dayLabel(e.at); if (dl !== last) { h += `<p class="fday">${esc(dl)}</p>`; last = dl; }
+    const evId = `${e.kind}_${e.b.id}`, on = reacted.has(`reactions/${uid}/items/${evId}_${me.uid}`);
+    h += `<article class="post"><img class="pa" src="${av}" alt=""><div><div class="ph"><b>${name}</b><span>@${esc(prof.username)} · ${esc(relTime(e.at))}</span></div><p>${say[e.kind]}</p><button class="pbk" type="button" data-${e.kind === 'wish' ? 'uw' : 'ub'}="${esc(e.b.id)}">${coverEl(e.b)}<div><div class="t">${esc(e.b.title)}</div><div class="a">${esc(e.b.author || '')}</div></div></button><div class="pfoot"><button class="react${on ? ' on' : ''}" type="button" data-react="${esc(uid)}|${esc(evId)}" data-rn="${name}">${reactBtn(myType(), on)}</button></div></div></article>`;
+  }
+  return h;
+}
 async function openUser(uid, quiet) {
   userNow = uid; $('userOv').hidden = false;
   if (!quiet) { $('uBody').innerHTML = '<p class="muted" style="padding:20px;text-align:center">Yükleniyor…</p>'; $('userOv').querySelector('.sheet').scrollTop = 0; }
@@ -3368,7 +3398,7 @@ async function openUser(uid, quiet) {
   try { const p = await FB.getDoc(fd('profiles', uid)); prof = p.exists() ? p.data() : null; } catch (e) {}
   if (userNow !== uid) return;
   if (!prof) { $('uBody').innerHTML = '<p class="muted" style="padding:20px;text-align:center">Bu profil artık yok.</p>'; return; }
-  userProf = prof;
+  userProf = prof; userShelf = null; if (!quiet) userTab = 'lib'; $('uTitle').textContent = prof.name || '@' + prof.username;
   try { const s = await FB.getDoc(fd('shelves', uid)); shelf = s.exists() ? s.data() : null; } catch (e) {}
   if (userNow !== uid) return;
   const f = SOC.following.get(uid), back = SOC.followers.get(uid), blocked = SOC.blocked.has(uid);
@@ -3383,13 +3413,14 @@ async function openUser(uid, quiet) {
   html += `<div class="umore" id="uMore" hidden>${back ? `<button class="btn" type="button" data-u="drop">Takipçilerimden çıkar</button>` : ''}${blocked ? '' : `<button class="btn danger" type="button" data-u="block">Engelle</button>`}</div>`;
   if (shelf) {
     const st = shelf.stats || {}, m = readingMatch(shelf.books || []);
+    userShelf = shelf;
     html += `<div class="pstats">${[[st.total || 0, 'kitap', 'rose'], [st.read || 0, 'okundu', 'sage'], [st.reading || 0, 'okunuyor', 'butter']].map(([v, l, c]) => `<div class="ptile" style="--c:var(--${c})"><b>${v}</b><span>${l}</span></div>`).join('')}</div>
-      <h3 class="psec">Okuma uyumunuz</h3><div class="pcard match">${m.score === null ? '<p class="muted" style="margin:0">Uyumu hesaplamak için ikinizin de en az 3 kitabı olmalı.</p>'
-        : `<div class="mscore"><b>%${m.score}</b><span>${m.score >= 75 ? 'Ruh ikizi okurlar!' : m.score >= 50 ? 'Zevkleriniz çok yakın' : m.score >= 25 ? 'Ortak noktalarınız var' : 'Birbirinize yeni dünyalar açabilirsiniz'}</span></div>
+      <details class="pcard match" style="margin-top:12px"${m.score !== null && m.score >= 0 ? '' : ''}><summary><b>Okuma uyumunuz</b>${m.score === null ? '' : ` <span class="muted">· %${m.score}</span>`}</summary>${m.score === null ? '<p class="muted" style="margin:8px 0 0">Uyumu hesaplamak için ikinizin de en az 3 kitabı olmalı.</p>'
+        : `<div class="mscore" style="margin-top:8px"><b>%${m.score}</b><span>${m.score >= 75 ? 'Ruh ikizi okurlar!' : m.score >= 50 ? 'Zevkleriniz çok yakın' : m.score >= 25 ? 'Ortak noktalarınız var' : 'Birbirinize yeni dünyalar açabilirsiniz'}</span></div>
            <p style="margin:8px 0 0">${m.common.length ? `İkinizde de olan <b>${m.common.length}</b> kitap var` : 'Henüz ortak kitabınız yok'}${m.shared.length ? `; ortak türleriniz: ${m.shared.map(esc).join(', ')}` : ''}.</p>`}
-        ${m.tips.length ? `<p style="margin:12px 0 6px;font-weight:800">Onda olup sende olmayanlar</p><ul class="hlist">${m.tips.map((b, i) => `<li class="item">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div><button class="btn" type="button" data-tip="${i}">İstek listeme</button></li>`).join('')}</ul>` : ''}</div>
-      <h3 class="psec">Rafı</h3><ul class="hlist">${(shelf.books || []).slice().sort((a, b) => String(b.addedAt).localeCompare(String(a.addedAt))).slice(0, 40).map(b => `<li class="item">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div>${b.status ? `<span class="st ${esc(b.status)}">${STAT[b.status] || ''}</span>` : ''}</li>`).join('') || '<li class="muted">Rafı boş.</li>'}</ul>
-      ${(shelf.wishes || []).length ? `<details class="pcard" style="margin-top:12px"><summary>İstek listesi (${shelf.wishes.length})</summary><ul class="hlist">${shelf.wishes.map(b => `<li class="item">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div></li>`).join('')}</ul></details>` : ''}`;
+        ${m.tips.length ? `<p style="margin:12px 0 6px;font-weight:800">Onda olup sende olmayanlar</p><ul class="hlist">${m.tips.map((b, i) => `<li class="item">${coverEl(b)}<div><div class="t">${esc(b.title)}</div><div class="a">${esc(b.author || '')}</div></div><button class="btn" type="button" data-tip="${i}">İstek listeme</button></li>`).join('')}</ul>` : ''}</details>
+      <div class="utabs" role="tablist"><button type="button" role="tab" data-utab="lib" aria-selected="${userTab === 'lib'}">Kitaplık</button><button type="button" role="tab" data-utab="feed" aria-selected="${userTab === 'feed'}">Akış</button></div>
+      <div id="uTab">${userTabHTML(uid, prof)}</div>`;
     $('uBody').dataset.tips = JSON.stringify(m.tips);
   } else html += `<div class="pcard" style="text-align:center;margin-top:14px"><p class="pname" style="font-size:22px">Bu hesap gizli</p><p class="muted" style="margin:6px 0 0">${f && f.status === 'pending' ? 'Takip isteğin onaylanınca kitaplığını görebileceksin.' : 'Kitaplığını görmek için takip isteği gönder.'}</p></div>`;
   $('uBody').innerHTML = html; hydrate($('uBody'));
@@ -3398,8 +3429,13 @@ async function openUser(uid, quiet) {
 $('uX').onclick = () => { $('userOv').hidden = true; userNow = null; };
 $('userOv').addEventListener('click', e => { if (e.target === $('userOv')) { $('userOv').hidden = true; userNow = null; } });
 $('uBody').addEventListener('click', async e => {
-  const t = e.target.closest('[data-u],[data-tip]'); if (!t) return;
   const uid = $('uBody').dataset.uid;
+  const tab = e.target.closest('[data-utab]');
+  if (tab) { userTab = tab.dataset.utab; for (const b of $('uBody').querySelectorAll('[data-utab]')) b.setAttribute('aria-selected', String(b === tab)); $('uTab').innerHTML = userTabHTML(uid, userProf); hydrate($('uTab')); return; }
+  const rb = e.target.closest('[data-react]'); if (rb) { const [owner, ev] = rb.dataset.react.split('|'); return toggleReact(owner, ev, rb); }
+  const bk = e.target.closest('[data-ub],[data-uw]');
+  if (bk && userShelf) { const id = bk.dataset.ub || bk.dataset.uw, b = (bk.dataset.ub ? userShelf.books : userShelf.wishes || []).find(x => x.id === id); if (b) openFoundBook({...b, src: 'friend'}); return; }
+  const t = e.target.closest('[data-u],[data-tip]'); if (!t) return;
   if (t.dataset.tip !== undefined) { const b = JSON.parse($('uBody').dataset.tips || '[]')[+t.dataset.tip]; if (b && addTipToWish(b)) { t.textContent = 'Eklendi ✓'; t.disabled = true; sfx.unlock(); sfx.tick(); } return; }
   const act = t.dataset.u; t.disabled = true;
   try {
