@@ -764,7 +764,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 64</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 65</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -1278,17 +1278,17 @@ function CAULDRON() {
 const POTION = (full, size = 22) => `<svg width="${size}" height="${Math.round(size * 8 / 6)}" viewBox="0 0 6 8" shape-rendering="crispEdges" aria-hidden="true"><rect x="2" y="0" width="2" height="1" fill="#a0703c"/><rect x="2" y="1" width="2" height="1" fill="${full ? '#d9c7f5' : '#3a3346'}"/><rect x="1" y="2" width="4" height="1" fill="${full ? '#d9c7f5' : '#3a3346'}"/><rect x="0" y="3" width="6" height="4" fill="${full ? '#9b6cf0' : '#2a2433'}"/><rect x="1" y="7" width="4" height="1" fill="${full ? '#7b4fd0' : '#2a2433'}"/>${full ? '<rect x="1" y="4" width="1" height="1" fill="#e6d6ff"/>' : ''}</svg>`;
 
 // --- Brewing and the farm ---
-// While the reading screen stays open and in front, the cauldron brews: every 10 minutes one bottle of potion.
+// While the reading screen stays open and in front, the cauldron brews: every 5 minutes one bottle of potion (up to 2 hours a day).
 // Leaving the app for more than 15 seconds spills the bottle in progress (bottles already made are kept).
 // Potions free magical animals from cruel wizards; they live on your farm. Nothing here is ever taken away.
-const BREW_MS = 10 * 60e3, DAY_CAP = 18, GRACE = 15e3;
+const BREW_MS = 5 * 60e3, DAY_CAP = 24, GRACE = 15e3;
 const PETS = [
-  {k: 'frog', n: 'Kurbağa', cost: 5, d: 'Bataklıkların neşeli şarkıcısı'},
-  {k: 'bat', n: 'Yarasa', cost: 8, d: 'Gece okurlarının dostu'},
-  {k: 'owl', n: 'Baykuş', cost: 10, d: 'Mektupları o taşır'},
-  {k: 'cat', n: 'Kara kedi', cost: 12, d: 'Her cadının yoldaşı'},
-  {k: 'hedgehog', n: 'Kirpi', cost: 20, d: 'Sabırlı okurları sever'},
-  {k: 'dragon', n: 'Ejderha yavrusu', cost: 30, d: 'Nadir', need: () => books.some(b => b.status === 'okundu' && normGenre(b.genre) === 'Fantastik'), needTxt: 'Bir fantastik kitap bitirince kafesi açılır'},
+  {k: 'frog', n: 'Kurbağa', cost: 3, d: 'Bataklıkların neşeli şarkıcısı'},
+  {k: 'bat', n: 'Yarasa', cost: 5, d: 'Gece okurlarının dostu'},
+  {k: 'owl', n: 'Baykuş', cost: 6, d: 'Mektupları o taşır'},
+  {k: 'cat', n: 'Kara kedi', cost: 8, d: 'Her cadının yoldaşı'},
+  {k: 'hedgehog', n: 'Kirpi', cost: 12, d: 'Sabırlı okurları sever'},
+  {k: 'dragon', n: 'Ejderha yavrusu', cost: 20, d: 'Nadir', need: () => books.some(b => b.status === 'okundu' && normGenre(b.genre) === 'Fantastik'), needTxt: 'Bir fantastik kitap bitirince kafesi açılır'},
 ];
 const petName = k => (PETS.find(p => p.k === k) || {}).n || '';
 const gkey = () => { let id = ''; try { id = me ? me.uid : ''; } catch (e) {} return 'bitigapp.game.' + id; };
@@ -1385,7 +1385,7 @@ function drawFarm(newIdx) {
   }).join('');
   box.innerHTML = `<div style="position:relative">${farmHTML(g.pets.map(p => p.k), newIdx)}<div class="bank" style="position:absolute;left:12px;top:12px">${POTION(true, 18)} ${g.pots}</div></div>
     ${farmPerHTML({w: periodSum(g, 'w'), mo: periodSum(g, 'm')}, farmPer, true)}
-    <p class="muted" style="font-size:13px;margin:8px 2px 0">Bir kitapta "Okumaya başla"ya dokun. Okuma ekranı açık kaldıkça her 10 dakikada bir şişe iksir dolar. Çiftliğin ve haftalık, aylık özetin seni takip edenlere profilinde görünür.</p>
+    <p class="muted" style="font-size:13px;margin:8px 2px 0">Bir kitapta "Okumaya başla"ya dokun. Okuma ekranı açık kaldıkça her 5 dakikada bir şişe iksir dolar. Çiftliğin ve haftalık, aylık özetin seni takip edenlere profilinde görünür.</p>
     <div class="cages"><h4>Zalim büyücülerin elindekiler</h4>${cages}</div>`;
 }
 function rescue(k) {
