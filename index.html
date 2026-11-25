@@ -335,6 +335,9 @@ body.selecting .tabbar{display:none}
 .socnums .hot{box-shadow:inset 0 0 0 2px var(--rose)}
 .switch{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;align-items:center;margin-top:12px;font-weight:800}.switch input{appearance:auto!important;-webkit-appearance:checkbox!important;accent-color:var(--rose);width:22px!important;height:22px;min-height:0;padding:0;margin:0;border:0;grid-row:span 2}.switch small{grid-column:2;font-weight:600}
 .thrsheet{min-height:72dvh}
+.libchip{display:inline-block;margin-top:6px;padding:3px 10px;border-radius:99px;background:color-mix(in srgb,var(--sage) 35%,transparent);font-size:12px;font-weight:800;color:var(--ink)}
+.libinv{box-shadow:inset 0 0 0 2px var(--rose)}
+#libBox .uitem{grid-template-columns:40px minmax(0,1fr) auto}
 .thr{grid-template-columns:40px minmax(0,1fr) auto;cursor:pointer}.thr.new .t{font-weight:900}.thr .a{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.udot{width:10px;height:10px;border-radius:50%;background:var(--rose)}
 .tbook{background:var(--field);border-radius:16px;padding:12px;margin-bottom:12px}
 .bub{max-width:82%;margin:6px 0;padding:8px 12px 6px;border-radius:16px 16px 16px 4px;background:var(--field);color:var(--ink)}.bub p{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}.bub span{display:block;font-size:11px;color:var(--mute);margin-top:2px;text-align:right}
@@ -635,7 +638,7 @@ a{color:var(--roseD)}
   <header class="band top">
     <div class="hrow">
       <button class="avbtn" id="avBtn" type="button" aria-label="Avatarım"><canvas id="avMini" width="24" height="36"></canvas><b id="avPlus" hidden>+</b></button>
-      <div><p class="hello" id="hello"></p><h1>Kitaplığım</h1>
+      <div><p class="hello" id="hello"></p><h1>Kitaplığım</h1><span class="libchip" id="libChip" hidden></span>
       <svg class="swash" viewBox="0 0 150 12" aria-hidden="true"><path d="M2 8c30-6 60-6 90-2s40 2 56-3" fill="none" stroke="#f3b9c0" stroke-width="4" stroke-linecap="round"/></svg></div>
     </div>
     <div class="pills" id="stats"></div>
@@ -710,7 +713,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 50</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 51</p>
       </details>
       <details>
         <summary>Kapak okuma ayarı</summary>
@@ -870,7 +873,7 @@ a{color:var(--roseD)}
     <p>Kendi çektiğin kapak fotoğrafı ortak listeye yalnızca ilgili kutuyu her seferinde kendin işaretlersen eklenir; kutu varsayılan olarak işaretli değildir. Uygulama, fotoğrafı göndermeden önce yeniden boyutlandırır ve EXIF ile GPS konum bilgileri dahil fotoğraftaki tüm üst verileri siler. Fotoğrafta kitap sahibinin adı, imza, ithaf yazısı ya da arka planda kişisel bir görüntü olmadığından emin olmalısın. Ortak listeye eklenen fotoğraflar seninle ilişkilendirilmeden saklandığı için hesabını sildiğinde kendiliğinden silinmez; kaldırılmasını istediğin bir fotoğraf için başvurabilirsin.</p>
     <h3>6. Arkadaş profili, takip ve baykuş postası</h3>
     <p>Hesabını oluşturduğunda sana, kayıtta seçtiğin kullanıcı adıyla bir arkadaş profili açılır. Profilin <b>gizli hesap</b> olarak başlar: kitaplık özetini yalnızca senin onayladığın takipçiler görür. İstersen Profilim &gt; Arkadaşlar bölümünden hesabını herkese açık yapabilirsin.</p>
-    <ul><li><b>Herkese görünenler:</b> kullanıcı adın, avatarındaki ad, avatarın, "hakkımda" yazın ve hesabının gizli ya da açık olduğu. Bunlar, gizli hesapta da oturum açmış kullanıcılar tarafından aranabilir ve görülebilir.</li><li><b>Kitaplık özetin:</b> kitapların ve istek listendeki kitapların künyesi (başlık, yazar, tür, sayfa sayısı, ISBN, kapak bağlantısı), okuma durumları, ekleme ve bitirme tarihleri ve sayıların. Gizli hesapta yalnızca onayladığın takipçilerin, açık hesapta oturum açmış tüm kullanıcılar görür.</li><li><b>Hiçbir durumda paylaşılmayanlar:</b> notların, hatıraların, kitabı nereden aldığın ve ödünç kayıtların. Puanların kimseye tek tek gösterilmez; yalnızca aşağıda anlatılan isimsiz toplamlara katılır. Hedeflerin, rozetlerin ve başucu kitapların da yalnızca sana görünür.</li><li><b>Arkadaşlık kayıtları:</b> kimi takip ettiğin, seni kimin takip ettiği, takip istekleri ve engellediğin kişiler; baykuşla gönderdiğin ve aldığın kitap önerileri (kitabın künyesi ve en fazla 200 karakterlik not) ve bu önerilerin altındaki yazışmalar (mesaj başına en fazla 500 karakter). Baykuş yalnızca seni takip eden kişilere gönderilebilir; yazışmayı yalnızca ikiniz görürsünüz; arkadaşlarının etkinliklerine verdiğin ve aldığın tepkiler (tepki verenin adı ve kullanıcı adıyla birlikte).</li><li><b>Okuma uyumu:</b> senin cihazında, ekranı açtığında hesaplanır; sonucu saklanmaz.</li><li><b>Bitigapp okur sayıları:</b> bir kitabın sayfasında o kitabın kaç Bitigapp kullanıcısının kitaplığında olduğu, kaç kişinin okuduğu ve ortalama puanı gösterilir. Bunun için her kitap için kitaplığında olup olmadığı, okuyup okumadığın ve verdiğin puan, hesabına bağlı ve yalnızca senin okuyabildiğin bir kayıt olarak tutulur; diğer kullanıcılar yalnızca toplamları görür, kimin eklediğini, okuduğunu ya da puan verdiğini göremez. Ortalama puan, en az 3 kişi puan vermeden gösterilmez. Ayarlar &gt; Hesabım &gt; "Bitigapp okur sayılarına katıl" seçeneğini kapatırsan ya da hesabını silersen katkın toplamlardan hemen çıkarılır.</li></ul>
+    <ul><li><b>Herkese görünenler:</b> kullanıcı adın, avatarındaki ad, avatarın, "hakkımda" yazın ve hesabının gizli ya da açık olduğu. Bunlar, gizli hesapta da oturum açmış kullanıcılar tarafından aranabilir ve görülebilir.</li><li><b>Kitaplık özetin:</b> kitapların ve istek listendeki kitapların künyesi (başlık, yazar, tür, sayfa sayısı, ISBN, kapak bağlantısı), okuma durumları, ekleme ve bitirme tarihleri ve sayıların. Gizli hesapta yalnızca onayladığın takipçilerin, açık hesapta oturum açmış tüm kullanıcılar görür.</li><li><b>Hiçbir durumda paylaşılmayanlar:</b> notların, hatıraların, kitabı nereden aldığın ve ödünç kayıtların. Puanların kimseye tek tek gösterilmez; yalnızca aşağıda anlatılan isimsiz toplamlara katılır. Hedeflerin, rozetlerin ve başucu kitapların da yalnızca sana görünür.</li><li><b>Arkadaşlık kayıtları:</b> kimi takip ettiğin, seni kimin takip ettiği, takip istekleri ve engellediğin kişiler; baykuşla gönderdiğin ve aldığın kitap önerileri (kitabın künyesi ve en fazla 200 karakterlik not) ve bu önerilerin altındaki yazışmalar (mesaj başına en fazla 500 karakter). Baykuş yalnızca seni takip eden kişilere gönderilebilir; yazışmayı yalnızca ikiniz görürsünüz; arkadaşlarının etkinliklerine verdiğin ve aldığın tepkiler (tepki verenin adı ve kullanıcı adıyla birlikte).</li><li><b>Okuma uyumu:</b> senin cihazında, ekranı açtığında hesaplanır; sonucu saklanmaz.</li><li><b>Ortak kitaplık (isteğe bağlı):</b> seni takip eden birini kitaplığına davet edebilir ya da başkasının davetini kabul edebilirsin. Kabul edildiğinde kitap kayıtları (künye, kapak, raf, alış ve ödünç bilgileri, kendi çektiğin kapak fotoğrafları) kitaplığı kuran kişinin hesabında ortak tutulur ve kitaplıktaki herkes bunları görür, değiştirebilir. Okuma durumun, puanın, notların ve bitirme tarihin uygulamada yalnızca sana gösterilir; ancak bu bilgiler ortak kitap kaydının içinde saklandığı için kitaplıktaki diğer kişilerin teknik olarak erişebileceği bir yerde durur. Kitaplıktan ayrıldığında kitapların bir kopyası kendi hesabına alınır ve senin okuma bilgilerin ortak kayıtlardan silinir. Kitaplığı kuran kişi seni çıkarırsa ya da hesabını silerse de kopyan kendi hesabına alınır.</li><li><b>Bitigapp okur sayıları:</b> bir kitabın sayfasında o kitabın kaç Bitigapp kullanıcısının kitaplığında olduğu, kaç kişinin okuduğu ve ortalama puanı gösterilir. Bunun için her kitap için kitaplığında olup olmadığı, okuyup okumadığın ve verdiğin puan, hesabına bağlı ve yalnızca senin okuyabildiğin bir kayıt olarak tutulur; diğer kullanıcılar yalnızca toplamları görür, kimin eklediğini, okuduğunu ya da puan verdiğini göremez. Ortalama puan, en az 3 kişi puan vermeden gösterilmez. Ayarlar &gt; Hesabım &gt; "Bitigapp okur sayılarına katıl" seçeneğini kapatırsan ya da hesabını silersen katkın toplamlardan hemen çıkarılır.</li></ul>
     <p><b>Hukuki sebep:</b> uygulamanın bir parçası olan bu hizmetin sunulması (KVKK m. 5/2-c, sözleşmenin kurulması veya ifası). Bu veriler 7. bölümde anlatılan Firebase altyapısında saklanır.</p>
     <p><b>Silme:</b> hesabını sildiğinde profilin, kullanıcı adın, kitaplık özetin, takip kayıtların, verdiğin ve aldığın tepkiler ve dahil olduğun tüm baykuş yazışmaları (iki taraf için de) hemen silinir. Baykuş yazışmaları sen ya da karşındaki kişi silene kadar saklanır; bir yazışmayı "Yazışmayı sil" ile istediğin zaman ikiniz için de silebilirsin. Engellediğin kişilerin listesi de hesabınla birlikte silinir.</p>
     <p>Başkalarına görünen bilgilerinin onlar tarafından ekran görüntüsü alınarak paylaşılmasını teknik olarak engelleyemeyiz; seni rahatsız eden kişiyi engelleyebilirsin.</p>
@@ -905,7 +908,7 @@ a{color:var(--roseD)}
     <h3>4. Ortak kitap listesi</h3>
     <p>Barkodla eklediğin kitapların künye bilgileri (başlık, yazar, yayınevi, ISBN gibi) ve kendi isteğinle paylaştığın kapak fotoğrafları, diğer kullanıcıların kitap eklemesini kolaylaştırmak için ortak listeye eklenir ve tüm kullanıcıların ücretsiz kullanımına açılır. Bu katkılar seninle ilişkilendirilmez. Yalnızca kendi çektiğin ve paylaşmaya hakkın olan kapak fotoğraflarını paylaşmalısın.</p>
     <h3>5. Arkadaşlar ve baykuş postası</h3>
-    <ul><li>Her hesabın, gizli olarak başlayan bir arkadaş profili vardır; aydınlatma metninin 6. bölümündeki bilgiler bu profil üzerinden diğer kullanıcılara görünür.</li><li>Baykuş yalnızca seni takip eden kişilere gönderilebilir. Kullanıcı adında, "hakkımda" yazında, baykuş notlarında ve yazışmalarda başkasını taklit eden, hakaret, taciz ya da reklam içeren ifadeler kullanmamalısın; başkalarının kişisel bilgilerini paylaşmamalısın.</li><li>Seni rahatsız eden kişiyi engelleyebilirsin; engellenen kişi profilini ve kitaplığını göremez, sana baykuş gönderemez. Kurallara aykırı profilleri bildirebilirsin; geliştirici bu profilleri kaldırabilir.</li></ul>
+    <ul><li>Her hesabın, gizli olarak başlayan bir arkadaş profili vardır; aydınlatma metninin 6. bölümündeki bilgiler bu profil üzerinden diğer kullanıcılara görünür.</li><li>Baykuş yalnızca seni takip eden kişilere gönderilebilir. Kullanıcı adında, "hakkımda" yazında, baykuş notlarında ve yazışmalarda başkasını taklit eden, hakaret, taciz ya da reklam içeren ifadeler kullanmamalısın; başkalarının kişisel bilgilerini paylaşmamalısın.</li><li>Ortak kitaplığa yalnızca seni takip eden kişileri davet edebilirsin. Ortak kitaplıktaki herkes kitap kayıtlarını değiştirebilir ve silebilir; yalnızca güvendiğin kişileri ekle.</li><li>Seni rahatsız eden kişiyi engelleyebilirsin; engellenen kişi profilini ve kitaplığını göremez, sana baykuş gönderemez. Kurallara aykırı profilleri bildirebilirsin; geliştirici bu profilleri kaldırabilir.</li></ul>
     <h3>6. Üçüncü taraf hizmetler</h3>
     <p>Uygulama; Google (Firebase), Cloudflare, GitHub, Google Books ve Open Library gibi üçüncü taraf hizmetlerle çalışır. İsteğe bağlı kapak okuma özelliği, senin kendi Google API anahtarın ve Google ile aranızdaki koşullar üzerinden çalışır. Bu hizmetlerdeki kesinti ya da değişiklikler uygulamanın çalışmasını etkileyebilir.</p>
     <h3>7. Sorumluluğun sınırı</h3>
@@ -941,6 +944,8 @@ a{color:var(--roseD)}
       <div class="pcard" id="pTaste"></div>
       <h3 class="psec">Arkadaşlar</h3>
       <div id="socBox"></div>
+      <h3 class="psec">Ortak kitaplık</h3>
+      <div id="libBox"></div>
       <h3 class="psec">Rozetler <span class="muted" id="pBadgeN"></span></h3>
       <div class="pbadges" id="pBadges"></div>
       <button class="btn primary" id="pShare" type="button" style="width:100%;margin-top:18px">Profil kartını paylaş</button>
@@ -1393,7 +1398,7 @@ function showTab(t) {
   $('pager').hidden = t !== 'lib'; document.querySelector('.dots').hidden = t !== 'lib';
   $('tabFeed').hidden = t !== 'feed'; $('tabProf').hidden = t !== 'prof';
   for (const b of $('tabbar').children) if (b.dataset.tab === t) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
-  if (t === 'prof') { $('pEdit').hidden = true; $('pView').hidden = false; drawProfile(); drawSocial(); }
+  if (t === 'prof') { $('pEdit').hidden = true; $('pView').hidden = false; drawProfile(); drawSocial(); drawLib(); }
   if (t === 'feed') { renderFeed(); if (SOC.on) loadFriends().then(renderFeed); }
 }
 $('tabbar').addEventListener('click', e => {
@@ -3269,7 +3274,7 @@ function socRefresh() { clearTimeout(refreshT); refreshT = setTimeout(() => { if
 function drawBadges() {
   const unread = SOC.owls.filter(t => owlUnread(t) && !SOC.blocked.has(otherOf(t))).length, req = [...SOC.followers.values()].filter(f => f.status === 'pending').length;
   $('tabbar').querySelector('[data-tab=feed]').classList.toggle('dot', unread > 0);
-  $('tabbar').querySelector('[data-tab=prof]').classList.toggle('dot', req > 0);
+  $('tabbar').querySelector('[data-tab=prof]').classList.toggle('dot', req > 0 || (typeof libInvites !== 'undefined' && libInvites.length > 0));
   $('inboxN').textContent = unread || ''; $('inboxN').hidden = !unread;
 }
 async function loadFriends(force) {
@@ -3592,6 +3597,7 @@ async function toggleReact(owner, ev, btn) {
 
 // --- Profilim: friends box ---
 function drawSocial() {
+  if (typeof drawLib === 'function') setTimeout(drawLib);
   const box = $('socBox'); if (!box) return;
   if (!me) { box.innerHTML = ''; return; }
   if (!SOC.on) {
@@ -3619,6 +3625,170 @@ $('socBox').addEventListener('change', async e => {
   catch (er) { e.target.checked = !priv; $('socMsg').textContent = 'Değiştirilemedi.'; }
 });
 
+// --- Shared library: one book collection (users/{owner}/books), personal reading state per member in book.per[uid] ---
+const PERSONAL = ['status', 'rating', 'notes', 'finishedAt', 'startedAt'];
+let LIB = '', libMine = null, libOther = null, libInvites = [], libUnsubs = [], libBusy = false;
+const ownerShared = () => !!(libMine && Object.values(libMine.members || {}).some(m => m.state === 'joined'));
+const pickP = o => { const p = {}; for (const k of PERSONAL) if (o[k] !== undefined && o[k] !== null && o[k] !== '') p[k] = o[k]; return p; };
+const stripP = o => { const c = {...o}; for (const k of PERSONAL) delete c[k]; delete c._per; delete c._flat; return c; };
+function toLocal(d) {
+  if (d.per) { const c = stripP(d); delete c.per; return {...c, status: 'okunacak', ...(d.per[me.uid] || {}), _per: d.per}; }
+  if (LIB === me.uid) return d;
+  const c = stripP(d); return {...c, status: 'okunacak', _flat: pickP(d)};
+}
+function toRemote(l) {
+  if (!l._per && !l._flat && LIB === me.uid && !ownerShared()) { const c = {...l}; delete c._per; delete c._flat; return c; }
+  const per = {...(l._per || {})};
+  if (l._flat && Object.keys(l._flat).length) per[LIB] = l._flat;
+  per[me.uid] = pickP(l);
+  return {...stripP(l), per};
+}
+const libPath = () => LIB || (me && me.uid);
+const plainBook = b => { const c = {...b}; delete c._per; delete c._flat; return c; };
+
+function watchLibs() {
+  for (const u of libUnsubs) try { u(); } catch (e) {}
+  libUnsubs = [
+    FB.onSnapshot(FB.doc(fbDb, 'libs', me.uid), s => { if (!me) return; const was = ownerShared(); libMine = s.exists() ? s.data() : null; if (was !== ownerShared()) scheduleSync(); drawLib(); }, () => {}),
+    FB.onSnapshot(FB.query(FB.collection(fbDb, 'libs'), FB.where('memberIds', 'array-contains', me.uid)), s => {
+      if (!me || (s.metadata && s.metadata.fromCache)) return;
+      const docs = s.docs.map(d => ({id: d.id, ...d.data()}));
+      libInvites = docs.filter(d => (d.members[me.uid] || {}).state === 'invited');
+      libOther = docs.find(d => d.id === LIB && LIB !== me.uid) || null;
+      if (LIB !== me.uid && !libOther && !libBusy) libGoneCheck();
+      drawLib(); drawBadges();
+    }, () => {}),
+  ];
+}
+// before taking the copy, make sure the shared library really is gone for us (not just a hiccup)
+async function libGoneCheck() {
+  const lib = LIB; let gone = false;
+  try { const l = await FB.getDoc(FB.doc(fbDb, 'libs', lib)); gone = !l.exists() || !(l.data().memberIds || []).includes(me.uid); }
+  catch (e) { gone = e && e.code === 'permission-denied'; }
+  if (gone && LIB === lib) leaveLib(true);
+}
+async function pickLib() {
+  LIB = me.uid;
+  try {
+    const j = await FB.getDoc(FB.doc(fbDb, 'libjoin', me.uid));
+    const lib = j.exists() ? j.data().lib : '';
+    if (lib && lib !== me.uid) {
+      let ok = false;
+      try { const l = await FB.getDoc(FB.doc(fbDb, 'libs', lib)); ok = l.exists() && (l.data().memberIds || []).includes(me.uid); if (ok) libOther = {id: lib, ...l.data()}; } catch (e) {}
+      if (ok) LIB = lib; else { LIB = lib; await libGoneCheck(); }
+    }
+  } catch (e) {}
+  try { const m = await FB.getDoc(FB.doc(fbDb, 'libs', me.uid)); libMine = m.exists() ? m.data() : null; } catch (e) {}
+}
+function restartBooks() {
+  if (unsubs[0]) try { unsubs[0](); } catch (e) {}
+  remote.b = null;
+  unsubs[0] = watchKind('b', 'books');
+  render(); drawLib();
+}
+async function inviteToLib(uid, p) {
+  const cur = libMine || {owner: me.uid, memberIds: [], members: {}};
+  const a = avLoad() || {};
+  const d = {owner: me.uid, ownerName: a.name || (SOC.prof && SOC.prof.username) || '', ownerUser: (SOC.prof && SOC.prof.username) || '', ownerAv: plain(a),
+    memberIds: [...new Set([...(cur.memberIds || []), uid])], members: {...(cur.members || {}), [uid]: {state: 'invited', name: p.name || p.username || '', user: p.username || '', av: p.avatar || null, at: Date.now()}}, lastInvited: uid};
+  await FB.setDoc(FB.doc(fbDb, 'libs', me.uid), d);
+}
+async function removeFromLib(uid) {
+  const cur = libMine; if (!cur) return;
+  const members = {...cur.members}; delete members[uid];
+  await FB.setDoc(FB.doc(fbDb, 'libs', me.uid), {...cur, memberIds: (cur.memberIds || []).filter(x => x !== uid), members});
+}
+async function joinLib(owner) {
+  if (ownerShared()) { note('Önce kendi ortak kitaplığındaki kişileri çıkarmalısın.'); return; }
+  libBusy = true;
+  try {
+    const inv = libInvites.find(x => x.id === owner); if (!inv) return;
+    await FB.setDoc(FB.doc(fbDb, 'libjoin', me.uid), {lib: owner, at: Date.now()});
+    const a = avLoad() || {};
+    await FB.setDoc(FB.doc(fbDb, 'libs', owner), {members: {[me.uid]: {...inv.members[me.uid], state: 'joined', name: a.name || inv.members[me.uid].name || '', av: plain(a), at: Date.now()}}}, {merge: true});
+    const snap = await FB.getDocs(FB.collection(fbDb, 'users', owner, 'books'));
+    LIB = owner; libOther = inv;
+    const merged = new Map(snap.docs.map(d => [d.id, toLocal(d.data())]));
+    const byKey = new Map([...merged.values()].map(b => [bkey(b), b]));
+    for (const b of books) {
+      const m = byKey.get(bkey(b)), now = Date.now();
+      if (m) { Object.assign(m, pickP(b)); if (!m.cover && !m.coverLocal && b.cover) m.cover = b.cover; m.updatedAt = now; }
+      else { const n = {...plainBook(b), updatedAt: now}; merged.set(n.id, n); byKey.set(bkey(n), n); }
+    }
+    books = [...merged.values()]; synced.b = {}; synced.c = {}; saveSynced();
+    try { localStorage.setItem(KEY, JSON.stringify(books)); } catch (e) {}
+    restartBooks(); sfx.unlock(); sfx.sparkle();
+    note(`<span>${esc(inv.ownerName || 'Arkadaşın')} ile ortak kitaplığa katıldın. Okuma durumların ve puanların sana özel.</span>`);
+  } catch (e) { note('Katılamadın. İnternetini kontrol edip tekrar dene.'); }
+  finally { libBusy = false; drawLib(); }
+}
+async function declineLib(owner) {
+  const inv = libInvites.find(x => x.id === owner); if (!inv) return;
+  const members = {...inv.members}; delete members[me.uid];
+  const {id, ...doc} = inv;
+  await FB.setDoc(FB.doc(fbDb, 'libs', owner), {...doc, memberIds: inv.memberIds.filter(x => x !== me.uid), members}).catch(() => note('İşlem yapılamadı.'));
+}
+// leave (or get removed): take a copy of the books, with my own reading state, back into my own library
+async function leaveLib(revoked) {
+  if (LIB === me.uid || libBusy) return;
+  libBusy = true;
+  const owner = LIB, copies = books.map(b => ({...plainBook(b), updatedAt: Date.now()}));
+  try {
+    if (!revoked) {
+      // take my reading notes out of the shared books
+      const mineIn = books.filter(b => b._per && b._per[me.uid]);
+      for (let i = 0; i < mineIn.length; i += 400) { const bt = FB.writeBatch(fbDb); for (const b of mineIn.slice(i, i + 400)) { const r = toRemote(b); delete r.per[me.uid]; bt.set(FB.doc(fbDb, 'users', owner, 'books', b.id), r); } await bt.commit().catch(() => {}); }
+      const l = libOther || (await FB.getDoc(FB.doc(fbDb, 'libs', owner)).then(s => s.exists() ? {id: owner, ...s.data()} : null).catch(() => null));
+      if (l) { const members = {...l.members}; delete members[me.uid]; const {id, ...doc} = l; await FB.setDoc(FB.doc(fbDb, 'libs', owner), {...doc, memberIds: (l.memberIds || []).filter(x => x !== me.uid), members}).catch(() => {}); }
+    }
+    await FB.deleteDoc(FB.doc(fbDb, 'libjoin', me.uid)).catch(() => {});
+    const own = await FB.getDocs(FB.collection(fbDb, 'users', me.uid, 'books'));
+    for (let i = 0; i < own.docs.length; i += 400) { const bt = FB.writeBatch(fbDb); own.docs.slice(i, i + 400).forEach(d => bt.delete(d.ref)); await bt.commit(); }
+    LIB = me.uid; libOther = null;
+    books = copies; synced.b = {}; synced.c = {}; saveSynced();
+    try { localStorage.setItem(KEY, JSON.stringify(books)); } catch (e) {}
+    restartBooks();
+    note(revoked ? 'Ortak kitaplık kapandı; kitapların bir kopyası kendi kitaplığına alındı.' : 'Ortak kitaplıktan ayrıldın; kitapların bir kopyası kendi kitaplığında.');
+  } catch (e) { note('Ayrılırken bir sorun oldu, tekrar dene.'); }
+  finally { libBusy = false; drawLib(); }
+}
+
+// Profilim: shared library box
+let libPick = false; const libProfs = new Map();
+function drawLib() {
+  const box = $('libBox'); if (!box) return;
+  const chip = $('libChip');
+  if (!me) { box.innerHTML = ''; if (chip) chip.hidden = true; return; }
+  const member = LIB !== me.uid, mine = libMine && Object.entries(libMine.members || {});
+  const joined = member ? Object.entries((libOther && libOther.members) || {}).filter(([u, m]) => m.state === 'joined' && u !== me.uid) : (mine || []).filter(([, m]) => m.state === 'joined');
+  if (chip) { chip.hidden = !(member || joined.length); chip.textContent = member ? `${(libOther && libOther.ownerName) || 'Ortak'} ile ortak kitaplık` : `Ortak kitaplık · ${joined.length + 1} kişi`; }
+  let h = '';
+  for (const inv of libInvites) h += `<div class="pcard libinv"><p style="margin:0 0 8px"><b>${esc(inv.ownerName || '@' + inv.ownerUser)}</b> seni ortak kitaplığına davet etti.</p><p class="muted" style="margin:0 0 10px;font-size:14px">Katılırsan senin ${books.length} kitabın ortak kitaplığa taşınır; aynı kitap ikinizde varsa tek kayıt kalır. Okuma durumların, puanların ve notların sana özel kalır. İstek listen kişisel kalır.</p><div class="bk"><button class="btn primary" type="button" data-lj="${esc(inv.id)}">Katıl</button><button class="btn" type="button" data-ld="${esc(inv.id)}">Hayır</button></div></div>`;
+  if (member) {
+    h += `<div class="pcard"><p style="margin:0 0 6px"><b>${esc((libOther && libOther.ownerName) || 'Arkadaşın')}</b> ile ortak bir kitaplık kullanıyorsun${joined.length ? ` (${joined.map(([, m]) => esc(m.name || m.user)).join(', ')} de burada)` : ''}.</p><p class="muted" style="margin:0 0 10px;font-size:14px">Kitaplar ortak; okuma durumun, puanın ve notların sana özel.</p><button class="btn" type="button" id="libLeave">Ortak kitaplıktan ayrıl</button></div>`;
+  } else if (!libInvites.length) {
+    const rows = (mine || []).map(([u, m]) => `<li class="item uitem"><img class="uav" src="${avURL(m.av || AV_DEFAULT, {})}" alt=""><div><div class="t">${esc(m.name || m.user)}</div><div class="a">${m.state === 'joined' ? 'Kitaplığında' : 'Davet bekliyor'}</div></div><button class="btn" type="button" data-lr="${esc(u)}">${m.state === 'joined' ? 'Çıkar' : 'Geri al'}</button></li>`).join('');
+    const cand = [...SOC.followers.entries()].filter(([u, f]) => f.status === 'accepted' && !(libMine && libMine.members && libMine.members[u]));
+    if (libPick) { const miss = cand.filter(([u]) => !libProfs.has(u) && !(SOC.friends.get(u) || {}).prof); if (miss.length) Promise.all(miss.map(([u]) => FB.getDoc(fd('profiles', u)).then(x => libProfs.set(u, x.exists() ? x.data() : {})).catch(() => libProfs.set(u, {})))).then(drawLib); }
+    h += `<div class="pcard">${rows ? `<ul class="hlist">${rows}</ul>` : '<p class="muted" style="margin:0 0 10px;font-size:14px">Eşin ya da ev arkadaşınla aynı kitaplığı kullanabilirsiniz: kitaplar ortak olur, herkesin okuma durumu ve puanı kendine kalır. Yalnızca seni takip eden kişileri ekleyebilirsin.</p>'}
+      <button class="btn${rows ? '' : ' primary'}" type="button" id="libAdd" style="width:100%">${libPick ? 'Vazgeç' : 'Kitaplığına kişi ekle'}</button>
+      ${libPick ? (cand.length ? `<ul class="hlist" style="margin-top:10px">${cand.map(([u, f]) => { const p = (SOC.friends.get(u) || {}).prof || libProfs.get(u) || {}; return `<li class="item uitem"><img class="uav" src="${avURL(p.avatar || AV_DEFAULT, {})}" alt=""><div><div class="t">${esc(p.name || p.username || '…')}</div><div class="a">${p.username ? '@' + esc(p.username) : ''}</div></div><button class="btn primary" type="button" data-li="${esc(u)}">Davet et</button></li>`; }).join('')}</ul>` : '<p class="muted" style="margin:10px 0 0">Seni takip eden kimse yok. Önce eşin ya da arkadaşın seni takip etsin.</p>') : ''}</div>`;
+  }
+  box.innerHTML = h; hydrate(box);
+}
+$('libBox').addEventListener('click', async e => {
+  const t = e.target.closest('button'); if (!t) return;
+  if (t.id === 'libAdd') { libPick = !libPick; return drawLib(); }
+  if (t.id === 'libLeave') { if (!t.dataset.armed) { t.dataset.armed = 1; t.textContent = 'Ayrılınca kitapların bir kopyası sende kalır. Emin misin?'; return; } t.disabled = true; return leaveLib(false); }
+  t.disabled = true;
+  try {
+    if (t.dataset.li) { const u = t.dataset.li, p = (SOC.friends.get(u) || {}).prof || libProfs.get(u) || (await FB.getDoc(fd('profiles', u)).then(s => s.data()).catch(() => ({}))) || {}; await inviteToLib(u, p); libPick = false; note('<span>Davet gönderildi. Kabul edince kitaplığınız birleşir.</span>'); }
+    else if (t.dataset.lr) { if (!t.dataset.armed) { t.dataset.armed = 1; t.textContent = 'Emin misin?'; t.disabled = false; return; } await removeFromLib(t.dataset.lr); }
+    else if (t.dataset.lj) await joinLib(t.dataset.lj);
+    else if (t.dataset.ld) await declineLib(t.dataset.ld);
+  } catch (er) { note('İşlem yapılamadı. İnternetini kontrol edip tekrar dene.'); t.disabled = false; }
+});
+
 // --- Accounts: sign-in with Firebase; each person's books live in their own corner of the database ---
 const FB_CFG = {apiKey: 'AIzaSyDIc6YSDyZ2TB4Rb93qHsce30AjSmjwBMQ', authDomain: 'kitapligim-80e6a.firebaseapp.com', projectId: 'kitapligim-80e6a', storageBucket: 'kitapligim-80e6a.firebasestorage.app', messagingSenderId: '127488815555', appId: '1:127488815555:web:219d14ef48ea3151eb0d76'};
 const LEGACY_B = 'kitapligim.books.v1', LEGACY_W = 'kitapligim.wish.v1';
@@ -3634,8 +3804,10 @@ const AUTH_ERR = {
   'auth/api-key-not-valid.-please-pass-a-valid-api-key.': 'Uygulama ayarında bir sorun var (API anahtarı).',
 };
 const authErr = e => AUTH_ERR[e && e.code] || 'Bir şeyler ters gitti' + (e && e.code ? ` (${e.code.replace('auth/', '')})` : '') + '. Tekrar dene.';
-const sortedJSON = o => JSON.stringify(o, Object.keys(o).sort());
-const bookRef = (kind, id) => FB.doc(fbDb, 'users', me.uid, kind === 'b' ? 'books' : 'wishes', id);
+const stableV = v => Array.isArray(v) ? v.map(stableV) : v && typeof v === 'object' ? Object.keys(v).sort().reduce((o, k) => (o[k] = stableV(v[k]), o), {}) : v;
+const sortedJSON = o => JSON.stringify(stableV(o));
+const bookRef = (kind, id) => kind === 'b' ? FB.doc(fbDb, 'users', libPath(), 'books', id) : FB.doc(fbDb, 'users', me.uid, 'wishes', id);
+const coverRef = id => FB.doc(fbDb, 'users', books.some(x => x.id === id) ? libPath() : me.uid, 'covers', id);
 const saveSynced = () => { try { localStorage.setItem(SYNKEY, JSON.stringify(synced)); } catch (e) {} };
 
 function setUserKeys(uid) {
@@ -3658,16 +3830,16 @@ function reconcile(kind) {
   const ids = new Set([...L.keys(), ...R.keys(), ...Object.keys(S)]);
   const ops = []; let localDirty = false;
   for (const id of ids) {
-    const l = L.get(id), r = R.get(id), ln = l ? sortedJSON(l) : undefined, rn = r ? sortedJSON(r) : undefined, sn = S[id];
+    const l = L.get(id), r = R.get(id), conv = x => kind === 'b' ? toRemote(x) : x, ln = l ? sortedJSON(conv(l)) : undefined, rn = r ? sortedJSON(r) : undefined, sn = S[id];
     if (ln === rn) { if (ln === undefined) delete S[id]; else S[id] = ln; continue; }
     const lc = ln !== sn, rc = rn !== sn;
     const ts = v => typeof v === 'number' ? v : Date.parse(v) || 0;
     const useLocal = lc && !rc ? true : rc && !lc ? false : l && r ? ts(l.updatedAt) >= ts(r.updatedAt) : !!l;
     if (useLocal) {
-      if (l) { if (lc) { l.updatedAt = Date.now(); localDirty = true; } const n = sortedJSON(l); ops.push(['set', id, JSON.parse(n)]); S[id] = n; R.set(id, JSON.parse(n)); }
+      if (l) { if (lc) { l.updatedAt = Date.now(); localDirty = true; } const n = sortedJSON(conv(l)); ops.push(['set', id, JSON.parse(n)]); S[id] = n; R.set(id, JSON.parse(n)); if (kind === 'b') { const nl = toLocal(JSON.parse(n)); if (sortedJSON(nl) !== sortedJSON(l)) { L.set(id, nl); localDirty = true; } } }
       else { ops.push(['del', id]); delete S[id]; R.delete(id); }
     } else {
-      if (r) { L.set(id, r); S[id] = rn; } else { L.delete(id); delete S[id]; }
+      if (r) { L.set(id, kind === 'b' ? toLocal(r) : r); S[id] = rn; } else { L.delete(id); delete S[id]; }
       localDirty = true;
     }
   }
@@ -3687,7 +3859,7 @@ async function pushOps(kind, ops) {
       const batch = FB.writeBatch(fbDb);
       for (const [op, id, data] of ops.slice(i, i + 400)) {
         if (op === 'set') batch.set(bookRef(kind, id), data);
-        else { batch.delete(bookRef(kind, id)); if (!books.some(x => x.id === id) && !wishes.some(x => x.id === id)) { batch.delete(FB.doc(fbDb, 'users', me.uid, 'covers', id)); delete synced.c[id]; } }
+        else { batch.delete(bookRef(kind, id)); if (!books.some(x => x.id === id) && !wishes.some(x => x.id === id)) { batch.delete(FB.doc(fbDb, 'users', kind === 'b' ? libPath() : me.uid, 'covers', id)); delete synced.c[id]; } }
       }
       await batch.commit();
     }
@@ -3709,10 +3881,10 @@ async function syncCovers() {
         const blob = await idb.get(x.id);
         if (blob) {
           const data = await new Promise(ok => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1] || ''); r.readAsDataURL(blob); });
-          if (data.length < 950000) { await FB.setDoc(FB.doc(fbDb, 'users', me.uid, 'covers', x.id), {mime: blob.type || 'image/jpeg', data}); synced.c[x.id] = 1; saveSynced(); }
+          if (data.length < 950000) { await FB.setDoc(coverRef(x.id), {mime: blob.type || 'image/jpeg', data}); synced.c[x.id] = 1; saveSynced(); }
         } else if (!coverTried.has(x.id)) {
           coverTried.add(x.id);
-          const s = await FB.getDoc(FB.doc(fbDb, 'users', me.uid, 'covers', x.id));
+          const s = await FB.getDoc(coverRef(x.id));
           if (s.exists()) { const d = s.data(), bin = atob(d.data); const u8 = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i); await idbPutRaw(x.id, new Blob([u8], {type: d.mime || 'image/jpeg'})); synced.c[x.id] = 1; saveSynced(); forgetLocal(x.id); render(); }
         }
       } catch (e) {} finally { coverBusy.delete(x.id); }
@@ -3833,18 +4005,23 @@ function enterApp(user) {
   $('auth').hidden = true; $('acctMail').textContent = user.email || '';
   syncState(navigator.onLine ? 'wait' : 'off');
   loadProfile().then(() => { $('statsOn').checked = votesOn(); votesDirty(); socStart(); });
-  const watch = (kind, name) => FB.onSnapshot(FB.collection(fbDb, 'users', user.uid, name), snap => {
+  LIB = user.uid; unsubs = [null, watchKind('w', 'wishes')];
+  pickLib().then(() => { if (me !== user) return; unsubs[0] = watchKind('b', 'books'); watchLibs(); render(); drawLib(); });
+}
+function watchKind(kind, name) {
+  const owner = kind === 'b' ? libPath() : me.uid;
+  return FB.onSnapshot(FB.collection(fbDb, 'users', owner, name), snap => {
     if (snap.metadata && snap.metadata.fromCache) return;
+    if (kind === 'b' && owner !== libPath()) return;
     remote[kind] = new Map(snap.docs.map(d => [d.id, d.data()]));
     reconcile(kind);
     if (remote.b && remote.w) syncState('ok');
   }, () => syncState('err'));
-  unsubs = [watch('b', 'books'), watch('w', 'wishes')];
 }
 function leaveApp() {
   socStop(); clearTimeout(profTimer); clearTimeout(syncTimer); clearTimeout(voteTimer);
-  for (const u of unsubs) try { u(); } catch (e) {}
-  unsubs = []; me = null; remote = {b: null, w: null}; profileReady = false;
+  for (const u of [...unsubs, ...libUnsubs]) try { u && u(); } catch (e) {}
+  unsubs = []; libUnsubs = []; LIB = ''; libMine = null; libOther = null; libInvites = []; me = null; remote = {b: null, w: null}; profileReady = false;
   books = []; wishes = []; render();
 }
 $('logout').onclick = async () => {
@@ -3891,14 +4068,17 @@ $('delAcct').onclick = async () => {
   try {
     const uid = me.uid;
     await clearVotes().catch(() => {});
+    if (LIB !== uid) await leaveLib(false).catch(() => {});
+    if (libMine) await FB.deleteDoc(FB.doc(fbDb, 'libs', uid)).catch(() => {});
+    await FB.deleteDoc(FB.doc(fbDb, 'libjoin', uid)).catch(() => {});
     await socDisable(true).catch(() => {});
     for (const name of ['books', 'wishes', 'covers']) {
       const s = await FB.getDocs(FB.collection(fbDb, 'users', uid, name));
       for (let i = 0; i < s.docs.length; i += 400) { const b = FB.writeBatch(fbDb); for (const d of s.docs.slice(i, i + 400)) b.delete(d.ref); await b.commit(); }
     }
     await FB.deleteDoc(FB.doc(fbDb, 'users', uid));
-    for (const u of unsubs) try { u(); } catch (e) {}
-    unsubs = [];
+    for (const u of [...unsubs, ...libUnsubs]) try { u && u(); } catch (e) {}
+    unsubs = []; libUnsubs = [];
     const mine = [...books, ...wishes].filter(x => x.coverLocal).map(x => x.id);
     await FB.deleteUser(fbAuth.currentUser);
     for (const id of mine) { idb.del(id).catch(() => {}); forgetLocal(id); }

@@ -94,6 +94,46 @@ service cloud.firestore {
       }
     }
 
+    // shared library: the owner invites people who follow them; an invitee joins by writing libjoin/{self}
+    function inLib(owner) {
+      return signedIn() && (me() == owner
+        || (exists(/databases/$(database)/documents/libjoin/$(me()))
+            && get(/databases/$(database)/documents/libjoin/$(me())).data.lib == owner
+            && me() in get(/databases/$(database)/documents/libs/$(owner)).data.memberIds));
+    }
+    match /users/{uid}/books/{id} { allow read, write: if inLib(uid); }
+    match /users/{uid}/covers/{id} { allow read, write: if inLib(uid); }
+    match /libs/{owner} {
+      function ownerOk() {
+        let d = request.resource.data;
+        let md = d.members.diff(resource == null ? {} : resource.data.members);
+        return d.owner == me() && d.memberIds.toSet() == d.members.keys().toSet()
+          && md.changedKeys().size() == 0
+          && (md.addedKeys().size() == 0
+              || (md.addedKeys().hasOnly([d.lastInvited]) && d.members[d.lastInvited].state == 'invited' && follows(d.lastInvited, me())));
+      }
+      function memberOk() {
+        let d = request.resource.data;
+        let o = resource.data;
+        let md = d.members.diff(o.members);
+        return me() in o.memberIds
+          && d.diff(o).affectedKeys().hasOnly(['members', 'memberIds'])
+          && md.affectedKeys().hasOnly([me()])
+          && ((md.removedKeys().hasOnly([me()]) && d.memberIds.toSet() == o.memberIds.toSet().difference([me()].toSet()))
+              || (md.changedKeys().hasOnly([me()]) && d.members[me()].state == 'joined' && d.memberIds == o.memberIds
+                  && get(/databases/$(database)/documents/libjoin/$(me())).data.lib == owner));
+      }
+      allow read: if signedIn() && (me() == owner || me() in resource.data.memberIds);
+      allow create: if signedIn() && me() == owner && ownerOk();
+      allow update: if signedIn() && ((me() == owner && ownerOk()) || (me() != owner && memberOk()));
+      allow delete: if signedIn() && me() == owner;
+    }
+    match /libjoin/{uid} {
+      allow read, delete: if signedIn() && me() == uid;
+      allow create, update: if signedIn() && me() == uid && request.resource.data.lib is string
+        && me() in get(/databases/$(database)/documents/libs/$(request.resource.data.lib)).data.memberIds;
+    }
+
     // community numbers: totals only; each account's own vote stays private
     function n01(x) { return x ? 1 : 0; }
     function zeroV() { return {'own': false, 'read': false, 'r': 0}; }
