@@ -701,6 +701,27 @@ a{color:var(--roseD)}
 :root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) #tabFeed :is(.post,.nowc,.fgoal){background:linear-gradient(#ffffff09,#ffffff00 60%),var(--card);border-color:color-mix(in srgb,var(--sw) 28%,var(--cardE));box-shadow:inset 0 1px 0 #ffffff0d,0 10px 26px #0008}
 :root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) #tabFeed .post .pbk{background:#00000033;border-color:var(--cardE)}
 :root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) #tabFeed .wrap{background:radial-gradient(120% 60% at 50% 0%,color-mix(in srgb,var(--glow) 7%,transparent),transparent 70%)}
+
+/* shared look: content on panels, ornamented section titles (Kitaplığım, Profilim, profiles) */
+.ornh,.psec{display:flex;align-items:center;gap:8px}
+.ornh{grid-column:1/-1;margin:0 2px 2px;font:800 12px "Nunito",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--sw,var(--mute))}
+.ornh::before,.psec::before{content:'✦';font:400 11px/1 "Nunito",sans-serif;color:var(--sw,var(--mute))}
+.ornh::after,.psec::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,color-mix(in srgb,var(--sw,var(--mute)) 70%,transparent),transparent)}
+.psec .muted{order:1}
+.ornh.only{font-size:13px}
+.actions.pnl .btn{padding-left:8px;padding-right:8px;gap:7px;white-space:nowrap;font-size:clamp(14px,4vw,16px)}
+.actions.pnl .btn svg{flex:none}
+.actions.pnl{margin:20px max(4vw,16px) 0;padding:12px;gap:9px;background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:0 6px 18px #0000000f}
+.ppanel{padding:14px;background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:0 6px 18px #0000000f;margin-bottom:10px}
+.prof .pcard,:is(#pTab,#uTab) .post{border:1px solid var(--line)}
+:is(#pTab,#uTab) .post{background:var(--paper);border-radius:20px;margin-top:10px;padding:14px 14px 12px}
+:is(#pTab,#uTab) .fday{display:flex;align-items:center;gap:8px;color:var(--sw,var(--mute))}
+:is(#pTab,#uTab) .fday::before{content:'✦';font-size:11px}
+:is(#pTab,#uTab) .fday::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,color-mix(in srgb,var(--sw,var(--mute)) 70%,transparent),transparent)}
+:root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) :is(.actions.pnl,.ppanel,.prof .pcard,#pTab .post,#uTab .post){background:linear-gradient(#ffffff09,#ffffff00 60%),var(--card);border-color:color-mix(in srgb,var(--sw) 28%,var(--cardE));box-shadow:inset 0 1px 0 #ffffff0d,0 10px 26px #0008}
+:root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) :is(#pTab,#uTab) .post .pbk{background:#00000033;border-color:var(--cardE)}
+:root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) #list .item{border:1px solid color-mix(in srgb,var(--sw) 22%,var(--cardE))}
+:root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) :is(#pMain,#tabProf) .wrap{background:radial-gradient(120% 40% at 50% 0%,color-mix(in srgb,var(--glow) 7%,transparent),transparent 70%)}
 </style>
 </head>
 <body>
@@ -721,7 +742,8 @@ a{color:var(--roseD)}
     <div class="back"><div class="shelf" id="shelf"></div></div>
     <div class="board"></div>
   </section>
-  <div class="band actions">
+  <div class="band actions pnl">
+    <p class="ornh">Kitap ekle</p>
     <button class="btn primary" id="scanBtn" type="button">
       <svg width="22" height="18" viewBox="0 0 22 18" aria-hidden="true"><g fill="currentColor"><rect width="2" height="18" rx="1"/><rect x="4" width="1.5" height="18"/><rect x="7" width="3" height="18" rx="1"/><rect x="12" width="1.5" height="18"/><rect x="15" width="2" height="18" rx="1"/><rect x="19" width="1.5" height="18"/><rect x="21" width="1" height="18"/></g></svg>
       Barkod okut
@@ -786,7 +808,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 70</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 71</p>
       </details>
     </div>
   </section>
@@ -1001,16 +1023,16 @@ a{color:var(--roseD)}
     <header class="band top fhead"><h1>Profilim</h1><button class="gearbtn" type="button" data-settings aria-label="Ayarlar"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3.3h-4l-.4 2.6a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h4l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.5 1 2-3.5zM13 15.4a3.4 3.4 0 1 1 0-6.8 3.4 3.4 0 0 1 0 6.8z" transform="translate(-1 0)"/></svg></button></header>
     <div class="pbody">
     <div id="pView">
-      <div class="phead">
+      <div class="ppanel"><div class="phead">
         <img id="pAv" class="pav" alt="">
         <div><p class="pname" id="pName"></p><p class="puser" id="pUser"></p><p class="pbio" id="pBio" hidden></p><p class="muted psince" id="pSince"></p></div>
       </div>
-      <div class="prow"><button class="btn" id="pEditBtn" type="button">Profili düzenle</button><button class="btn" id="pAvEdit" type="button">Avatarı değiştir</button></div>
+      <div class="prow"><button class="btn" id="pEditBtn" type="button">Profili düzenle</button><button class="btn" id="pAvEdit" type="button">Avatarı değiştir</button></div></div>
       <div class="pstats" id="pStats"></div>
       <button class="btn" id="pPreview" type="button" style="width:100%;margin-top:10px">Başkaları profilimi nasıl görüyor?</button>
       <div id="pTabs"></div>
       <div id="pTab"></div>
-      <h3 class="psec" style="margin-top:28px">Sadece sana görünenler</h3>
+      <p class="ornh only" style="margin-top:34px">Sadece sana görünenler</p>
       <h3 class="psec">Okuma hedefi</h3>
       <div class="pcard" id="pGoal"></div>
       <p class="muted" id="pGoalNote" style="font-size:13px;margin:6px 2px 0">Bitirdiğin tarih bu yıl olan kitaplar sayılır. Bir kitabı "Okundu" yaptığında tarih kendiliğinden bugün olarak dolar.</p>
