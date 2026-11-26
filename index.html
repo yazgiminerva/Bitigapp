@@ -765,7 +765,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 68</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 69</p>
       </details>
     </div>
   </section>
@@ -1266,17 +1266,38 @@ function gameLoad() {
   try { const g = JSON.parse(localStorage.getItem(gkey()) || 'null'); if (g && typeof g === 'object') return {pots: +g.pots || 0, total: +g.total || 0, pets: Array.isArray(g.pets) ? g.pets : [], days: g.days && typeof g.days === 'object' ? g.days : {}, up: +g.up || 0}; } catch (e) {}
   return {pots: 0, total: 0, pets: [], days: {}, up: 0};
 }
-let gameTimer = 0;
+let gameTimer = 0, gamePending = false;
+function gamePush() {
+  clearTimeout(gameTimer); gameTimer = 0;
+  // until the account's copy has been read and merged, never send: a fresh device must not overwrite earned potions
+  if (!gamePending || !me || !profileReady) return;
+  gamePending = false;
+  FB.setDoc(FB.doc(fbDb, 'users', me.uid), {game: gameLoad()}, {merge: true}).catch(() => { gamePending = true; });
+}
 function gameSave(g) {
   g.up = Date.now();
   const ks = Object.keys(g.days).sort(); while (ks.length > 70) delete g.days[ks.shift()];
   try { localStorage.setItem(gkey(), JSON.stringify(g)); } catch (e) {}
   let who = null; try { who = me; } catch (e) {}
   if (!who) return;
+  gamePending = true;
   clearTimeout(gameTimer);
-  gameTimer = setTimeout(() => { if (me) FB.setDoc(FB.doc(fbDb, 'users', me.uid), {game: gameLoad()}, {merge: true}).catch(() => {}); }, 1500);
+  gameTimer = setTimeout(gamePush, 1500);
   socShelfDirty();
 }
+// two copies of the game (this device and the account): keep the one with more progress, and the best of each day
+function gameMerge(a, b) {
+  const score = g => (+g.total || 0) * 1000 + (g.pets || []).length;
+  const base = score(b) > score(a) || (score(b) === score(a) && (+b.up || 0) > (+a.up || 0)) ? b : a;
+  const days = {};
+  for (const src of [a.days || {}, b.days || {}]) for (const [d, v] of Object.entries(src)) {
+    const o = days[d] || (days[d] = {m: 0, p: 0, r: 0});
+    o.m = Math.max(o.m, +v.m || 0); o.p = Math.max(o.p, +v.p || 0); o.r = Math.max(o.r, +v.r || 0);
+  }
+  return {pots: +base.pots || 0, total: +base.total || 0, pets: Array.isArray(base.pets) ? base.pets : [], days, up: Math.max(+a.up || 0, +b.up || 0)};
+}
+document.addEventListener('visibilitychange', () => { if (document.hidden && gameTimer) gamePush(); });
+addEventListener('pagehide', () => { if (gameTimer) gamePush(); });
 const gameDay = g => g.days[today()] || (g.days[today()] = {m: 0, p: 0, r: 0});
 const ymdOf = d => new Date(d - d.getTimezoneOffset() * 6e4).toISOString().slice(0, 10);
 function periodFrom(kind) { const d = new Date(); if (kind === 'w') { d.setDate(d.getDate() - (d.getDay() + 6) % 7); return ymdOf(d); } return today().slice(0, 8) + '01'; }
@@ -4381,8 +4402,15 @@ async function loadProfile() {
     if (p.avatar && typeof p.avatar === 'object') { avSave(p.avatar); renderAvatarHead(); }
     if (p.theme && THEMES.includes(p.theme) && p.theme !== themeNow()) setTheme(p.theme);
     if (p.prof && typeof p.prof === 'object') try { localStorage.setItem(PROF_KEY, JSON.stringify(p.prof)); } catch (e) {}
-    if (p.game && typeof p.game === 'object' && (+p.game.up || 0) > (+gameLoad().up || 0)) { try { localStorage.setItem(gkey(), JSON.stringify(p.game)); } catch (e) {} drawFarm(); }
+    const loc = gameLoad(), hasLoc = loc.total > 0 || loc.pets.length > 0 || Object.keys(loc.days).length > 0;
+    if (p.game && typeof p.game === 'object') {
+      const m = gameMerge(loc, p.game);
+      try { localStorage.setItem(gkey(), JSON.stringify(m)); } catch (e) {}
+      if (JSON.stringify(m) !== JSON.stringify(gameMerge(p.game, p.game))) gamePending = true;
+      drawFarm(); socShelfDirty();
+    } else if (hasLoc) gamePending = true;
     profileReady = true;
+    if (gamePending) gamePush();
     if (!s.exists() || !p.avatar) profileDirty();
     const ack = localStorage.getItem('kitapligim.ack');
     if (ack && !p.kosullar) FB.setDoc(FB.doc(fbDb, 'users', me.uid), JSON.parse(ack), {merge: true}).then(() => localStorage.removeItem('kitapligim.ack')).catch(() => {});
