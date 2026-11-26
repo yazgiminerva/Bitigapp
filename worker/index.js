@@ -13,7 +13,7 @@
 // POST /cover {isbn, mime, data(base64)} -> a cover a user chose to share; the first one stays
 // Var olan bir kaydın dolu alanları değiştirilmez, yalnızca boş alanları doldurulur.
 
-const ALLOWED = ['https://yazgiminerva.github.io'];
+const ALLOWED = ['https://bitigapp.com', 'https://www.bitigapp.com', 'https://yazgiminerva.github.io'];
 
 function cors(req) {
   const o = req.headers.get('Origin') || '';
@@ -129,7 +129,7 @@ async function search(req, env, url) {
 async function handle(req, env) {
   if (req.method === 'OPTIONS') return new Response(null, {headers: cors(req)});
   const url = new URL(req.url);
-  if (url.searchParams.get('ping')) return json(req, {ok: true, version: 12});
+  if (url.searchParams.get('ping')) return json(req, {ok: true, version: 13});
   // writes only from the app's own page
   if (req.method === 'POST' && !ALLOWED.includes(req.headers.get('Origin') || '')) return json(req, {ok: false, error: 'İzin yok'});
   if (url.pathname === '/cover') return cover(req, env, url);
