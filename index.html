@@ -680,6 +680,27 @@ a{color:var(--roseD)}
 .themes button[aria-pressed=true]{border-color:var(--rose)}
 .themes i{display:flex;gap:3px}.themes i b{width:10px;height:22px;border-radius:2px}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-delay:0s!important;transition-duration:.01s!important}}
+
+/* Akış: content sits on panels, section titles get a small ornament */
+#tabFeed .fday{display:flex;align-items:center;gap:8px;margin:22px 2px 2px;color:var(--sw,var(--mute))}
+#tabFeed .fday::before{content:'✦';font-size:11px;letter-spacing:0;opacity:.9}
+#tabFeed .fday::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,color-mix(in srgb,var(--sw,var(--mute)) 70%,transparent),transparent)}
+#tabFeed .post,#tabFeed .nowc,#tabFeed .fgoal{background:var(--paper);border:1px solid var(--line);border-radius:20px;box-shadow:0 6px 18px #0000000f}
+#tabFeed .post{margin-top:10px;padding:14px 14px 12px;border-bottom:1px solid var(--line)}
+#tabFeed .post .pbk{background:color-mix(in srgb,var(--ink) 5%,transparent)}
+#tabFeed .nowrow{display:flex;flex-direction:column;gap:10px;overflow:visible;padding:8px 0 0}
+#tabFeed .nowc{width:auto;flex-direction:row;align-items:center;text-align:left;gap:14px;padding:14px}
+#tabFeed .nowc .cv{width:72px;height:106px;flex:none}
+#tabFeed .nowi{display:flex;flex-direction:column;gap:3px;min-width:0;flex:1}
+#tabFeed .nowi b{font:600 18px/1.2 var(--serif);-webkit-line-clamp:2}
+#tabFeed .nowi .na{color:var(--mute);font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#tabFeed .nowi .ns{font-size:13px;color:var(--mute);margin-top:2px}#tabFeed .nowi .ns b{font:800 13px "Nunito",sans-serif;color:var(--ink)}
+#tabFeed .nowb{display:flex;gap:8px;margin-top:8px}#tabFeed .nowb .btn{width:auto;min-height:38px;padding:6px 12px;font-size:13px}#tabFeed .nowb .btn.primary{flex:1}
+#tabFeed .fgoal{margin-top:12px;padding:12px 14px}
+#tabFeed #feed>.fday:first-child{margin-top:8px}
+:root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) #tabFeed :is(.post,.nowc,.fgoal){background:linear-gradient(#ffffff09,#ffffff00 60%),var(--card);border-color:color-mix(in srgb,var(--sw) 28%,var(--cardE));box-shadow:inset 0 1px 0 #ffffff0d,0 10px 26px #0008}
+:root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) #tabFeed .post .pbk{background:#00000033;border-color:var(--cardE)}
+:root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) #tabFeed .wrap{background:radial-gradient(120% 60% at 50% 0%,color-mix(in srgb,var(--glow) 7%,transparent),transparent 70%)}
 </style>
 </head>
 <body>
@@ -765,7 +786,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 69</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 70</p>
       </details>
     </div>
   </section>
@@ -1661,7 +1682,11 @@ function renderFeed() {
   const now = books.filter(b => b.status === 'okunuyor');
   const goal = +(p.goals || {})[YEAR()] || 0, s = profStats();
   $('feedNow').innerHTML = (social ? `<div class="fchips">${[['all', 'Herkes'], ['friends', 'Arkadaşlar'], ['me', 'Ben']].map(([k, l]) => `<button class="chip" type="button" data-ff="${k}" aria-pressed="${feedFilter === k}">${l}</button>`).join('')}</div>` : '')
-    + (feedFilter !== 'friends' && now.length ? `<p class="fday">Şu an okuduğun</p><div class="nowrow">${now.map(b => `<div class="nowc" data-open="${esc(b.id)}" role="button" tabindex="0" aria-label="${esc(b.title)} sayfasını aç">${coverEl(b)}<b>${esc(b.title)}</b><button class="btn primary" type="button" data-done="${esc(b.id)}">Bitirdim</button></div>`).join('')}</div>` : '')
+    + (feedFilter !== 'friends' && now.length ? `<p class="fday">Şu an okuduğun</p><div class="nowrow">${now.map(b => {
+      const r = readNow(), live = r && r.id === b.id, secs = (b.readSecs || 0) + (live ? readMs(r) / 1000 : 0);
+      const sub = secs >= 60 ? `Bitigapp'le <b>${fmtDur(secs)}</b> okudun` : 'Henüz süre tutmadın';
+      return `<div class="nowc" data-open="${esc(b.id)}" role="button" tabindex="0" aria-label="${esc(b.title)} sayfasını aç">${coverEl(b)}<div class="nowi"><b>${esc(b.title)}</b>${b.author ? `<span class="na">${esc(b.author)}</span>` : ''}<span class="ns">${sub}</span><div class="nowb"><button class="btn primary" type="button" data-readgo="${esc(b.id)}">${live ? 'Okuma ekranına dön' : 'Okumaya devam et'}</button><button class="btn" type="button" data-done="${esc(b.id)}">Bitirdim</button></div></div></div>`;
+    }).join('')}</div>` : '')
     + (feedFilter !== 'friends' && goal ? `<div class="fgoal"><b>${YEAR()} hedefi</b><div class="gbar"><i style="width:${Math.min(100, Math.round(s.thisYear / goal * 100))}%"></i></div><b>${s.thisYear}/${goal}</b></div>` : '');
   const mine = {av: avURL(a, {}), name: esc(a.name || 'Sen'), user: p.username && social ? '@' + esc(p.username) : ''};
   const whoCache = new Map();
@@ -1699,7 +1724,8 @@ function renderFeed() {
   hydrate($('feedNow')); hydrate($('feed'));
 }
 $('tabFeed').addEventListener('click', e => {
-  const t = e.target.closest('[data-open],[data-wish],[data-done],[data-ff],[data-react],[data-fb],[data-user],#feedMore,#feedFind,#fSearch,#fInbox'); if (!t) return;
+  const t = e.target.closest('[data-readgo],[data-open],[data-wish],[data-done],[data-ff],[data-react],[data-fb],[data-user],#feedMore,#feedFind,#fSearch,#fInbox'); if (!t) return;
+  if (t.dataset.readgo) return startReading(t.dataset.readgo);
   if (t.id === 'feedMore') { feedMax += 15; return renderFeed(); }
   if (t.id === 'feedFind') return openSearch('people');
   if (t.id === 'fSearch') return openSearch();
