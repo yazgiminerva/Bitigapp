@@ -808,7 +808,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 71</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 72</p>
       </details>
     </div>
   </section>
@@ -4457,6 +4457,16 @@ async function loadProfile() {
       if (JSON.stringify(m) !== JSON.stringify(gameMerge(p.game, p.game))) gamePending = true;
       drawFarm(); socShelfDirty();
     } else if (hasLoc) gamePending = true;
+    // a gift put on the account (potions and/or animals) is added once, then cleared
+    if (p.gift && typeof p.gift === 'object') {
+      const g = gameLoad(), n = Math.max(0, Math.min(500, Math.round(+p.gift.pots || 0))), got = [];
+      g.pots += n; g.total += n;
+      for (const k of (Array.isArray(p.gift.pets) ? p.gift.pets : []).slice(0, 20)) if (PETS.some(x => x.k === k)) { g.pets.push({k, at: today()}); got.push(petName(k)); }
+      gameSave(g);
+      FB.setDoc(FB.doc(fbDb, 'users', me.uid), {gift: null}, {merge: true}).catch(() => {});
+      if (n || got.length) setTimeout(() => note(`<span>🎁 Hediye geldi: ${[n ? `<b>${n}</b> şişe iksir` : '', ...got.map(esc)].filter(Boolean).join(', ')}. Çiftliğine bak!</span>`), 1200);
+      drawFarm(); socShelfDirty();
+    }
     profileReady = true;
     if (gamePending) gamePush();
     if (!s.exists() || !p.avatar) profileDirty();
