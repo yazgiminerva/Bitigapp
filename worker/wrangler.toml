@@ -7,5 +7,8 @@ binding = "DB"
 database_name = "kitapligim"
 database_id = "216e773f-6cef-49fb-b732-6c6834f48efc"
 
+[ai]
+binding = "AI"
+
 [observability]
 enabled = true

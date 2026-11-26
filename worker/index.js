@@ -9,6 +9,9 @@
 // GET  /search?q=dorian gray -> {ok, books: [...]} most saved / picked first
 // POST /pick  {isbn, title, ...} -> a search result someone opened or picked (picks + 1);
 //                                   unknown books join the list so the next search finds them here
+// POST /read {image: base64 jpeg, genres: [...]} -> {ok, info} the title/author/... read from a cover photo
+//      by a vision model running on Cloudflare (Workers AI). The photo is not stored anywhere.
+//      Limits: READ_DAY per day for everyone together, READ_IP per day per connection (IP kept only as a daily hash).
 // GET  /cover?isbn=978...  -> the shared cover image (404 if none); &check=1 -> {ok, exists}
 // POST /cover {isbn, mime, data(base64)} -> a cover a user chose to share; the first one stays
 // Var olan bir kaydın dolu alanları değiştirilmez, yalnızca boş alanları doldurulur.
@@ -54,6 +57,7 @@ const int = (v, lo, hi) => { const n = parseInt(v, 10); return Number.isFinite(n
 const norm = s => String(s || '').toLocaleLowerCase('tr').replace(/ı/g, 'i').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
 const skOf = r => ' ' + norm([r.title, r.author, r.translator, r.publisher].join(' ')) + ' ';
 const COLS = 'isbn, title, author, translator, publisher, year, pages, genre, cover, saves, picks';
+const READ_MODEL = '@cf/google/gemma-4-26b-a4b-it', READ_DAY = 600, READ_IP = 30;
 
 export default {
   async fetch(req, env) {
@@ -126,14 +130,66 @@ async function search(req, env, url) {
   return json(req, {ok: true, books: rows.slice(0, 30)}, {'Cache-Control': 'no-store'});
 }
 
+async function sha(t) { const d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(t)); return [...new Uint8Array(d)].slice(0, 12).map(b => b.toString(16).padStart(2, '0')).join(''); }
+// count one read; false if today's shared or per-connection limit is used up
+async function takeRead(req, env) {
+  const day = new Date().toISOString().slice(0, 10), ip = req.headers.get('CF-Connecting-IP') || 'x';
+  const k = 'ip:' + await sha(day + '|' + ip + '|bitigapp');
+  const rows = (await env.DB.prepare('SELECT k, n FROM ailimit WHERE day = ? AND k IN (?, ?)').bind(day, 'all', k).all()).results || [];
+  const n = key => (rows.find(r => r.k === key) || {n: 0}).n;
+  if (n('all') >= READ_DAY) return {ok: false, why: 'day'};
+  if (n(k) >= READ_IP) return {ok: false, why: 'ip'};
+  const up = 'INSERT INTO ailimit (day, k, n) VALUES (?, ?, 1) ON CONFLICT(day, k) DO UPDATE SET n = n + 1';
+  await env.DB.batch([env.DB.prepare(up).bind(day, 'all'), env.DB.prepare(up).bind(day, k), env.DB.prepare('DELETE FROM ailimit WHERE day < ?').bind(day)]);
+  return {ok: true, left: READ_DAY - n('all') - 1};
+}
+function readPrompt(genres) {
+  const g = (Array.isArray(genres) ? genres : []).filter(x => typeof x === 'string').map(x => clean(x, 30)).filter(Boolean).slice(0, 40);
+  return `Bu fotoğraf bir kitaba ait (çoğunlukla ön kapak; arka kapak ya da kitap sırtı da olabilir). Kitabın bilgilerini fotoğrafta YAZANLARA göre çıkar.
+Kurallar:
+- Başlık ve yazar adını Türkçe yazım kurallarına uygun, normal büyük-küçük harfle yaz; kapakta hepsi büyük harfle yazsa bile ("KÜRK MANTOLU MADONNA" -> "Kürk Mantolu Madonna").
+- Fotoğrafta görmediğin alanları null bırak, asla uydurma. Çeviri kitapsa ve çevirmen görünüyorsa "translator" alanına yaz.
+${g.length ? `- "genre": kitabı tanıyorsan ya da kapaktan anlaşılıyorsa şu listeden TAM OLARAK birini yaz: ${g.join(', ')}. Emin değilsen null.\n` : ''}- "box_2d": fotoğraftaki kitabın (kapağın) sınırları, [ymin, xmin, ymax, xmax] biçiminde, 0-1000 aralığına ölçeklenmiş tam sayılar. Kitap seçilemiyorsa null.
+- "isbn" yalnızca fotoğrafta yazıyorsa, sadece rakamlarla.
+Yalnızca tek bir JSON nesnesi döndür, başka hiçbir şey yazma:
+{"title":"...","author":"...","translator":null,"publisher":"...","isbn":null,"genre":null,"year":null,"box_2d":[60,180,940,820]}`;
+}
+async function readCoverAI(req, env) {
+  const raw = await req.text();
+  if (raw.length > 1600000) return json(req, {ok: false, error: 'Fotoğraf çok büyük'});
+  let b; try { b = JSON.parse(raw); } catch (e) { return json(req, {ok: false, error: 'Geçersiz veri'}); }
+  const data = typeof (b && b.image) === 'string' ? b.image : '';
+  if (data.length < 2000 || !/^[A-Za-z0-9+/]+={0,2}$/.test(data)) return json(req, {ok: false, error: 'Geçersiz fotoğraf'});
+  const head = atob(data.slice(0, 16));
+  if (!(head.charCodeAt(0) === 0xFF && head.charCodeAt(1) === 0xD8)) return json(req, {ok: false, error: 'Fotoğraf JPEG olmalı'});
+  if (!env.AI) return json(req, {ok: false, error: 'Kapak okuma şu an kapalı'});
+  const t = await takeRead(req, env);
+  if (!t.ok) return json(req, {ok: false, limit: t.why, error: t.why === 'day' ? 'Bugünlük kapak okuma hakkı doldu' : 'Bugün bu bağlantıdan çok fazla kapak okundu'});
+  const out = await env.AI.run(READ_MODEL, {
+    messages: [{role: 'user', content: [{type: 'text', text: readPrompt(b.genres)}, {type: 'image_url', image_url: {url: 'data:image/jpeg;base64,' + data}}]}],
+    max_tokens: 300, temperature: 0,
+  });
+  const txt = String((out && (out.response ?? (out.choices && out.choices[0] && out.choices[0].message && out.choices[0].message.content))) || '');
+  let info = null;
+  try { info = JSON.parse(txt); } catch (e) { const m = txt.match(/\{[\s\S]*\}/); if (m) try { info = JSON.parse(m[0]); } catch (x) {} }
+  if (!info || typeof info !== 'object') return json(req, {ok: false, error: 'Kapaktaki yazılar okunamadı', usage: out && out.usage || null});
+  const pick = {};
+  for (const k of ['title', 'author', 'translator', 'publisher', 'genre']) pick[k] = typeof info[k] === 'string' ? clean(info[k], 300) || null : null;
+  pick.isbn = info.isbn ? String(info.isbn).replace(/[^0-9Xx]/g, '').slice(0, 13) || null : null;
+  pick.year = int(info.year, 1450, 2100);
+  pick.box_2d = Array.isArray(info.box_2d) && info.box_2d.length === 4 && info.box_2d.every(v => Number.isFinite(+v)) ? info.box_2d.map(v => Math.max(0, Math.min(1000, Math.round(+v)))) : null;
+  return json(req, {ok: true, info: pick, left: t.left, usage: out && out.usage || null});
+}
+
 async function handle(req, env) {
   if (req.method === 'OPTIONS') return new Response(null, {headers: cors(req)});
   const url = new URL(req.url);
-  if (url.searchParams.get('ping')) return json(req, {ok: true, version: 13});
+  if (url.searchParams.get('ping')) return json(req, {ok: true, version: 14});
   // writes only from the app's own page
   if (req.method === 'POST' && !ALLOWED.includes(req.headers.get('Origin') || '')) return json(req, {ok: false, error: 'İzin yok'});
   if (url.pathname === '/cover') return cover(req, env, url);
   if (url.pathname === '/search' && req.method === 'GET') return search(req, env, url);
+  if (url.pathname === '/read' && req.method === 'POST') return readCoverAI(req, env);
   if (url.pathname === '/pick' && req.method === 'POST') {
     const {b, err} = await readBody(req); if (err) return json(req, {ok: false, error: err});
     const rec = readRec(b); if (!rec) return json(req, {ok: false, error: 'ISBN ve başlık gerekli'});
