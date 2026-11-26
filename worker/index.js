@@ -12,7 +12,7 @@
 // POST /read {image: base64 jpeg, genres: [...]} -> {ok, info} the title/author/... read from a cover photo
 //      by a vision model running on Cloudflare (Workers AI). The photo is not stored anywhere.
 //      Limits: READ_DAY per day for everyone together, READ_IP per day per connection (IP kept only as a daily hash).
-// GET  /cover?isbn=978...  -> the shared cover image (404 if none); &check=1 -> {ok, exists}
+// GET  /cover?isbn=978...  -> the shared cover image from R2 via the edge cache (404 if none); &check=1 -> {ok, exists}
 // POST /cover {isbn, mime, data(base64)} -> a cover a user chose to share; the first one stays
 // GET  /desc?isbn=978...&t=başlık&a=yazar -> {ok, d, src} the book's back-cover text. Looked up once (Google Books,
 //      Turkish edition first), then kept here so every reader gets it instantly. Empty results are retried after a week.
@@ -236,7 +236,7 @@ async function desc(req, env, url) {
 async function handle(req, env) {
   if (req.method === 'OPTIONS') return new Response(null, {headers: cors(req)});
   const url = new URL(req.url);
-  if (url.searchParams.get('ping')) return json(req, {ok: true, version: 15});
+  if (url.searchParams.get('ping')) return json(req, {ok: true, version: 16, r2: !!env.COVERS});
   // writes only from the app's own page
   if (req.method === 'POST' && !ALLOWED.includes(req.headers.get('Origin') || '')) return json(req, {ok: false, error: 'İzin yok'});
   if (url.pathname === '/cover') return cover(req, env, url);
@@ -255,7 +255,7 @@ async function handle(req, env) {
     const isbn = normIsbn(url.searchParams.get('isbn'));
     if (!isbn) return json(req, {ok: false, error: 'Geçersiz ISBN'});
     const row = await env.DB.prepare('SELECT isbn, title, author, translator, publisher, year, pages, genre, cover FROM books WHERE isbn = ?').bind(isbn).first();
-    const pc = await env.DB.prepare('SELECT 1 AS x FROM covers WHERE isbn = ?').bind(isbn).first();
+    const pc = await coverExists(env, isbn);
     const poolUrl = pc ? `${url.origin}/cover?isbn=${isbn}` : '';
     if (row && poolUrl && !row.cover) row.cover = poolUrl;
     return json(req, {ok: true, found: !!row, book: row || null, poolCover: poolUrl});
@@ -270,19 +270,42 @@ async function handle(req, env) {
   return json(req, {ok: false, error: 'Desteklenmeyen istek'});
 }
 
+// --- shared cover photos: kept in R2 (file storage), served through Cloudflare's edge cache ---
+// Safety brakes so the free allowance is never exceeded: the bucket is private (only this Worker reaches it),
+// at most COVER_DAY new covers per day, and no new uploads once COVER_MAX bytes are stored.
+const COVER_MAX = 8e9, COVER_DAY = 5000, COVER_TTL = 2592000;
+const coverKey = isbn => 'p/' + isbn + '.jpg';
+function b64bytes(data) { const bin = atob(data), bytes = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i); return bytes; }
+async function coverExists(env, isbn) {
+  return !!(await env.DB.prepare('SELECT 1 AS x FROM r2objs WHERE k = ? UNION ALL SELECT 1 FROM covers WHERE isbn = ? LIMIT 1').bind(coverKey(isbn), isbn).first());
+}
+async function r2put(env, key, bytes, mime) {
+  await env.COVERS.put(key, bytes, {httpMetadata: {contentType: mime, cacheControl: 'public, max-age=' + COVER_TTL}});
+  await env.DB.prepare('INSERT INTO r2objs (k, size, at) VALUES (?, ?, ?) ON CONFLICT(k) DO UPDATE SET size = excluded.size, at = excluded.at').bind(key, bytes.length, Date.now()).run();
+}
 async function cover(req, env, url) {
   if (req.method === 'GET') {
     const isbn = normIsbn(url.searchParams.get('isbn'));
     if (!isbn) return json(req, {ok: false, error: 'Geçersiz ISBN'});
     if (url.searchParams.get('check')) {
-      const r = await env.DB.prepare('SELECT 1 AS x FROM covers WHERE isbn = ?').bind(isbn).first();
-      return json(req, {ok: true, exists: !!r, url: r ? `${url.origin}/cover?isbn=${isbn}` : ''});
+      const ex = await coverExists(env, isbn);
+      return json(req, {ok: true, exists: ex, url: ex ? `${url.origin}/cover?isbn=${isbn}` : ''});
     }
-    const row = await env.DB.prepare('SELECT mime, data FROM covers WHERE isbn = ?').bind(isbn).first();
-    if (!row) return new Response('Kapak yok', {status: 404, headers: cors(req)});
-    const bin = atob(row.data), bytes = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-    return new Response(bytes, {headers: {...cors(req), 'Content-Type': row.mime, 'Cache-Control': 'public, max-age=604800'}});
+    // 1) edge cache, 2) R2, 3) the old copy in D1 (moved to R2 on first view)
+    const cache = caches.default, ck = new Request(`${url.origin}/cover?isbn=${isbn}`);
+    const hit = await cache.match(ck); if (hit) return hit;
+    let body = null, mime = 'image/jpeg';
+    const obj = env.COVERS ? await env.COVERS.get(coverKey(isbn)) : null;
+    if (obj) { body = await obj.arrayBuffer(); mime = (obj.httpMetadata && obj.httpMetadata.contentType) || mime; }
+    else {
+      const row = await env.DB.prepare('SELECT mime, data FROM covers WHERE isbn = ?').bind(isbn).first();
+      if (!row) return new Response('Kapak yok', {status: 404, headers: cors(req)});
+      const bytes = b64bytes(row.data); body = bytes.buffer; mime = row.mime;
+      if (env.COVERS) try { await r2put(env, coverKey(isbn), bytes, mime); } catch (e) {}
+    }
+    const res = new Response(body, {headers: {...cors(req), 'Content-Type': mime, 'Cache-Control': 'public, max-age=' + COVER_TTL}});
+    try { await cache.put(ck, res.clone()); } catch (e) {}
+    return res;
   }
   if (req.method === 'POST') {
     const raw = await req.text();
@@ -297,10 +320,18 @@ async function cover(req, env, url) {
     const isJpg = head.charCodeAt(0) === 0xFF && head.charCodeAt(1) === 0xD8 && head.charCodeAt(2) === 0xFF;
     const isPng = head.slice(1, 4) === 'PNG';
     if (!isJpg && !isPng) return json(req, {ok: false, error: 'Geçersiz fotoğraf'});
-    const r = await env.DB.prepare('INSERT OR IGNORE INTO covers (isbn, mime, data, size, created_at) VALUES (?, ?, ?, ?, ?)')
-      .bind(isbn, isPng ? 'image/png' : 'image/jpeg', data, Math.round(data.length * 3 / 4), new Date().toISOString()).run();
-    const created = !!(r.meta && r.meta.changes);
-    return json(req, {ok: true, created, url: `${url.origin}/cover?isbn=${isbn}`});
+    // the first shared cover for a book stays
+    if (await coverExists(env, isbn)) return json(req, {ok: true, created: false, url: `${url.origin}/cover?isbn=${isbn}`});
+    if (!env.COVERS) return json(req, {ok: false, error: 'Kapak deposu hazır değil'});
+    // brakes: daily uploads and total size
+    const day = new Date().toISOString().slice(0, 10);
+    const [used, tot] = await Promise.all([
+      env.DB.prepare('SELECT n FROM ailimit WHERE day = ? AND k = ?').bind(day, 'cover-up').first(),
+      env.DB.prepare('SELECT COALESCE(SUM(size), 0) AS b FROM r2objs').first()]);
+    if ((used && used.n >= COVER_DAY) || (tot && tot.b >= COVER_MAX)) return json(req, {ok: false, limit: 'cover', error: 'Kapak paylaşımı bugünlük dolu'});
+    await env.DB.prepare('INSERT INTO ailimit (day, k, n) VALUES (?, ?, 1) ON CONFLICT(day, k) DO UPDATE SET n = n + 1').bind(day, 'cover-up').run();
+    await r2put(env, coverKey(isbn), b64bytes(data), isPng ? 'image/png' : 'image/jpeg');
+    return json(req, {ok: true, created: true, url: `${url.origin}/cover?isbn=${isbn}`});
   }
   return json(req, {ok: false, error: 'Desteklenmeyen istek'});
 }

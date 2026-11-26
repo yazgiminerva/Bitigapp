@@ -10,5 +10,9 @@ database_id = "216e773f-6cef-49fb-b732-6c6834f48efc"
 [ai]
 binding = "AI"
 
+[[r2_buckets]]
+binding = "COVERS"
+bucket_name = "bitigapp-covers"
+
 [observability]
 enabled = true
