@@ -172,7 +172,7 @@ async function readCoverAI(req, env) {
   const txt = String((out && (out.response ?? (out.choices && out.choices[0] && out.choices[0].message && out.choices[0].message.content))) || '');
   let info = null;
   try { info = JSON.parse(txt); } catch (e) { const m = txt.match(/\{[\s\S]*\}/); if (m) try { info = JSON.parse(m[0]); } catch (x) {} }
-  if (!info || typeof info !== 'object') return json(req, {ok: false, error: 'Kapaktaki yazılar okunamadı', usage: out && out.usage || null});
+  if (!info || typeof info !== 'object') return json(req, {ok: false, error: 'Kapaktaki yazılar okunamadı', usage: out && out.usage || null, dbg: JSON.stringify(out).slice(0, 1500)});
   const pick = {};
   for (const k of ['title', 'author', 'translator', 'publisher', 'genre']) pick[k] = typeof info[k] === 'string' ? clean(info[k], 300) || null : null;
   pick.isbn = info.isbn ? String(info.isbn).replace(/[^0-9Xx]/g, '').slice(0, 13) || null : null;
