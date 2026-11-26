@@ -14,6 +14,8 @@
 //      Limits: READ_DAY per day for everyone together, READ_IP per day per connection (IP kept only as a daily hash).
 // GET  /cover?isbn=978...  -> the shared cover image (404 if none); &check=1 -> {ok, exists}
 // POST /cover {isbn, mime, data(base64)} -> a cover a user chose to share; the first one stays
+// GET  /desc?isbn=978...&t=başlık&a=yazar -> {ok, d, src} the book's back-cover text. Looked up once (Google Books,
+//      Turkish edition first), then kept here so every reader gets it instantly. Empty results are retried after a week.
 // Var olan bir kaydın dolu alanları değiştirilmez, yalnızca boş alanları doldurulur.
 
 const ALLOWED = ['https://bitigapp.com', 'https://www.bitigapp.com', 'https://yazgiminerva.github.io'];
@@ -185,14 +187,61 @@ async function readCoverAI(req, env) {
   return json(req, {ok: true, info: pick, left: t.left});
 }
 
+// --- back-cover texts, shared by everyone ---
+const GB_KEY = 'AIzaSyD2ZTPknzPHoihZfxAgtYsvDWs_5QcBuoU', DESC_RETRY = 7 * 864e5, DESC_IP = 400;
+const plain = h => String(h || '').replace(/<br\s*\/?>|<\/p>/gi, '\n').replace(/<[^>]+>/g, '')
+  .replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+  .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(+n)).replace(/[ \t]+/g, ' ').replace(/\n\s*\n+/g, '\n\n').trim();
+function descKeys(url) {
+  const ks = [], isbn = normIsbn(url.searchParams.get('isbn'));
+  if (isbn) ks.push('i:' + isbn);
+  const t = norm(clean(url.searchParams.get('t'), 200).split(':')[0]), a = norm(clean(url.searchParams.get('a'), 200).split(',')[0]).split(' ').pop() || '';
+  if (t) ks.push('w:' + t + '|' + a);
+  return {ks, isbn, t: clean(url.searchParams.get('t'), 200), a: clean(url.searchParams.get('a'), 200)};
+}
+async function descFromGoogle(isbn, t, a) {
+  const tries = [];
+  if (isbn) tries.push('isbn:' + isbn);
+  if (t) tries.push('intitle:"' + t.split(':')[0] + '"' + (a ? ' inauthor:"' + a.split(',')[0] + '"' : ''));
+  for (const q of tries) {
+    try {
+      const r = await fetch('https://www.googleapis.com/books/v1/volumes?maxResults=5&key=' + GB_KEY + '&q=' + encodeURIComponent(q), {headers: {Referer: 'https://bitigapp.com/'}});
+      if (!r.ok) continue;
+      const j = await r.json();
+      const items = (j.items || []).map(i => i.volumeInfo || {}).filter(v => v.description);
+      const v = items.find(x => x.language === 'tr') || items[0];
+      if (v) return plain(v.description).slice(0, 4000);
+    } catch (e) {}
+  }
+  return '';
+}
+async function desc(req, env, url) {
+  const {ks, isbn, t, a} = descKeys(url);
+  if (!ks.length) return json(req, {ok: false, error: 'ISBN ya da başlık gerekli'});
+  const rows = (await env.DB.prepare(`SELECT k, d, at FROM descs WHERE k IN (${ks.map(() => '?').join(',')})`).bind(...ks).all()).results || [];
+  const hit = rows.find(r => r.d) || null;
+  if (hit) return json(req, {ok: true, d: hit.d, src: 'pool'}, {'Cache-Control': 'public, max-age=86400'});
+  if (rows.length && rows.every(r => Date.now() - r.at < DESC_RETRY)) return json(req, {ok: true, d: '', src: 'none'});
+  // only this part costs a Google query: keep it fair per connection
+  const day = new Date().toISOString().slice(0, 10), ik = 'd:' + await sha(day + '|' + (req.headers.get('CF-Connecting-IP') || 'x') + '|desc');
+  const used = await env.DB.prepare('SELECT n FROM ailimit WHERE day = ? AND k = ?').bind(day, ik).first();
+  if (used && used.n >= DESC_IP) return json(req, {ok: false, limit: 'ip'});
+  await env.DB.prepare('INSERT INTO ailimit (day, k, n) VALUES (?, ?, 1) ON CONFLICT(day, k) DO UPDATE SET n = n + 1').bind(day, ik).run();
+  const d = await descFromGoogle(isbn, t, a), now = Date.now();
+  const put = 'INSERT INTO descs (k, d, src, at) VALUES (?, ?, ?, ?) ON CONFLICT(k) DO UPDATE SET d = CASE WHEN excluded.d <> \'\' THEN excluded.d ELSE descs.d END, src = excluded.src, at = excluded.at';
+  await env.DB.batch(ks.map(k => env.DB.prepare(put).bind(k, d, d ? 'google' : '', now)));
+  return json(req, {ok: true, d, src: d ? 'google' : 'none'});
+}
+
 async function handle(req, env) {
   if (req.method === 'OPTIONS') return new Response(null, {headers: cors(req)});
   const url = new URL(req.url);
-  if (url.searchParams.get('ping')) return json(req, {ok: true, version: 14});
+  if (url.searchParams.get('ping')) return json(req, {ok: true, version: 15});
   // writes only from the app's own page
   if (req.method === 'POST' && !ALLOWED.includes(req.headers.get('Origin') || '')) return json(req, {ok: false, error: 'İzin yok'});
   if (url.pathname === '/cover') return cover(req, env, url);
   if (url.pathname === '/search' && req.method === 'GET') return search(req, env, url);
+  if (url.pathname === '/desc' && req.method === 'GET') return desc(req, env, url);
   if (url.pathname === '/read' && req.method === 'POST') return readCoverAI(req, env);
   if (url.pathname === '/pick' && req.method === 'POST') {
     const {b, err} = await readBody(req); if (err) return json(req, {ok: false, error: err});

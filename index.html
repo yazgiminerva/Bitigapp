@@ -816,7 +816,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 73</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 74</p>
       </details>
     </div>
   </section>
@@ -2190,6 +2190,13 @@ async function fetchDesc(b) {
   return d;
 }
 async function fetchDescOnline(b) {
+  // first Bitigapp's shared list: once anyone has opened this book, the text is already there
+  try {
+    const qs = new URLSearchParams({isbn: String(b.isbn || '').replace(/[^0-9Xx]/g, ''), t: b.title || '', a: b.author || ''});
+    const ctl = new AbortController(), tm = setTimeout(() => ctl.abort(), 8000);
+    const j = await (await fetch(WORKER + '/desc?' + qs, {signal: ctl.signal})).json(); clearTimeout(tm);
+    if (j && j.ok) return j.d || '';
+  } catch (e) {}
   const tries = [];
   if (b.isbn) tries.push('isbn:' + String(b.isbn).replace(/[^0-9Xx]/g, ''));
   if (b.title) tries.push('intitle:"' + String(b.title).split(':')[0] + '"' + (b.author ? ' inauthor:"' + String(b.author).split(',')[0] + '"' : ''));
