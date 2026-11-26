@@ -722,6 +722,14 @@ a{color:var(--roseD)}
 :root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) :is(#pTab,#uTab) .post .pbk{background:#00000033;border-color:var(--cardE)}
 :root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) #list .item{border:1px solid color-mix(in srgb,var(--sw) 22%,var(--cardE))}
 :root:is([data-theme=antique],[data-theme=cadi],[data-theme=buyucu]) :is(#pMain,#tabProf) .wrap{background:radial-gradient(120% 40% at 50% 0%,color-mix(in srgb,var(--glow) 7%,transparent),transparent 70%)}
+
+.skw{display:flex;flex-direction:column;gap:9px;padding:4px 0}
+.skrow{display:flex;align-items:center;gap:12px;padding:6px 0}.skcol{display:flex;flex-direction:column;gap:8px;flex:1}
+.sk{display:block;border-radius:7px;background:linear-gradient(90deg,color-mix(in srgb,var(--ink) 7%,transparent) 30%,color-mix(in srgb,var(--ink) 14%,transparent) 50%,color-mix(in srgb,var(--ink) 7%,transparent) 70%);background-size:300% 100%;animation:skel 1.3s ease-in-out infinite}
+@keyframes skel{from{background-position:100% 0}to{background-position:0 0}}
+#bkDesc>.bdesc,#aMore>*,#uBody>*{animation:skin .25s ease-out}
+@keyframes skin{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion:reduce){.sk,#bkDesc>.bdesc,#aMore>*,#uBody>*{animation:none}}
 </style>
 </head>
 <body>
@@ -808,7 +816,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 72</p>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 73</p>
       </details>
     </div>
   </section>
@@ -2199,7 +2207,7 @@ async function fetchDescOnline(b) {
 // --- Book page: what you see when you tap a book ---
 let bookNow = null;
 function bookStatsHTML(s) {
-  if (!s) return '<p class="muted bstat">Bitigapp okurlarının sayıları yükleniyor…</p>';
+  if (!s) return `<div class="bstat">${skel('line', 70)}</div>`;
   const own = s.owners || 0, rd = s.readers || 0, rc = s.rCount || 0;
   if (!own && !rd) return '<p class="muted bstat">Bu kitabı Bitigapp\'te henüz başka kimse eklememiş.</p>';
   return `<div class="bstat"><span><b>${own}</b>kişinin kitaplığında</span><span><b>${rd}</b>kişi okudu</span><span><b>${rc >= 3 ? (s.rSum / rc).toLocaleString('tr', {maximumFractionDigits: 1}) : '–'}</b>${rc >= 3 ? `ortalama puan (${rc})` : 'puan için en az 3 oy'}</span></div>`;
@@ -2212,7 +2220,7 @@ async function openBook(id) {
     <div><h2 class="bt">${esc(b.title)}</h2>${authorLink(b.author)}<p class="muted bm">${esc([b.publisher, b.year, b.pages ? b.pages + ' sayfa' : ''].filter(Boolean).join(' · '))}</p>
     <p class="bm"><span class="st ${esc(b.status || 'okunacak')}">${esc(STAT[b.status] || 'Okunacak')}</span>${b.rating ? ` <span class="bstars">${'★'.repeat(b.rating)}</span>` : ''}</p></div></div>
     <h3 class="psec">Bitigapp okurları</h3><div id="bkStats">${bookStatsHTML(null)}</div>
-    <h3 class="psec">Arka kapak</h3><div id="bkDesc">${b.desc ? `<p class="bdesc">${esc(b.desc)}</p>` : '<p class="muted">Açıklama aranıyor…</p>'}</div>
+    <h3 class="psec">Arka kapak</h3><div id="bkDesc">${b.desc ? `<p class="bdesc">${esc(b.desc)}</p>` : skel('text')}</div>
     ${b.notes ? `<h3 class="psec">Notlarım</h3><p class="bdesc">${esc(b.notes)}</p>` : ''}
     ${b.lentTo ? `<p class="muted">Ödünç: ${esc(b.lentTo)}</p>` : ''}
     ${b.readSecs >= 60 ? `<p class="muted" style="margin:10px 0 0">Bu kitabı Bitigapp'le toplam <b>${fmtDur(b.readSecs)}</b> okudun.</p>` : ''}
@@ -2240,7 +2248,7 @@ async function openFoundBook(r) {
     <div><h2 class="bt">${esc(r.title)}</h2>${authorLink(r.author)}<p class="muted bm">${esc([r.publisher, r.year, r.pages ? r.pages + ' sayfa' : ''].filter(Boolean).join(' · '))}</p>${h ? '<p class="bm"><span class="st" style="--c:var(--sage)">İstek listende</span></p>' : ''}</div></div>
     ${h && h.notes ? `<h3 class="psec">Notum</h3><p class="bdesc">${esc(h.notes)}</p>` : ''}
     <h3 class="psec">Bitigapp okurları</h3><div id="bkStats">${bookStatsHTML(null)}</div>
-    <h3 class="psec">Arka kapak</h3><div id="bkDesc"><p class="muted">Açıklama aranıyor…</p></div>
+    <h3 class="psec">Arka kapak</h3><div id="bkDesc">${skel('text')}</div>
     <div class="bk" style="margin-top:14px">${h ? '<button class="btn primary" type="button" id="bkBuy">Aldım, kitaplığıma ekle</button><button class="btn" type="button" id="bkUnwish">İstek listemden çıkar</button>' : '<button class="btn primary" type="button" id="bkAddLib">Kitaplığıma ekle</button><button class="btn" type="button" id="bkAddWish">İstek listeme ekle</button>'}</div>`;
   $('bookOv').hidden = false; $('bookOv').querySelector('.sheet').scrollTop = 0; hydrate($('bkBody'));
   bookFound = r;
@@ -2342,7 +2350,7 @@ async function runFind(deep) {
   if (q.length < 2) { box.innerHTML = ''; $('fHint').hidden = false; return; }
   $('fHint').hidden = true;
   if (!navigator.onLine) { box.innerHTML = '<p class="muted">İnternet yok. Bağlanınca tekrar dene ya da elle ekle.</p>'; return; }
-  if (deep) $('fMore') && ($('fMore').disabled = true, $('fMore').textContent = 'Aranıyor…'); else box.innerHTML = '<p class="muted">Aranıyor…</p>';
+  if (deep) $('fMore') && ($('fMore').disabled = true, $('fMore').textContent = 'Aranıyor…'); else box.innerHTML = skel('rows', 3);
   const list = await findBooks(q, deep);
   if (seq !== findSeq) return;
   findRes = list; if (!deep) findPage = 0; drawFind();
@@ -3684,7 +3692,7 @@ const tabsHTML = (attr, cur) => `<div class="utabs utabs3" role="tablist">${[['l
 function userTabHTML(uid, prof) { return profTabHTML(uid, prof, userShelf || {}, userTab, false, userFeedN); }
 async function openUser(uid, quiet) {
   userNow = uid; $('userOv').hidden = false;
-  if (!quiet) { $('uBody').innerHTML = '<p class="muted" style="padding:20px;text-align:center">Yükleniyor…</p>'; $('userOv').querySelector('.sheet').scrollTop = 0; }
+  if (!quiet) { $('uBody').innerHTML = skel('user'); $('userOv').querySelector('.sheet').scrollTop = 0; }
   let prof = null, shelf = null;
   try { const p = await FB.getDoc(fd('profiles', uid)); prof = p.exists() ? p.data() : null; } catch (e) {}
   if (userNow !== uid) return;
@@ -3760,7 +3768,7 @@ async function runBookSearch(deep) {
   const q = $('sQ').value.trim(), seq = ++searchSeq, box = $('sRes');
   if (q.length < 2) { box.innerHTML = '<p class="muted" style="padding:8px 2px">Kitabın adını ya da yazarını yaz. Bir kitaba dokunup arka kapağını, Bitigapp okurlarının sayılarını görebilir, kitaplığına ya da istek listene ekleyebilirsin.</p>'; return; }
   if (!navigator.onLine) { box.innerHTML = '<p class="muted" style="padding:8px 2px">İnternet yok.</p>'; return; }
-  if (deep) $('sMore') && ($('sMore').disabled = true, $('sMore').textContent = 'Aranıyor…'); else box.innerHTML = '<p class="muted" style="padding:8px 2px">Aranıyor…</p>';
+  if (deep) $('sMore') && ($('sMore').disabled = true, $('sMore').textContent = 'Aranıyor…'); else box.innerHTML = skel('rows', 3);
   const list = await findBooks(q, deep);
   if (seq !== searchSeq) return;
   sBooks = list; if (!deep) sPage = 0; drawBookSearch();
@@ -3774,7 +3782,7 @@ async function runSearch() {
   const q = fold($('sQ').value).replace(/^@/, ''), seq = ++searchSeq, box = $('sRes');
   if (!SOC.on) { box.innerHTML = '<p class="muted" style="padding:8px 2px">Arkadaş profilin henüz hazır değil; internet bağlantını kontrol edip Profilim\'de "Tekrar dene"ye dokun.</p>'; return; }
   if (q.length < 2) { box.innerHTML = '<p class="muted" style="padding:8px 2px">Kullanıcı adının ya da ismin ilk harflerini yaz.</p>'; return; }
-  box.innerHTML = '<p class="muted" style="padding:8px 2px">Aranıyor…</p>';
+  box.innerHTML = skel('rows', 3);
   try {
     const qq = (f, v) => FB.getDocs(FB.query(FB.collection(fbDb, 'profiles'), FB.where(f, '>=', v), FB.where(f, '<=', v + ''), FB.limit(12)));
     const [a, b] = await Promise.all([qq('usernameLower', q.replace(/\s+/g, '')), qq('nameLower', q)]);
@@ -3807,7 +3815,7 @@ async function drawList(kind) {
     : kind === 'requests' ? [...SOC.followers.values()].filter(f => f.status === 'pending').map(f => f.from)
     : kind === 'following' ? [...SOC.following.keys()] : [...SOC.blocked];
   if (!ids.length) { $('lBody').innerHTML = `<p class="muted" style="padding:16px 2px;text-align:center">${kind === 'requests' ? 'Bekleyen istek yok.' : 'Burası şimdilik boş.'}</p>`; return; }
-  $('lBody').innerHTML = '<p class="muted">Yükleniyor…</p>';
+  $('lBody').innerHTML = skel('rows', Math.min(ids.length, 4));
   const profs = await Promise.all(ids.map(id => FB.getDoc(fd('profiles', id)).then(s => [id, s.exists() ? s.data() : null]).catch(() => [id, null])));
   if (listKind !== kind) return;
   $('lBody').innerHTML = `<ul class="hlist">${profs.map(([id, p]) => `<li class="item uitem" data-user="${esc(id)}"><img class="uav" src="${avURL((p && p.avatar) || AV_DEFAULT, {})}" alt=""><div><div class="t">${esc((p && (p.name || p.username)) || 'Kullanıcı')}</div><div class="a">${p ? '@' + esc(p.username) : ''}</div></div>${kind === 'requests' ? `<div class="reqb"><button class="btn primary" type="button" data-acc="${esc(id)}">Onayla</button><button class="btn" type="button" data-rej="${esc(id)}">Sil</button></div>` : kind === 'blocked' ? `<button class="btn" type="button" data-unb="${esc(id)}">Engeli kaldır</button>` : ''}</li>`).join('')}</ul>`;
@@ -4148,7 +4156,7 @@ async function openAuthor(name) {
   const mine = books.filter(b => sameAuthor(name, b.author)), myW = wishes.filter(b => sameAuthor(name, b.author));
   const head = (mine.length ? `<h3 class="psec">Kitaplığında</h3><div class="bigcase ucase">${caseHTML(mine, b => `data-aid="${esc(b.id)}"`)}</div>` : '')
     + (myW.length ? `<h3 class="psec">İstek listende</h3><ul class="hlist">${myW.map(b => `<li class="item" data-aw="${esc(b.id)}">${coverEl(b)}<div><div class="t">${esc(b.title)}</div></div></li>`).join('')}</ul>` : '');
-  $('aBody').innerHTML = head + '<h3 class="psec">Diğer kitapları</h3><div id="aMore"><p class="muted">Aranıyor…</p></div>';
+  $('aBody').innerHTML = head + '<h3 class="psec">Diğer kitapları</h3><div id="aMore">' + skel('rows', 3) + '</div>';
   hydrate($('aBody'));
   if (!navigator.onLine) { $('aMore').innerHTML = '<p class="muted">İnternet yok.</p>'; return; }
   const gb = extra => gbFetch('printType=books&maxResults=40' + extra + '&q=' + encodeURIComponent('inauthor:"' + name + '"')).then(r => r.json()).then(j => (j.items || []).map(it => { const v = it.volumeInfo || {}; return {title: v.title + (v.subtitle ? ': ' + v.subtitle : ''), author: (v.authors || []).join(', '), publisher: v.publisher || '', year: (v.publishedDate || '').slice(0, 4), pages: v.pageCount || '', genre: (v.categories || [])[0] || '', isbn: isbnOf(v), cover: ((v.imageLinks || {}).thumbnail || '').replace(/^http:/, 'https:'), tr: v.language === 'tr', src: 'Google Books'}; })).catch(() => []);
@@ -4218,6 +4226,14 @@ const LIVE_WIN = 20 * 60e3, rkey = () => 'bitigapp.read.' + (me ? me.uid : '');
 const readNow = () => { try { return JSON.parse(localStorage.getItem(rkey()) || 'null'); } catch (e) { return null; } };
 const readSave = r => { try { r ? localStorage.setItem(rkey(), JSON.stringify(r)) : localStorage.removeItem(rkey()); } catch (e) {} };
 const readMs = r => r ? r.acc + (r.paused ? 0 : Date.now() - r.start) : 0;
+// quiet placeholders while something loads (instead of "…yükleniyor" texts)
+function skel(kind, n) {
+  const L = (w, h) => `<i class="sk" style="width:${w}%;height:${h || 12}px"></i>`;
+  if (kind === 'text') return `<div class="skw" role="status" aria-label="Yükleniyor">${[100, 97, 99, 93, 64].slice(0, n || 5).map(w => L(w)).join('')}</div>`;
+  if (kind === 'line') return `<div class="skw" role="status" aria-label="Yükleniyor">${L(n || 60)}</div>`;
+  if (kind === 'user') return `<div class="skw" role="status" aria-label="Yükleniyor" style="padding:16px 2px"><div class="skrow"><i class="sk" style="width:64px;height:64px;border-radius:50%"></i><div class="skcol">${L(55, 16)}${L(35)}</div></div>${L(100, 54)}${skel('rows', 3)}</div>`;
+  return `<div class="skw" role="status" aria-label="Yükleniyor">${Array.from({length: n || 3}, (_, k) => `<div class="skrow"><i class="sk" style="width:42px;height:62px;border-radius:6px"></i><div class="skcol">${L([70, 55, 64, 48][k % 4], 14)}${L([42, 36, 50, 30][k % 4])}</div></div>`).join('')}</div>`;
+}
 function fmtDur(sec) { sec = Math.round(sec); const h = Math.floor(sec / 3600), m = Math.floor(sec % 3600 / 60); return h ? `${h} sa${m ? ' ' + m + ' dk' : ''}` : `${Math.max(1, m)} dk`; }
 const clock = ms => { const t = Math.floor(ms / 1000), h = Math.floor(t / 3600), m = Math.floor(t % 3600 / 60), x = t % 60; return (h ? h + ':' + String(m).padStart(2, '0') : String(m)) + ':' + String(x).padStart(2, '0'); };
 let readTick = 0, liveTick = 0, liveN = null;
