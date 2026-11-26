@@ -765,12 +765,7 @@ a{color:var(--roseD)}
         </div>
         <button class="btn" id="soundBtn" type="button" style="width:100%;margin-top:10px" aria-pressed="true">Sesler açık</button>
         <p class="muted" style="margin:8px 0 0">Telefon sessizdeyken sesler duyulmayabilir.</p>
-        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 67</p>
-      </details>
-      <details>
-        <summary>Kapak okuma ayarı</summary>
-        <p class="muted" id="keyInfo" style="margin-top:0"></p>
-        <button class="btn" id="keyOpen" type="button">Anahtarı değiştir</button>
+        <p class="muted" style="margin:8px 0 0">Uygulama sürümü: 68</p>
       </details>
     </div>
   </section>
@@ -937,13 +932,13 @@ a{color:var(--roseD)}
     <p>Kişisel verilerin, uygulamanın çalışması için gerekli olan şu hizmet sağlayıcılara (veri işleyenlere) aktarılır:</p>
     <ul><li><b>Google (Firebase Authentication):</b> e-posta, hesap bilgileri ve giriş sırasında IP adresin. Bu hizmet Google'ın küresel altyapısında çalışır; veriler ABD dahil farklı ülkelerdeki sunucularda işlenebilir.</li><li><b>Google (Cloud Firestore):</b> kitaplık içeriğin, avatarın ve kendi kapak fotoğrafların. Veriler Almanya'daki (Frankfurt, europe-west3) veri merkezinde saklanır.</li><li><b>Cloudflare:</b> ortak kitap listesinin sunucusu; bu servise IP adresin ve bağlantı bilgilerin ulaşır.</li><li><b>GitHub:</b> uygulamanın dosyalarının barındırılması; sayfa açılırken IP adresin ve bağlantı bilgilerin ulaşır.</li><li><b>Google Books ve Open Library:</b> barkodla kitap aranırken ISBN numarası ve IP adresin bu servislere ulaşır.</li></ul>
     <p>Bu sağlayıcıların sunucuları yurt dışındadır; Frankfurt'ta saklanan veriler için de yurt dışına aktarım söz konusudur. Yurt dışına aktarım, KVKK m.9 kapsamında <span class="tbd">aktarım dayanağı belirlenecek</span> çerçevesinde yapılır. Kişisel verilerin, kanunen yetkili kamu kurum ve kuruluşlarına yalnızca hukuki yükümlülük gereği aktarılabilir.</p>
-    <h3>8. Kapak okuma özelliği (Google Gemini)</h3>
-    <p>Kapak okuma özelliği varsayılan olarak kapalıdır. Yalnızca sen Ayarlar &gt; Kapak okuma ayarı ekranındaki bilgilendirmeyi okuyup kendi Google API anahtarını girersen açılır.</p>
-    <ul><li><b>Anahtarın:</b> yalnızca bu cihazın tarayıcı depolamasında (localStorage) saklanır; veri sorumlusuna, Firebase'e ya da ortak listeye gönderilmez. Anahtarı sildiğinde özellik kapanır.</li><li><b>Gönderilen veri:</b> "Kapaktan ekle" ile çektiğin fotoğraf, telefonunda en fazla 1280 piksele küçültülüp EXIF ve GPS bilgileri silindikten sonra doğrudan telefonundan Google'ın Gemini API hizmetine (generativelanguage.googleapis.com) gönderilir. Fotoğraf veri sorumlusunun sunucularından geçmez.</li><li><b>Google'ın koşulları:</b> Bu aktarım senin anahtarın ve Google ile aranızdaki Gemini API koşulları üzerinden olur. Ücretsiz kullanımda Google gönderilen içerikleri ürünlerini geliştirmek için kullanabilir ve bu içerikler insan değerlendiriciler tarafından görülebilir; ücretli kullanımda koşullar farklıdır. Ayrıntılar için Google'ın Gemini API koşullarını incelemelisin.</li><li><b>Hukuki sebep:</b> <span class="tbd">danışman belirleyecek</span></li></ul>
+    <h3>8. Kapak okuma özelliği</h3>
+    <p>"Kapaktan ekle" ile kitabın kapağının fotoğrafını çektiğinde, kitabın adı, yazarı ve diğer künye bilgileri bir yapay zekâ modeli tarafından okunur.</p>
+    <ul><li><b>Gönderilen veri:</b> Fotoğraf, telefonunda en fazla 1024 piksele küçültülüp konum (GPS) ve diğer fotoğraf bilgileri silindikten sonra uygulamanın Cloudflare üzerindeki sunucusuna gönderilir. Sunucu fotoğrafı, yine Cloudflare'in altyapısında çalışan bir görüntü okuma modeline (Workers AI) verir ve okunan bilgileri telefonuna geri gönderir. Fotoğraf hiçbir yerde saklanmaz, okunduktan sonra atılır. Cloudflare bu hizmette gönderilen içerikle model eğitmez.</li><li><b>Sınır:</b> Herkesin adil kullanabilmesi için günlük okuma sayısı sınırlıdır. Bunun için bağlantı adresinin (IP) o güne ait, geri çevrilemez bir özeti tutulur ve ertesi gün silinir.</li><li><b>Fotoğrafa dikkat:</b> Çektiğin fotoğrafta yalnızca kitap olsun; insan yüzü, imza ya da kişisel bilgi olmamasına dikkat et.</li><li><b>Hukuki sebep:</b> <span class="tbd">danışman belirleyecek</span></li></ul>
     <h3>9. Toplama yöntemi</h3>
     <p>Kişisel verilerin, uygulamaya kayıt olurken ve uygulamayı kullanırken senin girdiğin bilgilerden; IP adresi ve tarayıcı bilgileri ise bağlantı sırasında otomatik yollarla, elektronik ortamda toplanır.</p>
     <h3>10. Çerezler ve cihazındaki yerel depolama</h3>
-    <p>Uygulama reklam, analiz ya da takip çerezi kullanmaz. Uygulamanın çalışması için zorunlu olan bilgiler (oturumun, kitaplığının çevrimdışı kopyası, kendi kapak fotoğrafların, tema, ses ve kapak okuma anahtarı gibi ayarların) cihazındaki tarayıcı depolamasında (localStorage ve IndexedDB) tutulur. Çıkış yaptığında kitaplığının ve kapak fotoğraflarının bu cihazdaki kopyaları silinir.</p>
+    <p>Uygulama reklam, analiz ya da takip çerezi kullanmaz. Uygulamanın çalışması için zorunlu olan bilgiler (oturumun, kitaplığının çevrimdışı kopyası, kendi kapak fotoğrafların, tema ve ses gibi ayarların) cihazındaki tarayıcı depolamasında (localStorage ve IndexedDB) tutulur. Çıkış yaptığında kitaplığının ve kapak fotoğraflarının bu cihazdaki kopyaları silinir.</p>
     <h3>11. Saklama ve imha süreleri</h3>
     <ul><li><b>Kitaplık verilerin</b> (kitaplar, istek listesi, notlar, kendi kapak fotoğrafların, avatar): hesabını silene kadar saklanır. Ayarlar &gt; Hesabım &gt; "Hesabımı ve kitaplarımı sil" ile hesabını sildiğinde bu kayıtlar uygulama tarafından Firestore'dan hemen silinir.</li><li><b>Hesap bilgilerin</b> (e-posta, hesap kimliği): hesabın silindiğinde Firebase Authentication'dan silinir; Google'ın belgelerine göre silme işleminden sonra canlı ve yedek sistemlerden 180 gün içinde kaldırılır.</li><li><b>Giriş sırasında kaydedilen IP adresleri:</b> Google tarafından birkaç hafta saklanır.</li><li><b>Arkadaş profili ve arkadaşlık kayıtları:</b> 6. bölüme bak.</li><li><b>Cihazındaki kopyalar:</b> çıkış yaptığında ya da tarayıcı verilerini sildiğinde silinir.</li><li><b>Ortak listedeki künye bilgileri:</b> kişisel veri içermediği için süresiz tutulur. Paylaştığın kapak fotoğrafları için 5. bölüme bak.</li></ul>
     <h3>12. Hakların</h3>
@@ -966,7 +961,7 @@ a{color:var(--roseD)}
     <h3>5. Arkadaşlar ve baykuş postası</h3>
     <ul><li>Her hesabın, gizli olarak başlayan bir arkadaş profili vardır; aydınlatma metninin 6. bölümündeki bilgiler bu profil üzerinden diğer kullanıcılara görünür.</li><li>Baykuş yalnızca seni takip eden kişilere gönderilebilir. Kullanıcı adında, "hakkımda" yazında, baykuş notlarında ve yazışmalarda başkasını taklit eden, hakaret, taciz ya da reklam içeren ifadeler kullanmamalısın; başkalarının kişisel bilgilerini paylaşmamalısın.</li><li>Ortak kitaplığa yalnızca seni takip eden kişileri davet edebilirsin. Ortak kitaplıktaki herkes kitap kayıtlarını değiştirebilir ve silebilir; yalnızca güvendiğin kişileri ekle.</li><li>Seni rahatsız eden kişiyi engelleyebilirsin; engellenen kişi profilini ve kitaplığını göremez, sana baykuş gönderemez. Kurallara aykırı profilleri bildirebilirsin; geliştirici bu profilleri kaldırabilir.</li></ul>
     <h3>6. Üçüncü taraf hizmetler</h3>
-    <p>Uygulama; Google (Firebase), Cloudflare, GitHub, Google Books ve Open Library gibi üçüncü taraf hizmetlerle çalışır. İsteğe bağlı kapak okuma özelliği, senin kendi Google API anahtarın ve Google ile aranızdaki koşullar üzerinden çalışır. Bu hizmetlerdeki kesinti ya da değişiklikler uygulamanın çalışmasını etkileyebilir.</p>
+    <p>Uygulama; Google (Firebase), Cloudflare, GitHub, Google Books ve Open Library gibi üçüncü taraf hizmetlerle çalışır. Kapak okuma özelliği Cloudflare Workers AI üzerinde çalışır. Bu hizmetlerdeki kesinti ya da değişiklikler uygulamanın çalışmasını etkileyebilir.</p>
     <h3>7. Sorumluluğun sınırı</h3>
     <p>Uygulama "olduğu gibi" ve ücretsiz sunulur. Kesintisiz ya da hatasız çalışacağı garanti edilmez. Kitap bilgileri çevrimiçi kaynaklardan ya da yapay zekâ ile otomatik doldurulduğu için hatalı olabilir; kaydetmeden önce kontrol etmelisin. İstersen verilerinin bir kopyasını Ayarlar &gt; Yedek dosyası bölümünden alabilirsin.</p>
     <h3>8. Hizmetin sonlandırılması</h3>
@@ -1129,32 +1124,6 @@ a{color:var(--roseD)}
     <ul id="wishList"></ul>
     <button class="btn" id="wShare" type="button" style="width:100%;margin-top:14px" hidden>Listeyi paylaş</button>
     <p class="muted" id="wMsg" style="margin:8px 0 0"></p>
-  </div>
-</div>
-
-<div class="ov" id="keyOv" hidden style="z-index:12">
-  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="kTitle">
-    <div class="sh-head"><h2 id="kTitle">Kapak okumayı aç</h2><button class="x" id="kx" type="button" aria-label="Kapat">×</button></div>
-    <p style="margin-top:0">Kapaktaki yazıları Google'ın Gemini servisi okuyor. Bu özellik isteğe bağlıdır ve sen anahtar girene kadar kapalıdır.</p>
-    <div class="warn" style="font-weight:600">
-      <b>Açmadan önce bil:</b>
-      <ul style="margin:6px 0 0;padding-left:18px;list-style:disc;display:block">
-        <li>"Kapaktan ekle" ile çektiğin fotoğraf, küçültülüp konum (GPS) ve diğer fotoğraf bilgileri silindikten sonra doğrudan telefonundan Google'ın Gemini API hizmetine gönderilir; Bitigapp'in sunucularından geçmez.</li>
-        <li>Anahtarın yalnızca bu cihazda saklanır; hesabına ya da başka bir yere gönderilmez.</li>
-        <li>Bu aktarım senin anahtarın ve Google'ın Gemini API koşulları üzerinden olur. Ücretsiz kullanımda Google gönderilen fotoğrafları ürünlerini geliştirmek için kullanabilir ve bunlar insan değerlendiriciler tarafından görülebilir.</li>
-      </ul>
-      <p style="margin:6px 0 0">Ayrıntılar: <button type="button" class="lnk" data-kvkk>Aydınlatma metni, 8. bölüm</button></p>
-    </div>
-    <p>Açmak istersen ücretsiz bir anahtar alman gerekiyor; bir kez yapman yeterli.</p>
-    <ol class="steps">
-      <li><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> adresini aç, Google hesabınla gir.</li>
-      <li><b>Create API key</b> düğmesine dokun, oluşan anahtarı kopyala.</li>
-      <li>Aşağıya yapıştırıp kaydet.</li>
-    </ol>
-    <label class="f">API anahtarı<input id="keyIn" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"></label>
-    <p class="muted">Anahtarını kimseyle paylaşma. "Anahtarı sil" ile özelliği istediğin zaman kapatabilirsin.</p>
-    <div class="row"><button class="btn primary" id="keySave" type="button">Kaydet ve dene</button><button class="btn danger" id="keyDel" type="button">Anahtarı sil</button></div>
-    <p id="keyMsg" class="muted"></p>
   </div>
 </div>
 
@@ -1813,7 +1782,6 @@ function render() {
   drawBulk();
   const lb = localStorage.getItem(BKEY);
   const days = lb ? Math.floor((Date.now() - +lb) / 864e5) : null;
-  $('keyInfo').textContent = getKey() ? 'Kapak okuma açık. Anahtarı değiştirebilir ya da silebilirsin.' : 'Kapak okuma henüz kurulmadı. "Kapaktan ekle"ye dokunduğunda kurulum adımları açılır.';
   $('bkInfo').textContent = 'Kitapların hesabına otomatik kaydediliyor; başka bir cihazdan giriş yaptığında hepsi gelir. Ayrıca bir dosya almak zorunda değilsin. Yedek dosyası, yanlışlıkla sildiğin bir kitabı geri getirmek ya da kitaplığını başka bir yerde saklamak istersen işine yarar. ' + (lb ? `Son yedek dosyası: ${days === 0 ? 'bugün' : days + ' gün önce'}.` : '');
 }
 
@@ -2425,7 +2393,7 @@ $('chips').addEventListener('click', e => { const k = e.target.dataset.k; if (k)
 $('gchips').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { gfilter = b.dataset.g === '*' ? null : b.dataset.g; render(); } });
 $('q').addEventListener('input', render);
 $('sort').addEventListener('change', render);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('keyOv').hidden) $('keyOv').hidden = true; else if (!$('ov').hidden) closeSheet(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('ov').hidden) closeSheet(); } });
 document.addEventListener('visibilitychange', () => { if (document.hidden && scanning) stopScan(); });
 
 // --- Sounds, made right here with Web Audio (no sound files) ---
@@ -3164,88 +3132,33 @@ function importArr(arr) {
 $('impBtn').onclick = () => { try { importArr(JSON.parse($('imp').value)); $('imp').value = ''; } catch (e) { $('impMsg').textContent = 'Bu metin okunamadı.'; } };
 $('impFile').addEventListener('change', async e => { const file = e.target.files && e.target.files[0]; e.target.value = ''; if (!file) return; try { importArr(JSON.parse(await file.text())); } catch (er) { $('impMsg').textContent = 'Dosya okunamadı.'; } });
 
-// Reading covers with Gemini
-const GKEY = 'kitapligim.gemKey', GMOD = 'kitapligim.gemModels', API = 'https://generativelanguage.googleapis.com/v1beta/';
-const getKey = () => { try { return localStorage.getItem(GKEY) || ''; } catch (e) { return ''; } };
+// Reading covers: the photo goes to our own Cloudflare Worker, where a vision model reads it (nothing is stored)
+try { localStorage.removeItem('kitapligim.gemKey'); localStorage.removeItem('kitapligim.gemModels'); } catch (e) {} // old personal keys are no longer used
 class UErr extends Error { constructor(m, status) { super(m); this.status = status || 0; } }
 const userMsg = e => e instanceof UErr ? e.message : 'Bağlantı kurulamadı. İnternetini kontrol edip tekrar dene.';
-async function apiErr(r) {
-  let e = {}; try { e = (await r.json()).error || {}; } catch (x) {}
-  const t = (e.message || '') + ' ' + JSON.stringify(e.details || '');
-  const m = /API_KEY|API key/i.test(t) ? 'Anahtar geçersiz görünüyor. Kopyalarken eksik kalmış olabilir.'
-    : r.status === 429 ? 'Ücretsiz kullanım sınırına ulaşıldı. Biraz bekleyip tekrar dene; günlük sınır her gün sıfırlanır.'
-    : /location|region|country/i.test(t) ? 'Gemini bu bölgede kullanılamıyor görünüyor.'
-    : r.status === 404 ? 'Uygun model bulunamadı.'
-    : `Kapak okunamadı (hata ${r.status}).`;
-  return new UErr(m, r.status);
-}
-async function pickModels(key) {
-  const r = await fetch(API + 'models?pageSize=1000', {headers: {'x-goog-api-key': key}});
-  if (!r.ok) throw await apiErr(r);
-  const all = ((await r.json()).models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent') && /gemini/i.test(m.name) && !/(image|tts|audio|live|embed|robotics|computer|thinking|nano|learnlm)/i.test(m.name));
-  const ver = n => parseFloat((n.match(/gemini-(\d+(?:\.\d+)?)/) || [0, 0])[1]);
-  const score = n => (/flash-lite/.test(n) ? 4 : /flash/.test(n) ? 3 : 1) - (/(preview|exp)/.test(n) ? 2 : 0);
-  all.sort((a, b) => score(b.name) - score(a.name) || ver(b.name) - ver(a.name));
-  const names = all.map(m => m.name).slice(0, 4);
-  if (!names.length) throw new UErr('Bu anahtarla kullanılabilecek bir model bulunamadı.');
-  return names;
-}
-async function models(key, fresh) {
-  let m = []; try { m = JSON.parse(localStorage.getItem(GMOD) || '[]'); } catch (e) {}
-  if (m.length && !fresh) return m;
-  m = await pickModels(key); try { localStorage.setItem(GMOD, JSON.stringify(m)); } catch (e) {}
-  return m;
-}
 async function imgB64(file) {
   let bmp; try { bmp = await createImageBitmap(file); } catch (e) { throw new UErr('Fotoğraf açılamadı.'); }
-  const k = Math.min(1, 1280 / Math.max(bmp.width, bmp.height)), c = document.createElement('canvas');
+  const k = Math.min(1, 1024 / Math.max(bmp.width, bmp.height)), c = document.createElement('canvas');
   c.width = Math.round(bmp.width * k); c.height = Math.round(bmp.height * k); c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
   return c.toDataURL('image/jpeg', .85).split(',')[1];
 }
-const PROMPT = `Bu fotoğraf bir kitaba ait (çoğunlukla ön kapak; arka kapak ya da kitap sırtı da olabilir). Kitabın bilgilerini fotoğrafta YAZANLARA göre çıkar.
-Kurallar:
-- Başlık ve yazar adını Türkçe yazım kurallarına uygun, normal büyük-küçük harfle yaz; kapakta hepsi büyük harfle yazsa bile ("KÜRK MANTOLU MADONNA" -> "Kürk Mantolu Madonna").
-- Fotoğrafta görmediğin alanları null bırak, asla uydurma. Çeviri kitapsa ve çevirmen görünüyorsa "translator" alanına yaz.
-- "genre": kitabı tanıyorsan ya da kapaktan anlaşılıyorsa şu listeden TAM OLARAK birini yaz: ${GENRES.map(g => g[0]).join(', ')}. Emin değilsen null.
-- "box_2d": fotoğraftaki kitabın (kapağın) sınırları, [ymin, xmin, ymax, xmax] biçiminde, 0-1000 aralığına ölçeklenmiş tam sayılar. Kitap seçilemiyorsa null.
-- "isbn" yalnızca fotoğrafta yazıyorsa, sadece rakamlarla.
-Yalnızca tek bir JSON nesnesi döndür:
-{"title":"...","author":"...","translator":null,"publisher":"...","isbn":null,"genre":"Roman","year":null,"box_2d":[60,180,940,820]}`;
 async function readCover(file) {
-  const key = getKey();
-  if (!key) throw new UErr('Önce kapak okuma ayarından anahtar ekle.');
   if (!navigator.onLine) throw new UErr('İnternet yok; kapak okunamıyor.');
-  const body = JSON.stringify({contents: [{parts: [{inline_data: {mime_type: 'image/jpeg', data: await imgB64(file)}}, {text: PROMPT}]}], generationConfig: {temperature: 0, responseMimeType: 'application/json'}});
-  let list = await models(key), last = null;
-  for (let round = 0; round < 2; round++) {
-    for (const m of list.slice(0, 3)) {
-      const r = await fetch(API + m + ':generateContent', {method: 'POST', headers: {'Content-Type': 'application/json', 'x-goog-api-key': key}, body});
-      if (r.ok) {
-        const j = await r.json();
-        const t = ((((j.candidates || [])[0] || {}).content || {}).parts || []).map(p => p.text || '').join('');
-        try { return JSON.parse(t); } catch (e) { const mm = t.match(/\{[\s\S]*\}/); if (mm) try { return JSON.parse(mm[0]); } catch (x) {} }
-        throw new UErr('Kapaktaki yazılar okunamadı. Daha net ve düz bir fotoğrafla tekrar dene.');
-      }
-      last = await apiErr(r);
-      if (!(r.status === 404 || r.status === 429 || r.status >= 500)) throw last;
-    }
-    if (round === 0 && last && last.status === 404) list = await models(key, true); else break;
-  }
-  throw last || new UErr('Kapak okunamadı.');
+  let j = null;
+  try { j = await (await fetch(WORKER + '/read', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({image: await imgB64(file), genres: GENRES.map(g => g[0])})})).json(); }
+  catch (e) { if (e instanceof UErr) throw e; throw new UErr('Kapak okuma servisine ulaşılamadı. Biraz sonra tekrar dene.'); }
+  if (j && j.ok && j.info) return j.info;
+  if (j && j.limit) throw new UErr(j.limit === 'day' ? 'Bugünlük kapak okuma hakkı doldu. Barkodla ya da adıyla ekleyebilirsin; kapak okuma gece yeniden açılır.' : 'Bugün bu bağlantıdan çok fazla kapak okundu. Barkodla ya da adıyla ekleyebilirsin.', 429);
+  throw new UErr((j && j.error ? j.error + '. ' : '') + 'Daha net ve düz bir fotoğrafla tekrar dene.');
 }
 let coverMode = 'new';
-function askCover(mode) { coverMode = mode; if (!getKey()) openKey(); else $('coverIn').click(); }
+function askCover(mode) { coverMode = mode; $('coverIn').click(); }
 $('coverBtn').onclick = () => { wishNext = false; askCover('new'); };
 $('coverFill').onclick = () => askCover('fill');
 async function coverPhoto(file, newSheet) {
   if (newSheet) { openSheet(null, true); $('shTitle').textContent = acq === 'wish' ? 'İstek listesine ekle' : 'Kapaktan ekle'; }
   const msg = $('scanMsg'), mine = editId;
   $('scanBox').hidden = false; $('coverFill').hidden = true;
-  if (!getKey()) {
-    addOwn(await cropCover(file, null).catch(() => null));
-    msg.textContent = 'Fotoğrafı kapak olarak ekledim. Kitabın bilgilerini de otomatik okumamı istersen kapak okumayı aç.';
-    return;
-  }
   msg.textContent = 'Kapak okunuyor…';
   try {
     const info = await readCover(file);
@@ -3275,24 +3188,6 @@ $('cvPhoto').addEventListener('change', e => {
   const file = e.target.files && e.target.files[0]; e.target.value = '';
   if (file) coverPhoto(file, false);
 });
-function openKey() { $('keyIn').value = getKey(); $('keyMsg').textContent = ''; $('keyDel').hidden = !getKey(); $('keyOv').hidden = false; }
-$('keyOpen').onclick = openKey;
-$('kx').onclick = () => { $('keyOv').hidden = true; };
-$('keyOv').addEventListener('click', e => { if (e.target === $('keyOv')) $('keyOv').hidden = true; });
-$('keySave').onclick = async () => {
-  const k = $('keyIn').value.trim();
-  if (!k) { $('keyMsg').textContent = 'Önce anahtarı yapıştır.'; return; }
-  $('keySave').disabled = true; $('keyMsg').textContent = 'Anahtar deneniyor…';
-  try {
-    const m = await pickModels(k);
-    localStorage.setItem(GKEY, k); localStorage.setItem(GMOD, JSON.stringify(m));
-    $('keyMsg').textContent = 'Hazır! Şimdi kapağın fotoğrafını çekebilirsin.'; $('keyDel').hidden = false; render();
-    setTimeout(() => { $('keyOv').hidden = true; }, 1400);
-  } catch (err) { $('keyMsg').textContent = userMsg(err); }
-  $('keySave').disabled = false;
-};
-$('keyDel').onclick = () => { try { localStorage.removeItem(GKEY); localStorage.removeItem(GMOD); } catch (e) {} $('keyIn').value = ''; $('keyDel').hidden = true; $('keyMsg').textContent = 'Anahtar silindi.'; render(); };
-
 // Ortak listeye yalnızca künye bilgileri gönderilir; durum, puan, notlar, hatıralar, yer ve ödünç bilgisi gönderilmez
 let syncing = false;
 async function syncShared() {

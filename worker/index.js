@@ -57,7 +57,7 @@ const int = (v, lo, hi) => { const n = parseInt(v, 10); return Number.isFinite(n
 const norm = s => String(s || '').toLocaleLowerCase('tr').replace(/ı/g, 'i').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
 const skOf = r => ' ' + norm([r.title, r.author, r.translator, r.publisher].join(' ')) + ' ';
 const COLS = 'isbn, title, author, translator, publisher, year, pages, genre, cover, saves, picks';
-const READ_MODEL = '@cf/google/gemma-4-26b-a4b-it', READ_DAY = 600, READ_IP = 30;
+const READ_MODEL = '@cf/google/gemma-4-26b-a4b-it', READ_DAY = 1000, READ_IP = 30;
 
 export default {
   async fetch(req, env) {
@@ -169,20 +169,20 @@ async function readCoverAI(req, env) {
   const messages = [{role: 'user', content: [{type: 'text', text: readPrompt(b.genres)}, {type: 'image_url', image_url: {url: 'data:image/jpeg;base64,' + data}}]}];
   const textOf = o => String((o && (o.response ?? (o.choices && o.choices[0] && o.choices[0].message && o.choices[0].message.content))) || '');
   const tries = [{chat_template_kwargs: {enable_thinking: false}}, {reasoning_effort: 'none'}, {max_tokens: 1500}];
-  let out = null, txt = '', used = -1, errs = [];
+  let out = null, txt = '';
   for (let i = 0; i < tries.length && !txt.trim(); i++) {
-    try { out = await env.AI.run(READ_MODEL, {messages, max_tokens: 300, temperature: 0, ...tries[i]}); txt = textOf(out); used = i; }
-    catch (e) { errs.push(String(e && e.message || e).slice(0, 200)); }
+    try { out = await env.AI.run(READ_MODEL, {messages, max_tokens: 300, temperature: 0, ...tries[i]}); txt = textOf(out); }
+    catch (e) {}
   }
   let info = null;
   try { info = JSON.parse(txt); } catch (e) { const m = txt.match(/\{[\s\S]*\}/); if (m) try { info = JSON.parse(m[0]); } catch (x) {} }
-  if (!info || typeof info !== 'object') return json(req, {ok: false, error: 'Kapaktaki yazılar okunamadı', usage: out && out.usage || null, dbg: {used, errs, out: JSON.stringify(out).slice(0, 600)}});
+  if (!info || typeof info !== 'object') return json(req, {ok: false, error: 'Kapaktaki yazılar okunamadı'});
   const pick = {};
   for (const k of ['title', 'author', 'translator', 'publisher', 'genre']) pick[k] = typeof info[k] === 'string' ? clean(info[k], 300) || null : null;
   pick.isbn = info.isbn ? String(info.isbn).replace(/[^0-9Xx]/g, '').slice(0, 13) || null : null;
   pick.year = int(info.year, 1450, 2100);
   pick.box_2d = Array.isArray(info.box_2d) && info.box_2d.length === 4 && info.box_2d.every(v => Number.isFinite(+v)) ? info.box_2d.map(v => Math.max(0, Math.min(1000, Math.round(+v)))) : null;
-  return json(req, {ok: true, info: pick, left: t.left, usage: out && out.usage || null, dbg: {used, errs}});
+  return json(req, {ok: true, info: pick, left: t.left});
 }
 
 async function handle(req, env) {
